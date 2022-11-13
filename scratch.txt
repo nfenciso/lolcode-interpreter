@@ -1,0 +1,32 @@
+(\bHAI\b|\bKTHXBYE\b)   #Code Delimiter
+|(\bI HAS A\b)          #Variable Declaration
+|(\bITZ\b)              #Variable Assignment
+|(\b[a-zA-Z]\w*\b)
+
+HAI, KTHXBYE - Code Delimiter
+I HAS A - Variable Declaration
+ITZ - Variable Assignment
+
+
+print(re.findall(r"(\".*\")|([0-9]+)", '5 "not rot" 13'))
+
+rx = r"(\sHAI\s|\sKTHXBYE\s|\sBTW\s|\sOBTW\s|\sTLDR\s|\sI HAS A\s|\sITZ\s|\sR\s|\sSUM OF\s|\sDIFF OF\s|\sPRODUKT OF\s|\sQUOSHUNT OF\s|\sMOD OF\s|\sBIGGR OF\s|\sSMALLR OF\s|\sBOTH OF\s|\sEITHER OF\s|\sWON OF\s|\sNOT\s|\sANY OF\s|\sALL OF\s|\sBOTH SAEM\s|\sDIFFRINT\s|\sSMOOSH\s|\sMAEK\s|\sA\s|\sIS NOW A\s|\sVISIBLE\s|\sGIMMEH\s|\sO RLY\?\sMEBBE\s|\sNO WAI\s|\sOIC\s|\sWTF\?\s|\sOMG\s|\sOMGWTF\s|\sIM IN YR\s|\sUPPIN\s|\sNERFIN\s|\sYR\s|\sTIL\s|\sWILE\s|\sIM OUTTA YR\s)|(-?[0-9]+|-?[0-9]*.[0-9]+|\".*\")|(\s[a-zA-Z]\w*\s)"
+
+
+
+
+
+TASKS
+[]if there is no valid match (error)
+[]literal handling
+" - OPEN string delimeter
+assfagg - string literal
+" - CLOSE string delimeter
+[]keywords part
+[]comment handling
+[]documentation -Nat
+
+
+
+
+
