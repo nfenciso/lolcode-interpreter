@@ -18,12 +18,12 @@ rx = r"(\sHAI\s|\sKTHXBYE\s|\sBTW\s|\sOBTW\s|\sTLDR\s|\sI HAS A\s|\sITZ\s|\sR\s|
 
 TASKS
 []      if there is no valid match (error)
-[]      literal handling
+[xxx]      literal handling
             " - OPEN string delimeter
             assfagg - string literal
             " - CLOSE string delimeter
 [xxx]   keywords part
-[]      comment handling
+[xxx]      comment handling
 []      documentation -Nat
 
 
