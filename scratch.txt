@@ -17,14 +17,14 @@ rx = r"(\sHAI\s|\sKTHXBYE\s|\sBTW\s|\sOBTW\s|\sTLDR\s|\sI HAS A\s|\sITZ\s|\sR\s|
 
 
 TASKS
-[]if there is no valid match (error)
-[]literal handling
-" - OPEN string delimeter
-assfagg - string literal
-" - CLOSE string delimeter
-[]keywords part
-[]comment handling
-[]documentation -Nat
+[]      if there is no valid match (error)
+[]      literal handling
+            " - OPEN string delimeter
+            assfagg - string literal
+            " - CLOSE string delimeter
+[xxx]   keywords part
+[]      comment handling
+[]      documentation -Nat
 
 
 
