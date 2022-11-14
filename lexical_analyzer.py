@@ -25,7 +25,7 @@ content = content.replace(" ", "   ")
 content = content.replace("\t", "\t\t\t")
 content = content.replace("\n","\n\n\n")
 
-rx = r"([ \t\n]HAI[ \t\n]|[ \t\n]KTHXBYE[ \t\n]|[ \t\n]BTW.*[ \t\n]|[ \t\n]OBTW[\n\r\w\W]*TLDR[ \t\n]|[ \t\n]I[ \t]+HAS[ \t]+A[ \t\n]|[ \t\n]ITZ[ \t\n]|[ \t\n]R[ \t\n]|[ \t\n]SUM[ \t]+OF[ \t\n]|[ \t\n]DIFF[ \t]+OF[ \t\n]|[ \t\n]PRODUKT[ \t]+OF[ \t\n]|[ \t\n]QUOSHUNT[ \t]+OF[ \t\n]|[ \t\n]MOD[ \t]+OF[ \t\n]|[ \t\n]BIGGR[ \t]+OF[ \t\n]|[ \t\n]SMALLR[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+OF[ \t\n]|[ \t\n]EITHER[ \t]+OF[ \t\n]|[ \t\n]WON[ \t]+OF[ \t\n]|[ \t\n]NOT[ \t\n]|[ \t\n]ANY[ \t]+OF[ \t\n]|[ \t\n]ALL[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+SAEM[ \t\n]|[ \t\n]DIFFRINT[ \t\n]|[ \t\n]SMOOSH[ \t\n]|[ \t\n]MAEK[ \t\n]|[ \t\n]A[ \t\n]|[ \t\n]IS[ \t]+NOW[ \t]+A[ \t\n]|[ \t\n]VISIBLE[ \t\n]|[ \t\n]GIMMEH[ \t\n]|[ \t\n]O[ \t]+RLY\?[ \t\n]|[ \t\n]YA[ \t]+RLY[ \t\n]|[ \t\n]MEBBE[ \t\n]|[ \t\n]NO[ \t]+WAI[ \t\n]|[ \t\n]OIC[ \t\n]|[ \t\n]WTF\?[ \t\n]|[ \t\n]OMG[ \t\n]|[ \t\n]OMGWTF[ \t\n]|[ \t\n]IM[ \t]+IN[ \t]+YR[ \t\n]|[ \t\n]UPPIN[ \t\n]|[ \t\n]NERFIN[ \t\n]|[ \t\n]YR[ \t\n]|[ \t\n]TIL[ \t\n]|[ \t\n]WILE[ \t\n]|[ \t\n]IM[ \t]+OUTTA[ \t]+YR[ \t\n]|[ \t\n]GTFO[ \t\n])|([ \t\n]-?[0-9]+[ \t\n]|^-?[0-9]+[ \t\n]|[ \t\n]-?[0-9]+$|^-?[0-9]+$|[ \t\n]-?[0-9]*\.[0-9]+[ \t\n]|^-?[0-9]*\.[0-9]+[ \t\n]|[ \t\n]-?[0-9]*\.[0-9]+$|^-?[0-9]*\.[0-9]+$|\"[^\"\n]*\"|^WIN[ \t\n]|[ \t\n]WIN[ \t\n]|[ \t\n]WIN$|^WIN$|^FAIL[ \t\n]|[ \t\n]FAIL[ \t\n]|[ \t\n]FAIL$|^FAIL$)|(^[a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*$|^[a-zA-Z]\w*$)|([^ \t\n]+)"
+rx = r"([ \t\n]HAI[ \t\n]|[ \t\n]KTHXBYE[ \t\n]|[ \t\n]BTW.*[ \t\n]|[ \t\n]OBTW[\n\r\w\W]*TLDR[ \t\n]|[ \t\n]I[ \t]+HAS[ \t]+A[ \t\n]|[ \t\n]ITZ[ \t\n]|[ \t\n]R[ \t\n]|[ \t\n]SUM[ \t]+OF[ \t\n]|[ \t\n]DIFF[ \t]+OF[ \t\n]|[ \t\n]PRODUKT[ \t]+OF[ \t\n]|[ \t\n]QUOSHUNT[ \t]+OF[ \t\n]|[ \t\n]MOD[ \t]+OF[ \t\n]|[ \t\n]BIGGR[ \t]+OF[ \t\n]|[ \t\n]SMALLR[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+OF[ \t\n]|[ \t\n]EITHER[ \t]+OF[ \t\n]|[ \t\n]WON[ \t]+OF[ \t\n]|[ \t\n]NOT[ \t\n]|[ \t\n]ANY[ \t]+OF[ \t\n]|[ \t\n]ALL[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+SAEM[ \t\n]|[ \t\n]DIFFRINT[ \t\n]|[ \t\n]SMOOSH[ \t\n]|[ \t\n]MAEK[ \t\n]|[ \t\n]A[ \t\n]|[ \t\n]IS[ \t]+NOW[ \t]+A[ \t\n]|[ \t\n]VISIBLE[ \t\n]|[ \t\n]GIMMEH[ \t\n]|[ \t\n]O[ \t]+RLY\?[ \t\n]|[ \t\n]YA[ \t]+RLY[ \t\n]|[ \t\n]MEBBE[ \t\n]|[ \t\n]NO[ \t]+WAI[ \t\n]|[ \t\n]OIC[ \t\n]|[ \t\n]WTF\?[ \t\n]|[ \t\n]OMG[ \t\n]|[ \t\n]OMGWTF[ \t\n]|[ \t\n]IM[ \t]+IN[ \t]+YR[ \t\n]|[ \t\n]UPPIN[ \t\n]|[ \t\n]NERFIN[ \t\n]|[ \t\n]YR[ \t\n]|[ \t\n]TIL[ \t\n]|[ \t\n]WILE[ \t\n]|[ \t\n]IM[ \t]+OUTTA[ \t]+YR[ \t\n]|[ \t\n]GTFO[ \t\n]|[ \t\n]AN[ \t\n])|([ \t\n]-?[0-9]+[ \t\n]|^-?[0-9]+[ \t\n]|[ \t\n]-?[0-9]+$|^-?[0-9]+$|[ \t\n]-?[0-9]*\.[0-9]+[ \t\n]|^-?[0-9]*\.[0-9]+[ \t\n]|[ \t\n]-?[0-9]*\.[0-9]+$|^-?[0-9]*\.[0-9]+$|\"[^\"\n]*\"|^WIN[ \t\n]|[ \t\n]WIN[ \t\n]|[ \t\n]WIN$|^WIN$|^FAIL[ \t\n]|[ \t\n]FAIL[ \t\n]|[ \t\n]FAIL$|^FAIL$)|(^[a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*$|^[a-zA-Z]\w*$)|([^ \t\n]+)"
 #(keywords)|(literals)|(identifiers)|(errors)
 
 #print(content)
@@ -38,8 +38,10 @@ error = "NONE"
 
 for i in results:
     comment = False
+    # captured by first regex (keywords)
     if (i[0]):
         kw = i[0]
+        # removing whitespaces
         while (kw[0] == " " or kw[0] == "\t" or kw[0] == "\n"):
             kw = kw[1:]
         while (kw[len(kw)-1] == " " or kw[len(kw)-1] == "\t" or kw[len(kw)-1] == "\n"):
@@ -47,6 +49,7 @@ for i in results:
 
         kw = ' '.join(kw.split())
 
+        # storing valid keyword lexemes and their classifications
         if (kw == "HAI" or kw == "KTHXBYE"):    lexemes.append(["Code Delimeter",kw])
         elif (kw[0:3] == "BTW"):
             lexemes.append(["Single Comment Keyword",kw[0:3]])
@@ -95,15 +98,18 @@ for i in results:
         elif (kw == "WILE"):                    lexemes.append(["Loop Condition",kw])
         elif (kw == "IM OUTTA YR"):             lexemes.append(["Loop Delimeter",kw])
         elif (kw == "GTFO"):                    lexemes.append(["Break Keyword",kw])
-        #more keywords
+        elif (kw == "AN"):                    lexemes.append(["Operand Separator",kw])
         else:                                   lexemes.append(["KEYWORD",kw])
+    # captured by second regex (literals)
     elif (i[1]):
         lit = i[1]
+        # removing whitespaces
         while (lit[0] == " " or lit[0] == "\t" or lit[0] == "\n"):
             lit = lit[1:]
         while (lit[len(lit)-1] == " " or lit[len(lit)-1] == "\t" or lit[len(lit)-1] == "\n"):
             lit = lit[:-1]
 
+        # storing valid literals and their classifications
         if (is_integer(lit)):
             lexemes.append(["NUMBR Literal",lit])
         elif (is_float(lit)):
@@ -114,17 +120,21 @@ for i in results:
             lexemes.append(["String Delimiter", "\""])
             lexemes.append(["YARN Literal", (lit)[1:-1].replace("   ", " ").replace("\t\t\t","\t") ]) # removing double quotes
             lexemes.append(["String Delimiter", "\""])
+    # captured by third regex (identifiers)
     elif (i[2]):
         ident = i[2]
+        # removing whitespaces
         while (ident[0] == " " or ident[0] == "\t" or ident[0] == "\n"):
             ident = ident[1:]
         while (ident[len(ident)-1] == " " or ident[len(ident)-1] == "\t" or ident[len(ident)-1] == "\n"):
             ident = ident[:-1]
 
+        # if identifier is already declared, save the next occurence to lexeme table
         if (ident in declaredIdentifiers):
             index = declaredIdentifiers.index(ident)
             lexemes.append([declaredIdentifiersType[index],ident])
         else:
+            # classifying what kind of identifier is being declared
             if (len(lexemes) != 0):
                 previousLexeme = lexemes[len(lexemes)-1][1]
                 declaredIdentifiers.append(ident)
@@ -141,6 +151,7 @@ for i in results:
             else:
                 lexemes.append(["IDENTIFIER",ident])
                 declaredIdentifiersType.append("IDENTIFIER")
+    # captured by fourth regex (not a LOL lexeme)
     else:
         error = i[3].replace(" ","").replace("\t","").replace("\n","")
         break
