@@ -25,7 +25,7 @@ content = content.replace(" ", "   ")
 content = content.replace("\t", "\t\t\t")
 content = content.replace("\n","\n\n\n")
 
-rx = r"([ \t\n]HAI[ \t\n]|[ \t\n]KTHXBYE[ \t\n]|[ \t\n]BTW.*[ \t\n]|[ \t\n]OBTW[\n\r\w\W]*TLDR[ \t\n]|[ \t\n]I[ \t]+HAS[ \t]+A[ \t\n]|[ \t\n]ITZ[ \t\n]|[ \t\n]R[ \t\n]|[ \t\n]SUM[ \t]+OF[ \t\n]|[ \t\n]DIFF[ \t]+OF[ \t\n]|[ \t\n]PRODUKT[ \t]+OF[ \t\n]|[ \t\n]QUOSHUNT[ \t]+OF[ \t\n]|[ \t\n]MOD[ \t]+OF[ \t\n]|[ \t\n]BIGGR[ \t]+OF[ \t\n]|[ \t\n]SMALLR[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+OF[ \t\n]|[ \t\n]EITHER[ \t]+OF[ \t\n]|[ \t\n]WON[ \t]+OF[ \t\n]|[ \t\n]NOT[ \t\n]|[ \t\n]ANY[ \t]+OF[ \t\n]|[ \t\n]ALL[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+SAEM[ \t\n]|[ \t\n]DIFFRINT[ \t\n]|[ \t\n]SMOOSH[ \t\n]|[ \t\n]MAEK[ \t\n]|[ \t\n]A[ \t\n]|[ \t\n]IS[ \t]+NOW[ \t]+A[ \t\n]|[ \t\n]VISIBLE[ \t\n]|[ \t\n]GIMMEH[ \t\n]|[ \t\n]O[ \t]+RLY\?[ \t\n]|[ \t\n]YA[ \t]+RLY[ \t\n]|[ \t\n]MEBBE[ \t\n]|[ \t\n]NO[ \t]+WAI[ \t\n]|[ \t\n]OIC[ \t\n]|[ \t\n]WTF\?[ \t\n]|[ \t\n]OMG[ \t\n]|[ \t\n]OMGWTF[ \t\n]|[ \t\n]IM[ \t]+IN[ \t]+YR[ \t\n]|[ \t\n]UPPIN[ \t\n]|[ \t\n]NERFIN[ \t\n]|[ \t\n]YR[ \t\n]|[ \t\n]TIL[ \t\n]|[ \t\n]WILE[ \t\n]|[ \t\n]IM[ \t]+OUTTA[ \t]+YR[ \t\n]|[ \t\n]GTFO[ \t\n]|[ \t\n]AN[ \t\n])|([ \t\n]-?[0-9]+[ \t\n]|^-?[0-9]+[ \t\n]|[ \t\n]-?[0-9]+$|^-?[0-9]+$|[ \t\n]-?[0-9]*\.[0-9]+[ \t\n]|^-?[0-9]*\.[0-9]+[ \t\n]|[ \t\n]-?[0-9]*\.[0-9]+$|^-?[0-9]*\.[0-9]+$|\"[^\"\n]*\"|^WIN[ \t\n]|[ \t\n]WIN[ \t\n]|[ \t\n]WIN$|^WIN$|^FAIL[ \t\n]|[ \t\n]FAIL[ \t\n]|[ \t\n]FAIL$|^FAIL$)|(^[a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*$|^[a-zA-Z]\w*$)|([^ \t\n]+)"
+rx = r"([ \t\n]HAI[ \t\n]|[ \t\n]KTHXBYE[ \t\n]|[ \t\n]BTW.*[ \t\n]|[ \t\n]OBTW[\n\r\w\W]*TLDR[ \t\n]|[ \t\n]I[ \t]+HAS[ \t]+A[ \t\n]|[ \t\n]ITZ[ \t\n]|[ \t\n]R[ \t\n]|[ \t\n]SUM[ \t]+OF[ \t\n]|[ \t\n]DIFF[ \t]+OF[ \t\n]|[ \t\n]PRODUKT[ \t]+OF[ \t\n]|[ \t\n]QUOSHUNT[ \t]+OF[ \t\n]|[ \t\n]MOD[ \t]+OF[ \t\n]|[ \t\n]BIGGR[ \t]+OF[ \t\n]|[ \t\n]SMALLR[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+OF[ \t\n]|[ \t\n]EITHER[ \t]+OF[ \t\n]|[ \t\n]WON[ \t]+OF[ \t\n]|[ \t\n]NOT[ \t\n]|[ \t\n]ANY[ \t]+OF[ \t\n]|[ \t\n]ALL[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+SAEM[ \t\n]|[ \t\n]DIFFRINT[ \t\n]|[ \t\n]SMOOSH[ \t\n]|[ \t\n]MAEK[ \t\n]|[ \t\n]A[ \t\n]|[ \t\n]IS[ \t]+NOW[ \t]+A[ \t\n]|[ \t\n]VISIBLE[ \t\n]|[ \t\n]GIMMEH[ \t\n]|[ \t\n]O[ \t]+RLY\?[ \t\n]|[ \t\n]YA[ \t]+RLY[ \t\n]|[ \t\n]MEBBE[ \t\n]|[ \t\n]NO[ \t]+WAI[ \t\n]|[ \t\n]OIC[ \t\n]|[ \t\n]WTF\?[ \t\n]|[ \t\n]OMG[ \t\n]|[ \t\n]OMGWTF[ \t\n]|[ \t\n]IM[ \t]+IN[ \t]+YR[ \t\n]|[ \t\n]UPPIN[ \t\n]|[ \t\n]NERFIN[ \t\n]|[ \t\n]YR[ \t\n]|[ \t\n]TIL[ \t\n]|[ \t\n]WILE[ \t\n]|[ \t\n]IM[ \t]+OUTTA[ \t]+YR[ \t\n]|[ \t\n]GTFO[ \t\n]|[ \t\n]AN[ \t\n]|[ \t\n]HOW[ \t]+IZ[ \t]+I[ \t\n]|[ \t\n]IF[ \t]+U[ \t]+SAY[ \t]+SO[ \t\n]|[ \t\n]I[ \t]+IZ[ \t\n]|[ \t\n]MKAY[ \t\n])|([ \t\n]-?[0-9]+[ \t\n]|^-?[0-9]+[ \t\n]|[ \t\n]-?[0-9]+$|^-?[0-9]+$|[ \t\n]-?[0-9]*\.[0-9]+[ \t\n]|^-?[0-9]*\.[0-9]+[ \t\n]|[ \t\n]-?[0-9]*\.[0-9]+$|^-?[0-9]*\.[0-9]+$|\"[^\"\n]*\"|^WIN[ \t\n]|[ \t\n]WIN[ \t\n]|[ \t\n]WIN$|^WIN$|^FAIL[ \t\n]|[ \t\n]FAIL[ \t\n]|[ \t\n]FAIL$|^FAIL$)|(^[a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*[ \t\n]|[ \t\n][a-zA-Z]\w*$|^[a-zA-Z]\w*$)|([^ \t\n]+)"
 #(keywords)|(literals)|(identifiers)|(errors)
 
 #print(content)
@@ -98,7 +98,11 @@ for i in results:
         elif (kw == "WILE"):                    lexemes.append(["Loop Condition",kw])
         elif (kw == "IM OUTTA YR"):             lexemes.append(["Loop Delimeter",kw])
         elif (kw == "GTFO"):                    lexemes.append(["Break Keyword",kw])
-        elif (kw == "AN"):                    lexemes.append(["Operand Separator",kw])
+        elif (kw == "AN"):                      lexemes.append(["Operand Separator",kw])
+        elif (kw == "HOW IZ I"):                lexemes.append(["Function Delimiter",kw])
+        elif (kw == "IF U SAY SO"):             lexemes.append(["Function Delimiter",kw])
+        elif (kw == "I IZ"):                    lexemes.append(["Function Call",kw])
+        elif (kw == "MKAY"):                    lexemes.append(["Parameter Delimiter",kw])
         else:                                   lexemes.append(["KEYWORD",kw])
     # captured by second regex (literals)
     elif (i[1]):
@@ -147,7 +151,6 @@ for i in results:
                 elif (previousLexeme == "HOW IZ I"):
                     lexemes.append(["Function Identifier",ident])
                     declaredIdentifiersType.append("Function Identifier")
-                #one more for loop identifier func identifier
                 else:
                     lexemes.append(["IDENTIFIER",ident])
                     declaredIdentifiersType.append("IDENTIFIER")
