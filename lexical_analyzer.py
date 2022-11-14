@@ -1,3 +1,9 @@
+# CMSC124 B-1L
+# Lexical Analyzer
+# CONTRIBUTORS:
+#   John Kenneth F. Manalang
+#   Nathaniel F. Enciso
+
 import re
 
 def is_integer(num):
