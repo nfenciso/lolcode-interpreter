@@ -144,6 +144,9 @@ for i in results:
                 elif (previousLexeme == "IM IN YR"):
                     lexemes.append(["Loop Identifier",ident])
                     declaredIdentifiersType.append("Loop Identifier")
+                elif (previousLexeme == "HOW IZ I"):
+                    lexemes.append(["Function Identifier",ident])
+                    declaredIdentifiersType.append("Function Identifier")
                 #one more for loop identifier func identifier
                 else:
                     lexemes.append(["IDENTIFIER",ident])
