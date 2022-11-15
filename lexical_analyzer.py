@@ -6,6 +6,8 @@
 
 import re
 
+
+
 def is_integer(num):
     try:
         int(num) * -1
@@ -56,14 +58,17 @@ for i in results:
         kw = ' '.join(kw.split())
 
         # storing valid keyword lexemes and their classifications
-        if (kw == "HAI" or kw == "KTHXBYE"):    lexemes.append(["Code Delimeter",kw])
+        if (kw == "HAI"):                       lexemes.append(["Code Delimeter OPEN",kw])
+        elif (kw == "KTHXBYE"):                 lexemes.append(["Code Delimeter CLOSE",kw])
         elif (kw[0:3] == "BTW"):
-            lexemes.append(["Single Comment Keyword",kw[0:3]])
-            lexemes.append(["Comment",kw[4:]])
+            pass
+            #lexemes.append(["Single Comment Keyword",kw[0:3]])
+            #lexemes.append(["Comment",kw[4:]])
         elif (kw[0:4] == "OBTW" and kw[-4:] == "TLDR"):
-            lexemes.append(["Multiple Comment Delimiter", "OBTW"])
-            lexemes.append(["Multiple Comment", kw[5:-5]])
-            lexemes.append(["Multiple Comment Delimiter", "TLDR"])
+            pass
+            #lexemes.append(["Multiple Comment Delimiter", "OBTW"])
+            #lexemes.append(["Multiple Comment", kw[5:-5]])
+            #lexemes.append(["Multiple Comment Delimiter", "TLDR"])
         elif (kw == "I HAS A"):                 lexemes.append(["Variable Declaration",kw])
         elif (kw == "ITZ"):                     lexemes.append(["Variable Assignment",kw])
         elif (kw == "R"):                       lexemes.append(["Assignment Keyword",kw])
@@ -175,3 +180,111 @@ if (error != "NONE"):
     print("INTERRUPT!\nERROR: "+error)
 else:
     print("\nANALYSIS COMPLETE!")
+
+print(lexemes)
+print()
+
+class TreeNode:
+    def __init__(self, data, typeNode):
+        self.data = data
+        self.type = typeNode
+        self.children = []
+        self.parent = None
+    
+    def add_child(self, child, pos):
+        child.parent = self
+        if (self.type == "TNT"):
+            if (pos == "L"):
+                self.children.insert(0, child)
+            elif (pos == "M"):
+                self.children.insert(len(self.children)-2, child)
+            elif (pos == "R"):
+                self.children.append(child)
+
+class Parser:
+    def __init__(self, tokens):
+        self.tokens = tokens
+        self.tok_idx = -1
+        self.advance()
+    
+    def advance(self):
+        self.index += 1
+        if (self.tok_idx < len(self.tokens)):
+            self.curr_tok = self.tokens[self.tok_idx]
+        return self.curr_tok
+    
+    def parse(self):
+        self.tree = TreeNode("<program>", "TNT")
+        if (self.curr_tok[0] == "Code Delimeter OPEN"):
+            self.tree.add_child(TreeNode("Code Delimeter OPEN", "T"), "L")
+
+
+
+def getResultOfMathOperations(sublistTokens):
+    acc = []
+    result = ""
+    curr = 0
+    math_operations = ["SUM OF", "DIFF OF", "PRODUKT OF", "QUOSHUNT", "MOD OF", "BIGGR OF", "SMALLR OF"]
+    while (1):
+        #print(acc, "curr:", curr)
+        if (len(acc) >= 3):
+            lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
+            secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
+            if (lastElemIsNum and secondLastElemIsNum):
+                firstOperand = acc[len(acc)-2]
+                secondOperand = acc[len(acc)-1]
+                operation = acc[len(acc)-3]
+                if (operation not in math_operations): break
+                if (operation == "SUM OF"):         acc[len(acc)-3] = firstOperand + secondOperand
+                elif (operation == "DIFF OF"):      acc[len(acc)-3] = firstOperand - secondOperand
+                elif (operation == "PRODUKT OF"):   acc[len(acc)-3] = firstOperand * secondOperand
+                elif (operation == "QUOSHUNT OF"):  acc[len(acc)-3] = firstOperand / secondOperand
+                elif (operation == "MOD OF"):       acc[len(acc)-3] = firstOperand % secondOperand
+                elif (operation == "BIGGR OF"):     acc[len(acc)-3] = max(firstOperand, secondOperand)
+                elif (operation == "SMALLR OF"):    acc[len(acc)-3] = min(firstOperand, secondOperand)
+                acc.pop()
+                acc.pop()
+
+                if (len(acc) == 1):
+                    result = acc[0]
+                    break
+                continue
+
+        if (curr == 0):
+            if (sublistTokens[curr] not in math_operations): break
+            else:
+                acc.append(sublistTokens[curr])
+                curr += 1
+        else:
+            lastElem = acc[len(acc)-1]
+            if (curr == len(sublistTokens)):
+                result = "ERROR: Lacking AN and an operand"
+                break
+            toBeInserted = sublistTokens[curr]
+            
+            if (lastElem in math_operations and toBeInserted == "AN"):  
+                result = "ERROR: Lacking operand after arithmetic operation"
+                break
+            if (lastElem == "AN" and toBeInserted == "AN"):      
+                result = "ERROR: Lacking operand between AN"       
+                break
+            lastElemIsNum = isinstance(lastElem, int) or isinstance(lastElem, float)
+            toBeInsertedIsNum = isinstance(toBeInserted, int) or isinstance(toBeInserted, float)
+            if (lastElemIsNum and toBeInsertedIsNum):     
+                result = "ERROR: Lacking AN"              
+                break
+            if (toBeInserted == "AN"):
+                curr += 1
+                if (curr == len(sublistTokens)):
+                    result = "ERROR: Lacking operand after AN" 
+                    break
+                toBeInserted = sublistTokens[curr]
+            
+            #print("TO BE INSERTED: "+str(toBeInserted))
+            acc.append(toBeInserted)
+            curr += 1
+
+    return result
+
+accumulatedMathTokens = ["SUM OF", "BIGGR OF", "SUM OF", 4, "AN", 2, "AN", 2, "AN", "DIFF OF", 10, "AN", 7]
+print(getResultOfMathOperations(accumulatedMathTokens))

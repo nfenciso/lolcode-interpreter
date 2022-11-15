@@ -1,0 +1,323 @@
+# CMSC124 B-1L
+# Lexical Analyzer
+# CONTRIBUTORS:
+#   John Kenneth F. Manalang
+#   Nathaniel F. Enciso
+
+import re
+
+#######################################
+# NODES
+#######################################
+
+class NumberNode:
+	def __init__(self, tok):
+		self.tok = tok
+
+	def __repr__(self):
+		return f'{self.tok}'
+
+class BinOpNode:
+	def __init__(self, left_node, op_tok, right_node):
+		self.left_node = left_node
+		self.op_tok = op_tok
+		self.right_node = right_node
+
+	def __repr__(self):
+		return f'({self.left_node}, {self.op_tok}, {self.right_node})'
+
+class UnaryOpNode:
+	def __init__(self, op_tok, node):
+		self.op_tok = op_tok
+		self.node = node
+
+	def __repr__(self):
+		return f'({self.op_tok}, {self.node})'
+
+#######################################
+# PARSE RESULT
+#######################################
+
+class ParseResult:
+	def __init__(self):
+		self.error = None
+		self.node = None
+
+	def register(self, res):
+		if isinstance(res, ParseResult):
+			if res.error: self.error = res.error
+			return res.node
+
+		return res
+
+	def success(self, node):
+		self.node = node
+		return self
+
+	def failure(self, error):
+		self.error = error
+		return self
+
+#######################################
+# PARSER
+#######################################
+
+class Parser:
+	def __init__(self, tokens):
+		self.tokens = tokens
+		self.tok_idx = -1
+		self.advance()
+
+	def advance(self, ):
+		self.tok_idx += 1
+		if self.tok_idx < len(self.tokens):
+			self.current_tok = self.tokens[self.tok_idx]
+		return self.current_tok
+
+	def parse(self):
+		res = self.expr()
+		# if not res.error and self.current_tok[0] != TT_EOF:
+		# 	return res.failure(
+		# 		"Expected '+', '-', '*' or '/'"
+		# 	)
+		return res
+
+	###################################
+
+	def factor(self):
+		res = ParseResult()
+		tok = self.current_tok
+
+		if tok[0] in ("ADD", "SUB"):
+			res.register(self.advance())
+			factor = res.register(self.factor())
+			if res.error: return res
+			return res.success(UnaryOpNode(tok, factor))
+		
+		elif tok[0] in ("NUM"):
+			res.register(self.advance())
+			return res.success(NumberNode(tok))
+
+		elif tok[0] == "OPPAREN":
+			res.register(self.advance())
+			expr = res.register(self.expr())
+			if res.error: return res
+			if self.current_tok[0] == "CLPAREN":
+				res.register(self.advance())
+				return res.success(expr)
+			else:
+				return res.failure(
+					"Expected ')'"
+				)
+
+		return res.failure(tok.pos_start, tok.pos_end,
+			"Expected int or float"
+		)
+
+	def term(self):
+		return self.bin_op(self.factor, ("MUL", "DIV"))
+
+	def expr(self):
+		return self.bin_op(self.term, ("ADD", "SUB"))
+
+	###################################
+
+	def bin_op(self, func, ops):
+		res = ParseResult()
+		left = res.register(func())
+		if res.error: return res
+
+		while self.current_tok[0] in ops:
+			op_tok = self.current_tok
+			res.register(self.advance())
+			right = res.register(func())
+			if res.error: return res
+			left = BinOpNode(left, op_tok, right)
+
+		return res.success(left)
+
+
+def is_integer(num):
+    try:
+        int(num) * -1
+        return True
+    except:
+        return False
+
+def is_float(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
+
+fileHandle = open("sample.lol","r")
+content = fileHandle.read()
+fileHandle.close()
+
+print(content)
+
+content = " "+content+" "
+content = content.replace(" ", "   ")
+content = content.replace("\t", "\t\t\t")
+content = content.replace("\n","\n\n\n")
+
+rx = r"([ \t\n]HAI[ \t\n]|[ \t\n]KTHXBYE[ \t\n]|[ \t\n]BTW.*[ \t\n]|[ \t\n]OBTW[\n\r\w\W]*TLDR[ \t\n]|[ \t\n]I[ \t]+HAS[ \t]+A[ \t\n]|[ \t\n]ITZ[ \t\n]|[ \t\n]R[ \t\n]|[ \t\n]SUM[ \t]+OF[ \t\n]|[ \t\n]DIFF[ \t]+OF[ \t\n]|[ \t\n]PRODUKT[ \t]+OF[ \t\n]|[ \t\n]QUOSHUNT[ \t]+OF[ \t\n]|[ \t\n]MOD[ \t]+OF[ \t\n]|[ \t\n]BIGGR[ \t]+OF[ \t\n]|[ \t\n]SMALLR[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+OF[ \t\n]|[ \t\n]EITHER[ \t]+OF[ \t\n]|[ \t\n]WON[ \t]+OF[ \t\n]|[ \t\n]NOT[ \t\n]|[ \t\n]ANY[ \t]+OF[ \t\n]|[ \t\n]ALL[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+SAEM[ \t\n]|[ \t\n]DIFFRINT[ \t\n]|[ \t\n]SMOOSH[ \t\n]|[ \t\n]MAEK[ \t\n]|[ \t\n]A[ \t\n]|[ \t\n]IS[ \t]+NOW[ \t]+A[ \t\n]|[ \t\n]VISIBLE[ \t\n]|[ \t\n]GIMMEH[ \t\n]|[ \t\n]O[ \t]+RLY\?[ \t\n]|[ \t\n]YA[ \t]+RLY[ \t\n]|[ \t\n]MEBBE[ \t\n]|[ \t\n]NO[ \t]+WAI[ \t\n]|[ \t\n]OIC[ \t\n]|[ \t\n]WTF\?[ \t\n]|[ \t\n]OMG[ \t\n]|[ \t\n]OMGWTF[ \t\n]|[ \t\n]IM[ \t]+IN[ \t]+YR[ \t\n]|[ \t\n]UPPIN[ \t\n]|[ \t\n]NERFIN[ \t\n]|[ \t\n]YR[ \t\n]|[ \t\n]TIL[ \t\n]|[ \t\n]WILE[ \t\n]|[ \t\n]IM[ \t]+OUTTA[ \t]+YR[ \t\n]|[ \t\n]GTFO[ \t\n]|[ \t\n]AN[ \t\n]|[ \t\n]HOW[ \t]+IZ[ \t]+I[ \t\n]|[ \t\n]IF[ \t]+U[ \t]+SAY[ \t]+SO[ \t\n]|[ \t\n]I[ \t]+IZ[ \t\n]|[ \t\n]MKAY[ \t\n])|([ \t\n]-?[0-9]+[ \t\n]|[ \t\n]-?[0-9]*\.[0-9]+[ \t\n]|\"[^\"\n]*\"|[ \t\n]WIN[ \t\n]|[ \t\n]FAIL[ \t\n])|([ \t\n][a-zA-Z]\w*[ \t\n])|([^ \t\n]+)"
+#(keywords)|(literals)|(identifiers)|(errors)
+
+#print(content)
+print()
+lexemes = []
+declaredIdentifiers = []
+declaredIdentifiersType = []
+results = re.findall(rx, content)
+error = "NONE"
+
+for i in results:
+    comment = False
+    # captured by first regex (keywords)
+    if (i[0]):
+        kw = i[0]
+        # removing whitespaces
+        while (kw[0] == " " or kw[0] == "\t" or kw[0] == "\n"):
+            kw = kw[1:]
+        while (kw[len(kw)-1] == " " or kw[len(kw)-1] == "\t" or kw[len(kw)-1] == "\n"):
+            kw = kw[:-1]
+
+        kw = ' '.join(kw.split())
+
+        # storing valid keyword lexemes and their classifications
+        if (kw == "HAI" or kw == "KTHXBYE"):    lexemes.append(["Code Delimeter",kw])
+        elif (kw[0:3] == "BTW"):
+            lexemes.append(["Single Comment Keyword",kw[0:3]])
+            lexemes.append(["Comment",kw[4:]])
+        elif (kw[0:4] == "OBTW" and kw[-4:] == "TLDR"):
+            lexemes.append(["Multiple Comment Delimiter", "OBTW"])
+            lexemes.append(["Multiple Comment", kw[5:-5]])
+            lexemes.append(["Multiple Comment Delimiter", "TLDR"])
+        elif (kw == "I HAS A"):                 lexemes.append(["Variable Declaration",kw])
+        elif (kw == "ITZ"):                     lexemes.append(["Variable Assignment",kw])
+        elif (kw == "R"):                       lexemes.append(["Assignment Keyword",kw])
+        elif (kw == "SUM OF"):                  lexemes.append(["Arithmetic Operation",kw])
+        elif (kw == "DIFF OF"):                 lexemes.append(["Arithmetic Operation",kw])
+        elif (kw == "PRODUKT OF"):              lexemes.append(["Arithmetic Operation",kw])
+        elif (kw == "QUOSHUNT OF"):             lexemes.append(["Arithmetic Operation",kw])
+        elif (kw == "MOD OF"):                  lexemes.append(["Arithmetic Operation",kw])
+        elif (kw == "BIGGR OF"):                lexemes.append(["Arithmetic Operation",kw])
+        elif (kw == "SMALLR OF"):               lexemes.append(["Arithmetic Operation",kw])
+        elif (kw == "BOTH OF"):                 lexemes.append(["Boolean Operation",kw])
+        elif (kw == "EITHER OF"):               lexemes.append(["Boolean Operation",kw])
+        elif (kw == "WON OF"):                  lexemes.append(["Boolean Operation",kw])
+        elif (kw == "NOT"):                     lexemes.append(["Boolean Operation",kw])
+        elif (kw == "ANY OF"):                  lexemes.append(["Boolean Operation",kw])
+        elif (kw == "ALL OF"):                  lexemes.append(["Boolean Operation",kw])
+        elif (kw == "BOTH SAEM"):               lexemes.append(["Comparison Operation",kw])
+        elif (kw == "DIFFRINT"):                lexemes.append(["Comparison Operation",kw])
+        elif (kw == "SMOOSH"):                  lexemes.append(["Concatenation Keyword",kw])
+        elif (kw == "MAEK"):                    lexemes.append(["Typecast Keyword",kw])
+        elif (kw == "A"):                       lexemes.append(["Typecast Noise Word",kw])
+        elif (kw == "IS NOW A"):                lexemes.append(["Typecast Keyword",kw])
+        elif (kw == "VISIBLE"):                 lexemes.append(["Output Keyword",kw])
+        elif (kw == "GIMMEH"):                  lexemes.append(["Input Keyword",kw])
+        elif (kw == "O RLY?"):                  lexemes.append(["If-Then Delimeter",kw])
+        elif (kw == "YA RLY"):                  lexemes.append(["If Keyword",kw])
+        elif (kw == "MEBBE"):                   lexemes.append(["Else If Keyword",kw])
+        elif (kw == "NO WAI"):                  lexemes.append(["Else Keyword",kw])
+        elif (kw == "OIC"):                     lexemes.append(["Conditional Delimeter",kw])
+        elif (kw == "WTF?"):                    lexemes.append(["Switch-Case Delimeter",kw])
+        elif (kw == "OMG"):                     lexemes.append(["Case Keyword",kw])
+        elif (kw == "OMGWTF"):                  lexemes.append(["Default Case Keyword",kw])
+        elif (kw == "IM IN YR"):                lexemes.append(["Loop Delimeter",kw])
+        elif (kw == "UPPIN"):                   lexemes.append(["Loop Operation",kw])
+        elif (kw == "NERFIN"):                  lexemes.append(["Loop Operation",kw])
+        elif (kw == "YR"):                      lexemes.append(["Loop Keyword",kw])
+        elif (kw == "TIL"):                     lexemes.append(["Loop Condition",kw])
+        elif (kw == "WILE"):                    lexemes.append(["Loop Condition",kw])
+        elif (kw == "IM OUTTA YR"):             lexemes.append(["Loop Delimeter",kw])
+        elif (kw == "GTFO"):                    lexemes.append(["Break Keyword",kw])
+        elif (kw == "AN"):                      lexemes.append(["Operand Separator",kw])
+        elif (kw == "HOW IZ I"):                lexemes.append(["Function Delimiter",kw])
+        elif (kw == "IF U SAY SO"):             lexemes.append(["Function Delimiter",kw])
+        elif (kw == "I IZ"):                    lexemes.append(["Function Call",kw])
+        elif (kw == "MKAY"):                    lexemes.append(["Parameter Delimiter",kw])
+        else:                                   lexemes.append(["KEYWORD",kw])
+    # captured by second regex (literals)
+    elif (i[1]):
+        lit = i[1]
+        # removing whitespaces
+        while (lit[0] == " " or lit[0] == "\t" or lit[0] == "\n"):
+            lit = lit[1:]
+        while (lit[len(lit)-1] == " " or lit[len(lit)-1] == "\t" or lit[len(lit)-1] == "\n"):
+            lit = lit[:-1]
+
+        # storing valid literals and their classifications
+        if (is_integer(lit)):
+            lexemes.append(["NUMBR Literal",lit])
+        elif (is_float(lit)):
+            lexemes.append(["NUMBAR Literal",lit])
+        elif (lit == "WIN" or lit == "FAIL"):
+            lexemes.append(["TROOF Literal",lit])
+        else:
+            lexemes.append(["String Delimiter", "\""])
+            lexemes.append(["YARN Literal", (lit)[1:-1].replace("   ", " ").replace("\t\t\t","\t") ]) # removing double quotes
+            lexemes.append(["String Delimiter", "\""])
+    # captured by third regex (identifiers)
+    elif (i[2]):
+        ident = i[2]
+        # removing whitespaces
+        while (ident[0] == " " or ident[0] == "\t" or ident[0] == "\n"):
+            ident = ident[1:]
+        while (ident[len(ident)-1] == " " or ident[len(ident)-1] == "\t" or ident[len(ident)-1] == "\n"):
+            ident = ident[:-1]
+
+        # if identifier is already declared, save the next occurence to lexeme table
+        if (ident in declaredIdentifiers):
+            index = declaredIdentifiers.index(ident)
+            lexemes.append([declaredIdentifiersType[index],ident])
+        else:
+            # classifying what kind of identifier is being declared
+            if (len(lexemes) != 0):
+                previousLexeme = lexemes[len(lexemes)-1][1]
+                declaredIdentifiers.append(ident)
+                if (previousLexeme == "I HAS A"):       
+                    lexemes.append(["Variable Identifier",ident])
+                    declaredIdentifiersType.append("Variable Identifier")
+                elif (previousLexeme == "IM IN YR"):
+                    lexemes.append(["Loop Identifier",ident])
+                    declaredIdentifiersType.append("Loop Identifier")
+                elif (previousLexeme == "HOW IZ I"):
+                    lexemes.append(["Function Identifier",ident])
+                    declaredIdentifiersType.append("Function Identifier")
+                else:
+                    lexemes.append(["IDENTIFIER",ident])
+                    declaredIdentifiersType.append("IDENTIFIER")
+            else:
+                lexemes.append(["IDENTIFIER",ident])
+                declaredIdentifiersType.append("IDENTIFIER")
+    # captured by fourth regex (not a LOL lexeme)
+    else:
+        error = i[3].replace(" ","").replace("\t","").replace("\n","")
+        break
+
+
+for i in lexemes:
+   print(i[0].ljust(27," ")+":\t"+i[1])
+if (error != "NONE"):
+    print("INTERRUPT!\nERROR: "+error)
+else:
+    print("\nANALYSIS COMPLETE!")
+
+print(lexemes)
+print()
+lexIndex = 0
+
+sample_lex = [["NUM","5"],["ADD","+"],["NUM","3"],["MUL","*"],["NUM","9"]]
+sample_lex_index = 0
+
+parser = Parser(sample_lex)
+ast = parser.parse()
+print(ast.node)
+
+# expr      ::= expr + term | expr - term
+# term      ::= term * factor | term / factor
+# factor    ::= NUM

@@ -1,44 +1,4 @@
-(\bHAI\b|\bKTHXBYE\b)   #Code Delimiter
-|(\bI HAS A\b)          #Variable Declaration
-|(\bITZ\b)              #Variable Assignment
-|(\b[a-zA-Z]\w*\b)
-
-HAI, KTHXBYE - Code Delimiter
-I HAS A - Variable Declaration
-ITZ - Variable Assignment
-
-
-print(re.findall(r"(\".*\")|([0-9]+)", '5 "not rot" 13'))
-
-rx = r"(\sHAI\s|\sKTHXBYE\s|\sBTW\s|\sOBTW\s|\sTLDR\s|\sI HAS A\s|\sITZ\s|\sR\s|\sSUM OF\s|\sDIFF OF\s|\sPRODUKT OF\s|\sQUOSHUNT OF\s|\sMOD OF\s|\sBIGGR OF\s|\sSMALLR OF\s|\sBOTH OF\s|\sEITHER OF\s|\sWON OF\s|\sNOT\s|\sANY OF\s|\sALL OF\s|\sBOTH SAEM\s|\sDIFFRINT\s|\sSMOOSH\s|\sMAEK\s|\sA\s|\sIS NOW A\s|\sVISIBLE\s|\sGIMMEH\s|\sO RLY\?\sMEBBE\s|\sNO WAI\s|\sOIC\s|\sWTF\?\s|\sOMG\s|\sOMGWTF\s|\sIM IN YR\s|\sUPPIN\s|\sNERFIN\s|\sYR\s|\sTIL\s|\sWILE\s|\sIM OUTTA YR\s)|(-?[0-9]+|-?[0-9]*.[0-9]+|\".*\")|(\s[a-zA-Z]\w*\s)"
-
-
-
-
-
-TASKS
-[]      if there is no valid match (error)
-[xxx]      literal handling
-            " - OPEN string delimeter
-            assfagg - string literal
-            " - CLOSE string delimeter
-[xxx]   keywords part
-[xxx]      comment handling
-[]      documentation -Nat
-
-
-
-Test String:
-02(tyrytfy hello hahahaha
-d redfs!ioo1313???a
-q? 9 1.2 1.2a 5a 5! w!4 4!er 9.@! 6a 89i 678! .87! a! a1 eyy123130
-eeee 1.2a .3 ."3
-hhhh yo#she213$$$ ey"
-bbh -1.5 "hello muthafa" "yo
--*@!##dd7 (9ui9. he"ewa ,
-VISIBLE "noot not" var <3"
-"??kk& ey3!e3e 3e!3ee " !
-!*&()_ ^$#$&&#
-00^sa!Eeew2332
-
-
+-support soft newlines (,)
+-support a single statement across multiple lines (...)
+-indicate whether delimeter is open or close
+-comment out comment-related keywords AKA do not add them as lexemes
