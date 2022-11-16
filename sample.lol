@@ -1,5 +1,4 @@
 HAI
-    I HAS A var ITZ 5 BTW sup
+    I HAS A var ITZ SUM OF BIGGR OF SUM OF 4 AN 2 AN 2 AN DIFF OF 10 AN 7
     VISIBLE "I " var
-    SMOOSH 
 KTHXBYE
