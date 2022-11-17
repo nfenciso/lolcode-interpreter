@@ -20,9 +20,9 @@ def is_float(num):
     except ValueError:
         return False
 
-rx = r"([ \t\n]HAI[ \t\n]|[ \t\n]KTHXBYE[ \t\n]|[ \t\n]BTW.*[ \t\n]|[ \t\n]OBTW[\n\r\w\W]*TLDR[ \t\n]|[ \t\n]I[ \t]+HAS[ \t]+A[ \t\n]|[ \t\n]ITZ[ \t\n]|[ \t\n]R[ \t\n]|[ \t\n]SUM[ \t]+OF[ \t\n]|[ \t\n]DIFF[ \t]+OF[ \t\n]|[ \t\n]PRODUKT[ \t]+OF[ \t\n]|[ \t\n]QUOSHUNT[ \t]+OF[ \t\n]|[ \t\n]MOD[ \t]+OF[ \t\n]|[ \t\n]BIGGR[ \t]+OF[ \t\n]|[ \t\n]SMALLR[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+OF[ \t\n]|[ \t\n]EITHER[ \t]+OF[ \t\n]|[ \t\n]WON[ \t]+OF[ \t\n]|[ \t\n]NOT[ \t\n]|[ \t\n]ANY[ \t]+OF[ \t\n]|[ \t\n]ALL[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+SAEM[ \t\n]|[ \t\n]DIFFRINT[ \t\n]|[ \t\n]SMOOSH[ \t\n]|[ \t\n]MAEK[ \t\n]|[ \t\n]A[ \t\n]|[ \t\n]IS[ \t]+NOW[ \t]+A[ \t\n]|[ \t\n]VISIBLE.*[ \t\n]|[ \t\n]GIMMEH[ \t\n]|[ \t\n]O[ \t]+RLY\?[ \t\n]|[ \t\n]YA[ \t]+RLY[ \t\n]|[ \t\n]MEBBE[ \t\n]|[ \t\n]NO[ \t]+WAI[ \t\n]|[ \t\n]OIC[ \t\n]|[ \t\n]WTF\?[ \t\n]|[ \t\n]OMG[ \t\n]|[ \t\n]OMGWTF[ \t\n]|[ \t\n]IM[ \t]+IN[ \t]+YR[ \t\n]|[ \t\n]UPPIN[ \t\n]|[ \t\n]NERFIN[ \t\n]|[ \t\n]YR[ \t\n]|[ \t\n]TIL[ \t\n]|[ \t\n]WILE[ \t\n]|[ \t\n]IM[ \t]+OUTTA[ \t]+YR[ \t\n]|[ \t\n]GTFO[ \t\n]|[ \t\n]AN[ \t\n]|[ \t\n]HOW[ \t]+IZ[ \t]+I[ \t\n]|[ \t\n]IF[ \t]+U[ \t]+SAY[ \t]+SO[ \t\n]|[ \t\n]I[ \t]+IZ[ \t\n]|[ \t\n]MKAY[ \t\n])|([ \t\n]-?[0-9]+[ \t\n]|[ \t\n]-?[0-9]*\.[0-9]+[ \t\n]|\"[^\"\n]*\"|[ \t\n]WIN[ \t\n]|[ \t\n]FAIL[ \t\n])|([ \t\n][a-zA-Z]\w*[ \t\n])|([^ \t\n]+)"
-rxVisible = r"([ \t\n]HAI[ \t\n]|[ \t\n]KTHXBYE[ \t\n]|[ \t\n]BTW.*[ \t\n]|[ \t\n]OBTW[\n\r\w\W]*TLDR[ \t\n]|[ \t\n]I[ \t]+HAS[ \t]+A[ \t\n]|[ \t\n]ITZ[ \t\n]|[ \t\n]R[ \t\n]|[ \t\n]SUM[ \t]+OF[ \t\n]|[ \t\n]DIFF[ \t]+OF[ \t\n]|[ \t\n]PRODUKT[ \t]+OF[ \t\n]|[ \t\n]QUOSHUNT[ \t]+OF[ \t\n]|[ \t\n]MOD[ \t]+OF[ \t\n]|[ \t\n]BIGGR[ \t]+OF[ \t\n]|[ \t\n]SMALLR[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+OF[ \t\n]|[ \t\n]EITHER[ \t]+OF[ \t\n]|[ \t\n]WON[ \t]+OF[ \t\n]|[ \t\n]NOT[ \t\n]|[ \t\n]ANY[ \t]+OF[ \t\n]|[ \t\n]ALL[ \t]+OF[ \t\n]|[ \t\n]BOTH[ \t]+SAEM[ \t\n]|[ \t\n]DIFFRINT[ \t\n]|[ \t\n]SMOOSH[ \t\n]|[ \t\n]MAEK[ \t\n]|[ \t\n]A[ \t\n]|[ \t\n]IS[ \t]+NOW[ \t]+A[ \t\n]|[ \t\n]VISIBLE[ \t\n]|[ \t\n]GIMMEH[ \t\n]|[ \t\n]O[ \t]+RLY\?[ \t\n]|[ \t\n]YA[ \t]+RLY[ \t\n]|[ \t\n]MEBBE[ \t\n]|[ \t\n]NO[ \t]+WAI[ \t\n]|[ \t\n]OIC[ \t\n]|[ \t\n]WTF\?[ \t\n]|[ \t\n]OMG[ \t\n]|[ \t\n]OMGWTF[ \t\n]|[ \t\n]IM[ \t]+IN[ \t]+YR[ \t\n]|[ \t\n]UPPIN[ \t\n]|[ \t\n]NERFIN[ \t\n]|[ \t\n]YR[ \t\n]|[ \t\n]TIL[ \t\n]|[ \t\n]WILE[ \t\n]|[ \t\n]IM[ \t]+OUTTA[ \t]+YR[ \t\n]|[ \t\n]GTFO[ \t\n]|[ \t\n]AN[ \t\n]|[ \t\n]HOW[ \t]+IZ[ \t]+I[ \t\n]|[ \t\n]IF[ \t]+U[ \t]+SAY[ \t]+SO[ \t\n]|[ \t\n]I[ \t]+IZ[ \t\n]|[ \t\n]MKAY[ \t\n])|([ \t\n]-?[0-9]+[ \t\n]|[ \t\n]-?[0-9]*\.[0-9]+[ \t\n]|\"[^\"\n]*\"|[ \t\n]WIN[ \t\n]|[ \t\n]FAIL[ \t\n])|([ \t\n][a-zA-Z]\w*[ \t\n])|([^ \t\n]+)"
-#(keywords)|(literals)|(identifiers)|(errors)
+rx = r"([ \t]HAI[ \t]|[ \t]KTHXBYE[ \t]|[ \t]BTW.*[ \t]|[ \t]OBTW[\r\w\W]*TLDR[ \t]|[ \t]I[ \t]+HAS[ \t]+A[ \t]|[ \t]ITZ[ \t]|[ \t]R[ \t]|[ \t]SUM[ \t]+OF[ \t]|[ \t]DIFF[ \t]+OF[ \t]|[ \t]PRODUKT[ \t]+OF[ \t]|[ \t]QUOSHUNT[ \t]+OF[ \t]|[ \t]MOD[ \t]+OF[ \t]|[ \t]BIGGR[ \t]+OF[ \t]|[ \t]SMALLR[ \t]+OF[ \t]|[ \t]BOTH[ \t]+OF[ \t]|[ \t]EITHER[ \t]+OF[ \t]|[ \t]WON[ \t]+OF[ \t]|[ \t]NOT[ \t]|[ \t]ANY[ \t]+OF[ \t]|[ \t]ALL[ \t]+OF[ \t]|[ \t]BOTH[ \t]+SAEM[ \t]|[ \t]DIFFRINT[ \t]|[ \t]SMOOSH[ \t]|[ \t]MAEK[ \t]|[ \t]A[ \t]|[ \t]IS[ \t]+NOW[ \t]+A[ \t]|[ \t]VISIBLE.*[ \t]|[ \t]GIMMEH[ \t]|[ \t]O[ \t]+RLY\?[ \t]|[ \t]YA[ \t]+RLY[ \t]|[ \t]MEBBE[ \t]|[ \t]NO[ \t]+WAI[ \t]|[ \t]OIC[ \t]|[ \t]WTF\?[ \t]|[ \t]OMG[ \t]|[ \t]OMGWTF[ \t]|[ \t]IM[ \t]+IN[ \t]+YR[ \t]|[ \t]UPPIN[ \t]|[ \t]NERFIN[ \t]|[ \t]YR[ \t]|[ \t]TIL[ \t]|[ \t]WILE[ \t]|[ \t]IM[ \t]+OUTTA[ \t]+YR[ \t]|[ \t]GTFO[ \t]|[ \t]AN[ \t]|[ \t]HOW[ \t]+IZ[ \t]+I[ \t]|[ \t]IF[ \t]+U[ \t]+SAY[ \t]+SO[ \t]|[ \t]I[ \t]+IZ[ \t]|[ \t]MKAY[ \t])|([ \t]-?[0-9]+[ \t]|[ \t]-?[0-9]*\.[0-9]+[ \t]|\"[^\"]*\"|[ \t]WIN[ \t]|[ \t]FAIL[ \t])|([ \t][a-zA-Z]\w*[ \t])|([\n]+)|([^ \t]+)"
+rxVisible = r"([ \t]HAI[ \t]|[ \t]KTHXBYE[ \t]|[ \t]BTW.*[ \t]|[ \t]OBTW[\r\w\W]*TLDR[ \t]|[ \t]I[ \t]+HAS[ \t]+A[ \t]|[ \t]ITZ[ \t]|[ \t]R[ \t]|[ \t]SUM[ \t]+OF[ \t]|[ \t]DIFF[ \t]+OF[ \t]|[ \t]PRODUKT[ \t]+OF[ \t]|[ \t]QUOSHUNT[ \t]+OF[ \t]|[ \t]MOD[ \t]+OF[ \t]|[ \t]BIGGR[ \t]+OF[ \t]|[ \t]SMALLR[ \t]+OF[ \t]|[ \t]BOTH[ \t]+OF[ \t]|[ \t]EITHER[ \t]+OF[ \t]|[ \t]WON[ \t]+OF[ \t]|[ \t]NOT[ \t]|[ \t]ANY[ \t]+OF[ \t]|[ \t]ALL[ \t]+OF[ \t]|[ \t]BOTH[ \t]+SAEM[ \t]|[ \t]DIFFRINT[ \t]|[ \t]SMOOSH[ \t]|[ \t]MAEK[ \t]|[ \t]A[ \t]|[ \t]IS[ \t]+NOW[ \t]+A[ \t]|[ \t]VISIBLE[ \t]|[ \t]GIMMEH[ \t]|[ \t]O[ \t]+RLY\?[ \t]|[ \t]YA[ \t]+RLY[ \t]|[ \t]MEBBE[ \t]|[ \t]NO[ \t]+WAI[ \t]|[ \t]OIC[ \t]|[ \t]WTF\?[ \t]|[ \t]OMG[ \t]|[ \t]OMGWTF[ \t]|[ \t]IM[ \t]+IN[ \t]+YR[ \t]|[ \t]UPPIN[ \t]|[ \t]NERFIN[ \t]|[ \t]YR[ \t]|[ \t]TIL[ \t]|[ \t]WILE[ \t]|[ \t]IM[ \t]+OUTTA[ \t]+YR[ \t]|[ \t]GTFO[ \t]|[ \t]AN[ \t]|[ \t]HOW[ \t]+IZ[ \t]+I[ \t]|[ \t]IF[ \t]+U[ \t]+SAY[ \t]+SO[ \t]|[ \t]I[ \t]+IZ[ \t]|[ \t]MKAY[ \t])|([ \t]-?[0-9]+[ \t]|[ \t]-?[0-9]*\.[0-9]+[ \t]|\"[^\"]*\"|[ \t]WIN[ \t]|[ \t]FAIL[ \t])|([ \t][a-zA-Z]\w*[ \t])|([\n]+)|([^ \t\n]+)"
+#(keywords)|(literals)|(identifiers)|(newlines)|(errors)
 
 declaredIdentifiers = []
 declaredIdentifiersType = []
@@ -32,6 +32,7 @@ def LexAnalyze(results, main):
     if (not main):
         results = re.findall(rxVisible, results)
         numVisibleLex = 0
+    
     for i in results:
         comment = False
         if (not main):
@@ -180,6 +181,10 @@ def LexAnalyze(results, main):
                 else:
                     lexemes.append(["IDENTIFIER",ident])
                     declaredIdentifiersType.append("IDENTIFIER")
+        
+        elif (i[3]):
+        
+            lexemes.append(["NEWLINE", "\\n"])
         # captured by fourth capture group (not a LOL lexeme)
         else:
             error = i[3].replace(" ","").replace("\t","").replace("\n","")
@@ -201,7 +206,7 @@ def lex_main():
     content = " "+content+" "
     content = content.replace(" ", "   ")
     content = content.replace("\t", "\t\t\t")
-    content = content.replace("\n","\n\n\n")
+    content = content.replace("\n"," \n\n ")
     categoriesAndLexemes = []
     error = "NONE"
     results = re.findall(rx, content)
@@ -215,9 +220,10 @@ def lex_main():
         print("INTERRUPT!\n"+error)
     else:
         for i in categoriesAndLexemes:
-           print("\n",i[0].ljust(27," ")+":\t"+i[1], end="")
-           if (i[0] == "Output Keyword"):
-               print(" ("+str(i[2])+" next lexemes)",end="")
+            if (i[0] != "NEWLINE"):
+                print("\n",i[0].ljust(27," ")+":\t"+i[1], end="")
+                if (i[0] == "Output Keyword"):
+                    print(" ("+str(i[2])+" next lexemes)",end="")
 
         if (error != "NONE"):
             print("INTERRUPT!\nERROR: "+error)
@@ -228,3 +234,4 @@ def lex_main():
         #for i in categoriesAndLexemes:
         #    print(i)
         #print()
+lex_main()

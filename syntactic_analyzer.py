@@ -57,9 +57,9 @@ class Parser:
         if (self.curr_tok[0] == "Code Delimeter OPEN"):
             self.tree = TreeNode("<program>")
             self.tree.add_child(TreeNode("Code Delimeter OPEN"))
-            levelTwoIdx = self.lookAhead()
-            self.goBackToSpecificIdx(1)
-            self.parse(levelTwoIdx)
+            numOfLvlTwoNodes = self.lookAhead()
+            print(numOfLvlTwoNodes)
+            # self.parse(levelTwoIdx)
             if (self.error != "NONE"):
                 return self.error
 
@@ -68,101 +68,15 @@ class Parser:
             return self.error
 
     def lookAhead(self):
-        levelTwoIdx = []
-        while (1):
-            self.advance()
-            if (self.tok_idx == len(self.tokens)): 
-                break
-            
-            #print(self.tok_idx,self.curr_tok)
-            if (self.curr_tok[0] in canBeLevelTwo):
-                levelTwoIdx.append(self.tok_idx)
+        
+        return self.tokens.count(["NEWLINE", "\\n"])
 
-                if (self.curr_tok[0] == "Arithmetic Operation"):
-                    while (self.curr_tok[0] in mathRelatedLex):
-                        #print("x",self.tok_idx,self.curr_tok)
-                        self.advance()
-                    levelTwoIdx.append(self.tok_idx)
-                    #print("xx",self.tok_idx,self.curr_tok)
-                if (self.curr_tok[0] == "Output Keyword"):
-                    for j in range(0,self.curr_tok[2]):
-                        self.advance()     
-        return levelTwoIdx
-
-    def parse(self, levelTwoIdx):
+    def parse(self, numOfLvlTwoNodes):
         nodeContent = []
         finishedNode = True
-        #print(levelTwoIdx)
+        print(numOfLvlTwoNodes)
         while (1):
-            
-            if (self.tok_idx in levelTwoIdx):
-                #print(self.tok_idx)
-                #print(levelTwoIdx)
-                if (self.curr_tok[0] == "Variable Declaration"):
-                    nodeContent.append(self.curr_tok)
-                    self.advance()
-                    if (self.curr_tok[0] == "Variable Identifier"):
-                        nodeContent.append(self.curr_tok)
-                        self.advance()
-                    else:
-                        self.error = "ERROR: There must be a Variable Identifier after I HAS A"
-                        return self.error
-                    
-                    #print("x",self.tok_idx)
-                    #print(levelTwoIdx)
-                    if (self.tok_idx in levelTwoIdx):
-                        self.tree.add_child(TreeNode(nodeContent))
-                        nodeContent = []
-                        continue
-                    if (self.curr_tok[0] == "Variable Assignment"):
-                        nodeContent.append(self.curr_tok)
-                        self.advance()
-                        if (self.tok_idx in levelTwoIdx):
-                            finishedNode = False
-                            continue
-                    elif (self.tok_idx not in levelTwoIdx):
-                        self.error = "ERROR: Wrong syntax in I HAS A line"
-                        return self.error
-                elif (self.curr_tok[0] == "Code Delimeter CLOSE"):
-                    self.tree.add_child(TreeNode("Code Delimeter CLOSE"))
-                    self.advance()
-                elif (self.curr_tok[0] == "Arithmetic Operation"):
-                    mathList = []
-                    while (self.curr_tok[0] in mathRelatedLex):
-                        mathList.append(self.curr_tok)
-                        self.advance()
-                    evalMathList = checkIfValidMathSyntax(mathList)
-                    if (isinstance(evalMathList, int)):
-                        if (not finishedNode):
-                            nodeContent.append("<arithmeticExpression>")
-                            self.tree.add_child(TreeNode(nodeContent))
-                            self.tree.children[len(self.tree.children)-1].add_child(TreeNode(mathList))
-                            nodeContent = []
-                        else:
-                            nodeContent = evalMathList
-                            self.tree.add_child(TreeNode(nodeContent))
-                            nodeContent = []
-                        continue
-                    else:
-                        self.error = evalMathList
-                        return self.error
-                elif (self.curr_tok[0] == "Output Keyword"):
-                    visibleNumLex = self.curr_tok[2]
-                    nodeContent = []
-                    nodeContent.append(self.curr_tok)
-                    nodeContent.append("<arguments>")
-                    self.tree.add_child(TreeNode(nodeContent))
-                    nodeContent = []
-                    self.advance()
-                    for j in range(0, visibleNumLex):
-                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
-                        self.advance()
-                    continue
-            
-            if (self.curr_tok == "END OF TOKENS"):
-                break
-   
-            self.advance()
+            break
         self.tree.print_tree()
 
 
