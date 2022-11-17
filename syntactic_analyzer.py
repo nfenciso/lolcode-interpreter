@@ -221,69 +221,72 @@ def checkIfValidMathSyntax(tokens):
         else:
             sublistTokens.append(random.randint(1,999))
 
-    while (1):
-        print(acc, "curr:", curr)
-        if (len(acc) >= 3):
-            lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
-            secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
-            if (lastElemIsNum and secondLastElemIsNum):
-                firstOperand = acc[len(acc)-2]
-                secondOperand = acc[len(acc)-1]
-                operation = acc[len(acc)-3]
-                if (operation not in math_operations): break
-                if (operation == "SUM OF"):         acc[len(acc)-3] = firstOperand + secondOperand
-                elif (operation == "DIFF OF"):      acc[len(acc)-3] = firstOperand - secondOperand
-                elif (operation == "PRODUKT OF"):   acc[len(acc)-3] = firstOperand * secondOperand
-                elif (operation == "QUOSHUNT OF"):  
-                    if (secondOperand == 0): secondOperand = 1
-                    acc[len(acc)-3] = firstOperand / secondOperand
-                elif (operation == "MOD OF"):       acc[len(acc)-3] = firstOperand % secondOperand
-                elif (operation == "BIGGR OF"):     acc[len(acc)-3] = max(firstOperand, secondOperand)
-                elif (operation == "SMALLR OF"):    acc[len(acc)-3] = min(firstOperand, secondOperand)
-                acc.pop()
-                acc.pop()
+    if (len(tokens) < 4):
+        eval = "ERROR: Not enough lexemes for an arithmetic expression"
+    else:
+        while (1):
+            print(acc, "curr:", curr)
+            if (len(acc) >= 3):
+                lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
+                secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
+                if (lastElemIsNum and secondLastElemIsNum):
+                    firstOperand = acc[len(acc)-2]
+                    secondOperand = acc[len(acc)-1]
+                    operation = acc[len(acc)-3]
+                    if (operation not in math_operations): break
+                    if (operation == "SUM OF"):         acc[len(acc)-3] = firstOperand + secondOperand
+                    elif (operation == "DIFF OF"):      acc[len(acc)-3] = firstOperand - secondOperand
+                    elif (operation == "PRODUKT OF"):   acc[len(acc)-3] = firstOperand * secondOperand
+                    elif (operation == "QUOSHUNT OF"):  
+                        if (secondOperand == 0): secondOperand = 1
+                        acc[len(acc)-3] = firstOperand / secondOperand
+                    elif (operation == "MOD OF"):       acc[len(acc)-3] = firstOperand % secondOperand
+                    elif (operation == "BIGGR OF"):     acc[len(acc)-3] = max(firstOperand, secondOperand)
+                    elif (operation == "SMALLR OF"):    acc[len(acc)-3] = min(firstOperand, secondOperand)
+                    acc.pop()
+                    acc.pop()
 
-                if (len(acc) == 1 and curr > len(tokens)-1):
-                    eval = acc[0]
-                    break
-                continue
+                    if (len(acc) == 1 and curr > len(tokens)-1):
+                        eval = acc[0]
+                        break
+                    continue
 
-        if (curr == 0):
-            if (sublistTokens[curr] not in math_operations): break
+            if (curr == 0):
+                if (sublistTokens[curr] not in math_operations): break
+                else:
+                    acc.append(sublistTokens[curr])
+                    curr += 1
             else:
-                acc.append(sublistTokens[curr])
-                curr += 1
-        else:
-            lastElem = acc[len(acc)-1]
-            if ((isinstance(acc[0],int) or isinstance(acc[0],float)) and curr < len(sublistTokens)):
-                eval = "ERROR: Lacking arithmetic operation"
-                break
-            if (curr == len(sublistTokens)):
-                eval = "ERROR: Lacking AN and an operand"
-                break
-            toBeInserted = sublistTokens[curr]
-            
-            if (lastElem in math_operations and toBeInserted == "AN"):  
-                eval = "ERROR: Lacking operand after arithmetic operation"
-                break
-            if (lastElem == "AN" and toBeInserted == "AN"):      
-                eval = "ERROR: Lacking operand between AN"       
-                break
-            lastElemIsNum = isinstance(lastElem, int) or isinstance(lastElem, float)
-            toBeInsertedIsNum = isinstance(toBeInserted, int) or isinstance(toBeInserted, float)
-            if (lastElemIsNum and toBeInsertedIsNum):     
-                eval = "ERROR: Lacking AN"              
-                break
-            if (toBeInserted == "AN"):
-                curr += 1
+                lastElem = acc[len(acc)-1]
+                if ((isinstance(acc[0],int) or isinstance(acc[0],float)) and curr < len(sublistTokens)):
+                    eval = "ERROR: Lacking arithmetic operation"
+                    break
                 if (curr == len(sublistTokens)):
-                    eval = "ERROR: Lacking operand after AN" 
+                    eval = "ERROR: Lacking AN and an operand in the arithmetic expression"
                     break
                 toBeInserted = sublistTokens[curr]
-            
-            #print("TO BE INSERTED: "+str(toBeInserted))
-            acc.append(toBeInserted)
-            curr += 1
+                
+                if (lastElem in math_operations and toBeInserted == "AN"):  
+                    eval = "ERROR: Lacking operand after arithmetic operation"
+                    break
+                if (lastElem == "AN" and toBeInserted == "AN"):      
+                    eval = "ERROR: Lacking operand between AN"       
+                    break
+                lastElemIsNum = isinstance(lastElem, int) or isinstance(lastElem, float)
+                toBeInsertedIsNum = isinstance(toBeInserted, int) or isinstance(toBeInserted, float)
+                if (lastElemIsNum and toBeInsertedIsNum):     
+                    eval = "ERROR: Lacking AN"              
+                    break
+                if (toBeInserted == "AN"):
+                    curr += 1
+                    if (curr == len(sublistTokens)):
+                        eval = "ERROR: Lacking operand after AN in the arithmetic expression" 
+                        break
+                    toBeInserted = sublistTokens[curr]
+                
+                #print("TO BE INSERTED: "+str(toBeInserted))
+                acc.append(toBeInserted)
+                curr += 1
 
     if (eval == "NO ERRORS"):
         return tokens
