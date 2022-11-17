@@ -215,17 +215,16 @@ def lex_main():
         print("INTERRUPT!\n"+error)
     else:
         for i in categoriesAndLexemes:
-            print("\n",i[0].ljust(27," ")+":\t"+i[1], end="")
-            if (i[0] == "Output Keyword"):
-                print(" ("+str(i[2])+" next lexemes)",end="")
+           print("\n",i[0].ljust(27," ")+":\t"+i[1], end="")
+           if (i[0] == "Output Keyword"):
+               print(" ("+str(i[2])+" next lexemes)",end="")
 
         if (error != "NONE"):
             print("INTERRUPT!\nERROR: "+error)
         else:
-            print("\nANALYSIS COMPLETE!")
+            print("\nLEXICAL ANALYSIS COMPLETE!")
+            return categoriesAndLexemes
 
         #for i in categoriesAndLexemes:
         #    print(i)
         #print()
-
-lex_main()
