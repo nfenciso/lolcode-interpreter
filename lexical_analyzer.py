@@ -49,8 +49,8 @@ def LexAnalyze(results, main):
             kw = ' '.join(kw.split())
 
             # storing valid keyword lexemes and their classifications
-            if (kw == "HAI"):                       lexemes.append(["Code Delimeter OPEN",kw])
-            elif (kw == "KTHXBYE"):                 lexemes.append(["Code Delimeter CLOSE",kw])
+            if (kw == "HAI"):                       lexemes.append(["Code Delimiter OPEN",kw])
+            elif (kw == "KTHXBYE"):                 lexemes.append(["Code Delimiter CLOSE",kw])
             elif (kw[0:3] == "BTW"):
                 pass
                 #lexemes.append(["Single Comment Keyword",kw[0:3]])
@@ -104,21 +104,21 @@ def LexAnalyze(results, main):
                     error = "ERROR"
                     return error
             elif (kw == "GIMMEH"):                  lexemes.append(["Input Keyword",kw])
-            elif (kw == "O RLY?"):                  lexemes.append(["If-Then Delimeter",kw])
+            elif (kw == "O RLY?"):                  lexemes.append(["If-Then Delimiter",kw])
             elif (kw == "YA RLY"):                  lexemes.append(["If Keyword",kw])
             elif (kw == "MEBBE"):                   lexemes.append(["Else If Keyword",kw])
             elif (kw == "NO WAI"):                  lexemes.append(["Else Keyword",kw])
-            elif (kw == "OIC"):                     lexemes.append(["Conditional Delimeter",kw])
-            elif (kw == "WTF?"):                    lexemes.append(["Switch-Case Delimeter",kw])
+            elif (kw == "OIC"):                     lexemes.append(["Conditional Delimiter",kw])
+            elif (kw == "WTF?"):                    lexemes.append(["Switch-Case Delimiter",kw])
             elif (kw == "OMG"):                     lexemes.append(["Case Keyword",kw])
             elif (kw == "OMGWTF"):                  lexemes.append(["Default Case Keyword",kw])
-            elif (kw == "IM IN YR"):                lexemes.append(["Loop Delimeter",kw])
+            elif (kw == "IM IN YR"):                lexemes.append(["Loop Delimiter",kw])
             elif (kw == "UPPIN"):                   lexemes.append(["Loop Operation",kw])
             elif (kw == "NERFIN"):                  lexemes.append(["Loop Operation",kw])
             elif (kw == "YR"):                      lexemes.append(["Loop Keyword",kw])
             elif (kw == "TIL"):                     lexemes.append(["Loop Condition",kw])
             elif (kw == "WILE"):                    lexemes.append(["Loop Condition",kw])
-            elif (kw == "IM OUTTA YR"):             lexemes.append(["Loop Delimeter",kw])
+            elif (kw == "IM OUTTA YR"):             lexemes.append(["Loop Delimiter",kw])
             elif (kw == "GTFO"):                    lexemes.append(["Break Keyword",kw])
             elif (kw == "AN"):                      lexemes.append(["Operand Separator",kw])
             elif (kw == "HOW IZ I"):                lexemes.append(["Function Delimiter",kw])
@@ -176,11 +176,13 @@ def LexAnalyze(results, main):
                         lexemes.append(["Function Identifier",ident])
                         declaredIdentifiersType.append("Function Identifier")
                     else:
-                        lexemes.append(["IDENTIFIER",ident])
-                        declaredIdentifiersType.append("IDENTIFIER")
+                        error = "ERROR: Undeclared identifier"
+                        lexemes.insert(0, error)
+                        return lexemes
                 else:
-                    lexemes.append(["IDENTIFIER",ident])
-                    declaredIdentifiersType.append("IDENTIFIER")
+                    error = "ERROR: Undeclared identifier"
+                    lexemes.insert(0, error)
+                    return lexemes
         
         elif (i[3]):
         
@@ -212,6 +214,7 @@ def lex_main():
     results = re.findall(rx, content)
     categoriesAndLexemes = LexAnalyze(results, True)
     #print(categoriesAndLexemes)
+    print("===================================================================")
     if (isinstance(categoriesAndLexemes[0], str)):
         error = categoriesAndLexemes.pop(0)
         for i in categoriesAndLexemes:
@@ -221,17 +224,19 @@ def lex_main():
     else:
         for i in categoriesAndLexemes:
             if (i[0] != "NEWLINE"):
-                print("\n",i[0].ljust(27," ")+":\t"+i[1], end="")
+                print("\n\t",i[0].ljust(27," ")+":\t"+i[1], end="")
                 if (i[0] == "Output Keyword"):
                     print(" ("+str(i[2])+" next lexemes)",end="")
+                
 
         if (error != "NONE"):
             print("INTERRUPT!\nERROR: "+error)
         else:
-            print("\nLEXICAL ANALYSIS COMPLETE!")
+            print("\n\nLEXICAL ANALYSIS COMPLETE!")
+            print("===================================================================")
             return categoriesAndLexemes
 
         #for i in categoriesAndLexemes:
         #    print(i)
         #print()
-lex_main()
+#lex_main()

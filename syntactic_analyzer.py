@@ -1,7 +1,7 @@
 import random
 import lexical_analyzer
 
-canBeLevelTwo = ["Arithmetic Operation","Output Keyword","Variable Declaration","Code Delimeter CLOSE"]
+canBeLevelTwo = ["Arithmetic Operation","Output Keyword","Variable Declaration","Code Delimiter CLOSE"]
 mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier"]
 
 class TreeNode:
@@ -54,15 +54,14 @@ class Parser:
         return self.advance()
     
     def startParse(self):
-        if (self.curr_tok[0] == "Code Delimeter OPEN"):
+        
+        if (self.curr_tok[0] == "Code Delimiter OPEN"):
             self.tree = TreeNode("<program>")
-            self.tree.add_child(TreeNode("Code Delimeter OPEN"))
             numOfLvlTwoNodes = self.lookAhead()
-            print(numOfLvlTwoNodes)
-            # self.parse(levelTwoIdx)
+            #print(numOfLvlTwoNodes)
+            self.parse(numOfLvlTwoNodes)
             if (self.error != "NONE"):
                 return self.error
-
         else:
             self.error = "ERROR: Must begin the program with HAI"
             return self.error
@@ -74,9 +73,138 @@ class Parser:
     def parse(self, numOfLvlTwoNodes):
         nodeContent = []
         finishedNode = True
-        print(numOfLvlTwoNodes)
-        while (1):
-            break
+        cnt = numOfLvlTwoNodes
+        while (cnt > 0):
+            #print(self.curr_tok)
+            if (self.curr_tok[0] == "Code Delimiter OPEN"):
+                self.tree.add_child(TreeNode(self.curr_tok))
+                self.advance()
+                if (self.curr_tok[0] == "NEWLINE"):
+                    self.advance()
+                else:
+                    self.error = "ERROR: There must not be anything after HAI"
+                    return self.error
+            elif (self.curr_tok[0] == "Variable Declaration"):
+                nodeContent = []
+                nodeContent.append(self.curr_tok)
+                self.advance()
+                if (self.curr_tok[0] == "Variable Identifier"):
+                    nodeContent.append(self.curr_tok)
+                    self.advance()
+                    if (self.curr_tok[0] == "NEWLINE"):
+                        self.tree.add_child(TreeNode(nodeContent))
+                        self.advance()
+                        nodeContent = []
+                    else:
+                        if (self.curr_tok[0] == "Variable Assignment"):
+                            nodeContent.append(self.curr_tok)
+                            self.advance()
+                            if (self.curr_tok[0] == "String Delimiter"):
+                                nodeContent.append(self.curr_tok)
+                                self.advance()
+                                nodeContent.append(self.curr_tok)
+                                self.advance()
+                                nodeContent.append(self.curr_tok)
+                                self.advance()
+                            elif (self.curr_tok[0] == "NUMBR Literal" or self.curr_tok[0] == "NUMBAR Literal" or self.curr_tok[0] == "TROOF Literal"):
+                                nodeContent.append(self.curr_tok)
+                                self.advance()
+                                if (self.curr_tok[0] == "NEWLINE"):
+                                    self.tree.add_child(TreeNode(nodeContent))
+                                    self.advance()
+                                    nodeContent = []
+                                else:
+                                    self.error = "ERROR: ITZ expression must only have one argument"
+                                    return self.error
+                            elif (self.curr_tok[0] == "Arithmetic Operation"):
+                                finishedNode = False
+                                continue
+                            #boolean
+                            #comparison
+                            else:
+                                self.error = "ERROR: ITZ expression must have a value, variable, or expression as argument"
+                                return self.error
+                        else:
+                            self.error = "ERROR: There must be an ITZ after the variable"
+                            return self.error
+                else:
+                    self.error = "ERROR: There must be a Variable Identifier after I HAS A"
+                    return self.error
+            elif (self.curr_tok[0] == "Arithmetic Operation"):
+                mathList = []
+                mathList.append(self.curr_tok)
+                self.advance()
+                while (True):
+                    if (self.curr_tok[0] in mathRelatedLex):
+                        mathList.append(self.curr_tok)
+                        self.advance()
+                    else:
+                        break
+                evalMathList = checkIfValidMathSyntax(mathList)
+                if (isinstance(evalMathList, str)):
+                    self.error = evalMathList
+                    return self.error
+                else:
+                    if (not finishedNode):
+                        nodeContent.append("<math_arguments>")
+                        self.tree.add_child(TreeNode(nodeContent))
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(mathList))
+                    else:
+                        self.tree.add_child(TreeNode(mathList))
+                    nodeContent = []
+                    if (self.curr_tok[0] == "NEWLINE"):
+                        self.advance()
+                        continue
+                    else:
+                        self.error = "ERROR: Unexpected end of arithmetic expression"
+                        return self.error
+            elif (self.curr_tok[0] == "Output Keyword"):
+                outputList = []
+                outputList.append(self.curr_tok)
+                outputList.append("<output_arguments>")
+                self.tree.add_child(TreeNode(outputList))
+                outputList = []
+                self.advance()
+                while (1):
+                    #print("XX", self.curr_tok)
+                    if (self.curr_tok[0] == "NEWLINE"):
+                        break
+                    if (self.curr_tok[0] in ["Variable Identifier","NUMBAR Literal","NUMBR Literal","TROOF Literal"]):
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
+                        self.advance()
+                    elif (self.curr_tok[0] == "String Delimiter"):
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
+                        self.advance()
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
+                        self.advance()
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
+                        self.advance()
+                        #print(self.curr_tok)
+                    elif (self.curr_tok[0] == "Arithmetic Operation"):
+                        mathList = []
+                        mathList.append(self.curr_tok)
+                        self.advance()
+                        while (True):
+                            if (self.curr_tok[0] in mathRelatedLex):
+                                mathList.append(self.curr_tok)
+                                self.advance()
+                            else:
+                                break
+                        evalMathList = checkIfValidMathSyntax(mathList)
+                        if (isinstance(evalMathList, str)):
+                            self.error = evalMathList
+                            return self.error
+                        else:
+                            self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<math_arguments>"))
+                            child = self.tree.children[len(self.tree.children)-1]
+                            child.children[len(child.children)-1].add_child(TreeNode(mathList))
+                    #boolean
+                    #comparison
+                    
+                    
+                
+            cnt -= 1
+                    
         self.tree.print_tree()
 
 
@@ -85,7 +213,7 @@ def checkIfValidMathSyntax(tokens):
     acc = []
     eval = "NO ERRORS"
     curr = 0
-    math_operations = ["SUM OF", "DIFF OF", "PRODUKT OF", "QUOSHUNT", "MOD OF", "BIGGR OF", "SMALLR OF"]
+    math_operations = ["SUM OF", "DIFF OF", "PRODUKT OF", "QUOSHUNT OF", "MOD OF", "BIGGR OF", "SMALLR OF"]
     sublistTokens = []
     for i in tokens:
         if (i[0] == 'Arithmetic Operation' or i[0] == 'Operand Separator'):
@@ -94,7 +222,7 @@ def checkIfValidMathSyntax(tokens):
             sublistTokens.append(random.randint(1,999))
 
     while (1):
-        #print(acc, "curr:", curr)
+        print(acc, "curr:", curr)
         if (len(acc) >= 3):
             lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
             secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
@@ -166,7 +294,8 @@ def checkIfValidMathSyntax(tokens):
 #print(checkIfValidMathSyntax(accumulatedMathTokens))
 tokens = lexical_analyzer.lex_main()
 i = 0
-while (i < len(tokens)):
-    print(i,tokens[i])
-    i +=1
-syntax = Parser(tokens)
+if (isinstance(tokens, list)):
+    while (i < len(tokens)):
+        #print(i,tokens[i])
+        i +=1
+    syntax = Parser(tokens)

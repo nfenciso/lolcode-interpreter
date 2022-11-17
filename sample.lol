@@ -1,6 +1,7 @@
 HAI
-    I HAS A var ITZ SUM OF BIGGR OF SUM OF 4 AN 2 AN 2 AN DIFF OF 10 AN 7 I HAS A var4
+    DIFF OF 9 AN 0
+    I HAS A var0
+    I HAS A var1 ITZ BIGGR OF SUM OF 4 AN 2 AN var0
     I HAS A var2
-    VISIBLE "NUMS: " var DIFF OF var AN 6
-    I HAS A var3
+    VISIBLE 2 SUM OF 4 AN 3 "wassup " var1
 KTHXBYE
