@@ -34,11 +34,11 @@ class TreeNode:
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
-        self.tok_idx = -1 # para san ito
+        self.tok_idx = -1
         self.error = "NONE"
         self.advance()
         x = self.startParse()
-        if (isinstance(x, str)): # why check to be string? ahhh kasi papalitan mo ng prompt kapag may error?
+        if (isinstance(x, str)): 
             print(self.error)
     
     def advance(self):
@@ -74,7 +74,7 @@ class Parser:
         nodeContent = []
         finishedNode = True
         cnt = numOfLvlTwoNodes
-        while (cnt > 0): # saan nacacatch yung self.curr_tok = newline
+        while (cnt > 0): 
             #print(self.curr_tok)
             if (self.curr_tok[0] == "Code Delimiter OPEN"):
                 self.tree.add_child(TreeNode(self.curr_tok))
