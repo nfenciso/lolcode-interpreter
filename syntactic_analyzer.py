@@ -34,11 +34,11 @@ class TreeNode:
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
-        self.tok_idx = -1
+        self.tok_idx = -1 # para san ito
         self.error = "NONE"
         self.advance()
         x = self.startParse()
-        if (isinstance(x, str)):
+        if (isinstance(x, str)): # why check to be string? ahhh kasi papalitan mo ng prompt kapag may error?
             print(self.error)
     
     def advance(self):
@@ -74,7 +74,7 @@ class Parser:
         nodeContent = []
         finishedNode = True
         cnt = numOfLvlTwoNodes
-        while (cnt > 0):
+        while (cnt > 0): # saan nacacatch yung self.curr_tok = newline
             #print(self.curr_tok)
             if (self.curr_tok[0] == "Code Delimiter OPEN"):
                 self.tree.add_child(TreeNode(self.curr_tok))
@@ -106,6 +106,12 @@ class Parser:
                                 self.advance()
                                 nodeContent.append(self.curr_tok)
                                 self.advance()
+                                if (self.curr_tok[0] == "NEWLINE"):
+                                    self.tree.add_child(TreeNode(nodeContent))
+                                    self.advance()
+                                    nodeContent = []
+                                else:
+                                    self.error = "ERROR: ITZ expression must only have one argument"
                             elif (self.curr_tok[0] == "NUMBR Literal" or self.curr_tok[0] == "NUMBAR Literal" or self.curr_tok[0] == "TROOF Literal"):
                                 nodeContent.append(self.curr_tok)
                                 self.advance()
@@ -148,7 +154,7 @@ class Parser:
                     if (not finishedNode):
                         nodeContent.append("<math_arguments>")
                         self.tree.add_child(TreeNode(nodeContent))
-                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(mathList))
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(mathList)) # connect to last child
                     else:
                         self.tree.add_child(TreeNode(mathList))
                     nodeContent = []
@@ -208,7 +214,7 @@ class Parser:
         self.tree.print_tree()
 
 
-
+# returns value or string error
 def checkIfValidMathSyntax(tokens):
     acc = []
     eval = "NO ERRORS"
@@ -219,7 +225,7 @@ def checkIfValidMathSyntax(tokens):
         if (i[0] == 'Arithmetic Operation' or i[0] == 'Operand Separator'):
             sublistTokens.append(i[1])
         else:
-            sublistTokens.append(random.randint(1,999))
+            sublistTokens.append(random.randint(1,999)) # para san etong randomize? pangcheck?
 
     if (len(tokens) < 4):
         eval = "ERROR: Not enough lexemes for an arithmetic expression"
@@ -299,6 +305,6 @@ tokens = lexical_analyzer.lex_main()
 i = 0
 if (isinstance(tokens, list)):
     while (i < len(tokens)):
-        #print(i,tokens[i])
+        print(i,tokens[i])
         i +=1
     syntax = Parser(tokens)
