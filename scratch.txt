@@ -5,8 +5,8 @@
 
 REQUIRED TASKS LEFT:
 [----]GIMMEH
-[]If-Else
-[x]Assignment (R, RMAEK, IS NOW A)
+[----????]If-Else
+[----]Assignment (R, RMAEK, IS NOW A)
 []Comparison
 []Boolean
 []Switch-Case
