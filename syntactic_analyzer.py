@@ -2,7 +2,7 @@ import random
 import lexical_analyzer
 
 canBeLevelTwo = ["Arithmetic Operation","Output Keyword","Variable Declaration","Code Delimiter CLOSE"]
-mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier"]
+mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier","String Delimiter"]
 literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"] # add boolean
 expressions = ["Arithmetic Operation"] # add boolean
 types = ["NUMBAR keyword", "NUMBR keyword", "YARN keyword", "TROOF keyword"]
@@ -165,7 +165,8 @@ class Parser:
                 self.advance()
                 while (True):
                     if (self.curr_tok[0] in mathRelatedLex):
-                        mathList.append(self.curr_tok)
+                        if (self.curr_tok[0] != "String Delimiter"):
+                            mathList.append(self.curr_tok)
                         self.advance()
                     else:
                         break
@@ -216,7 +217,8 @@ class Parser:
                         self.advance()
                         while (True):
                             if (self.curr_tok[0] in mathRelatedLex):
-                                mathList.append(self.curr_tok)
+                                if (self.curr_tok[0] != "String Delimiter"):
+                                    mathList.append(self.curr_tok)
                                 self.advance()
                             else:
                                 break
@@ -287,7 +289,8 @@ class Parser:
                             self.advance()
                             while (True):
                                 if (self.curr_tok[0] in mathRelatedLex):
-                                    mathList.append(self.curr_tok)
+                                    if (self.curr_tok[0] != "String Delimiter"):
+                                        mathList.append(self.curr_tok)
                                     self.advance()
                                 else:
                                     break
@@ -382,7 +385,7 @@ class Parser:
                 if (self.curr_tok == "END OF TOKENS"):
                     # self.advance()
                 # else:
-                    print(self.curr_tok)
+                    #print(self.curr_tok)
                     break
                 else:
                     self.error = "ERROR: There must not be anything after KTHXBYE"
@@ -416,11 +419,6 @@ class Parser:
                 else:
                     self.error = "ERROR: YA RLY must be alone in its line"
                 while (1):
-                    if (self.isMain == 1):
-                        print("xxx",ifList)
-                    else:
-                        print("yyy",ifList)
-                        print(self.curr_tok)
                     if (self.curr_tok[0] == "Else Keyword" or self.curr_tok[0] == "Conditional Delimiter"):
                         break
                     if (self.curr_tok == "END OF TOKENS"):
@@ -429,13 +427,13 @@ class Parser:
                     ifList.append(self.curr_tok)
                     self.advance()
                 ifSyntax = Parser(ifList, TreeNode("<if>"))
+                print(ifList)
                 if (isinstance(ifSyntax.getResult(), str)):
                     self.error = ifSyntax.getResult()
                     return self.error
                 else:
                     self.tree.children[len(self.tree.children)-1].add_child(ifSyntax.getResult())
 
-                print(ifList)
                 ifList = []
                 # skip appending OIC or NO WAI
                 if (self.curr_tok[0] == "Else Keyword"):
@@ -463,7 +461,6 @@ class Parser:
                     else:
                         self.tree.children[len(self.tree.children)-1].add_child(elseSyntax.getResult())
                 
-                print(self.curr_tok)
                 self.advance()
                 if (self.curr_tok[0] == "NEWLINE"):
                     self.advance()
@@ -489,12 +486,12 @@ def checkIfValidMathSyntax(tokens):
             sublistTokens.append(i[1])
         else:
             sublistTokens.append(random.randint(1,999)) # para san etong randomize? pangcheck?
-
+    print(sublistTokens)
     if (len(tokens) < 4):
         eval = "ERROR: Not enough lexemes for an arithmetic expression"
     else:
         while (1):
-            print(acc, "curr:", curr)
+            print(acc, len(acc))
             if (len(acc) >= 3):
                 lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
                 secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
@@ -568,7 +565,7 @@ tokens = lexical_analyzer.lex_main()
 i = 0
 if (isinstance(tokens, list)):
     while (i < len(tokens)):
-        print(i,tokens[i])
+        #print(i,tokens[i])
         i +=1
     syntax = Parser(tokens,1)
     if (isinstance(syntax.getResult(), str)):
