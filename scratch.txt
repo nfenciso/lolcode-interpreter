@@ -4,9 +4,9 @@
 -comment out comment-related keywords AKA do not add them as lexemes
 
 REQUIRED TASKS LEFT:
-[]GIMMEH
+[x]GIMMEH
 []If-Else
-[]Assignment (R, RMAEK, IS NOW A)
+[x]Assignment (R, RMAEK, IS NOW A)
 []Comparison
 []Boolean
 []Switch-Case

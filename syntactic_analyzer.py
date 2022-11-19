@@ -169,7 +169,7 @@ class Parser:
                 outputList.append(self.curr_tok)
                 outputList.append("<output_arguments>")
                 self.tree.add_child(TreeNode(outputList))
-                outputList = []
+                outputList = [] # unused?
                 self.advance()
                 while (1):
                     #print("XX", self.curr_tok)
@@ -205,8 +205,19 @@ class Parser:
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(mathList))
                     #boolean
-                    #comparison
-                    
+            #         #comparison
+            elif (self.curr_tok[0] == "Input Keyword"):
+                inputList = []
+                inputList.append(self.curr_tok)
+                # inputList.append("<output_arguments>")
+                self.advance()
+                if (self.curr_tok[0] == "Variable Identifier"):
+                    inputList.append(self.curr_tok)
+                    self.advance()
+                    if (self.curr_tok[0] == "NEWLINE"):
+                        pass
+
+                # pass
                     
                 
             cnt -= 1
