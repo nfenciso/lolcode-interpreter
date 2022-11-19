@@ -10,9 +10,6 @@ HAI
             VISIBLE 5
             I HAS A var5
             SUM OF 5 AN 3
-            O RLY?
-                YA RLY
-            OIC
         NO WAI
             SUM OF 2 AN var5
     OIC
