@@ -211,7 +211,7 @@ def lex_main():
 
     print(content+"\n")
 
-    content = " "+content+" "
+    content = " "+content+"\n "
     content = content.replace(" ", "   ")
     content = content.replace("\t", "\t\t\t")
     content = content.replace("\n"," \n\n ")
