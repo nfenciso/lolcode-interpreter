@@ -1,26 +1,42 @@
 HAI
-    I HAS A var0 ITZ "2323"
-    I HAS A var1 ITZ BIGGR OF SUM OF 4 AN 2 AN var0
-    I HAS A var2
-    VISIBLE 2 SUM OF 4 AN 3 "wassup " var1
-    DIFF OF 9 AN 0
-    I HAS A fa
-    O RLY?
-        YA RLY
-            VISIBLE 5
-            I HAS A var5
-            SUM OF 5 AN 3
-        NO WAI
-            SUM OF 2 AN var5
-    OIC
-    GIMMEH fa
-    I HAS A var3
-    var2 R 123
-    var2 R DIFF OF 9 AN 0
-    var2 R MAEK var2 NUMBR
-    var2 IS NOW A YARN
-    MAEK var2 NUMBR 
+    BTW variable dec
+    I HAS A x
+    I HAS A y
+    
+    VISIBLE "x:" WIN ", y:" WIN
+    x R WIN
+    y R WIN
 
-    BOTH OF var0 AN var1
+    VISIBLE BOTH OF x AN y
+    VISIBLE EITHER OF x AN y
+    VISIBLE WON OF x AN y
+    VISIBLE NOT x
+    VISIBLE ALL OF x AN x AN x AN y MKAY
+    VISIBLE ANY OF y AN y AN y AN 0 MKAY
+    VISIBLE ANY OF BOTH OF x AN EITHER OF NOT x AN y AN y AN NOT y MKAY
+    VISIBLE BOTH OF x AN EITHER OF NOT x AN y
 
+    VISIBLE "x:" FAIL ", y:" WIN
+    x R FAIL
+
+    VISIBLE BOTH OF x AN y
+    VISIBLE EITHER OF x AN y
+    VISIBLE WON OF x AN y
+    VISIBLE NOT x
+    VISIBLE ALL OF x AN x AN x AN y MKAY
+    VISIBLE ANY OF y AN y AN y AN 0 MKAY
+    VISIBLE ANY OF BOTH OF x AN EITHER OF NOT x AN y AN y AN NOT y MKAY
+    VISIBLE BOTH OF x AN EITHER OF NOT x AN y
+
+    VISIBLE "x:" FAIL ", y:" FAIL
+    y R FAIL
+
+    VISIBLE BOTH OF x AN y
+    VISIBLE EITHER OF x AN y
+    VISIBLE WON OF x AN y
+    VISIBLE NOT x
+    VISIBLE ALL OF x AN x AN x AN y MKAY
+    VISIBLE ANY OF y AN y AN y AN 0 MKAY
+    VISIBLE ANY OF BOTH OF x AN EITHER OF NOT x AN y AN y AN NOT y MKAY
+    VISIBLE BOTH OF x AN EITHER OF NOT x AN y
 KTHXBYE
