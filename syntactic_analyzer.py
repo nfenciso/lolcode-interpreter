@@ -224,6 +224,27 @@ class Parser:
                             else:
                                 break
                         evalMathList = checkIfValidMathSyntax(mathList)
+                        #stringsNotIncluded = 0
+
+
+                        while (1):
+                            if (isinstance(evalMathList, str)):
+                                if (evalMathList == "ERROR: Lacking arithmetic operation"):
+                                    if (mathList[len(mathList)-1][0] == "YARN Literal"): 
+                                        mathList.pop()
+                                        evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                        self.tok_idx -= 4
+                                        self.advance()
+                                    elif (mathList[len(mathList)-1][0] == "Variable Identifier"): 
+                                        mathList.pop()
+                                        evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                        self.tok_idx -= 2
+                                        self.advance()
+                                    else:
+                                        break
+                            else: break
+                            print(evalMathList)
+
                         if (isinstance(evalMathList, str)):
                             self.error = evalMathList
                             return self.error
@@ -506,12 +527,12 @@ def checkIfValidMathSyntax(tokens):
             sublistTokens.append(i[1])
         else:
             sublistTokens.append(random.randint(1,999)) # para san etong randomize? pangcheck?
-    print(sublistTokens)
+    #print(sublistTokens)
     if (len(tokens) < 4):
         eval = "ERROR: Not enough lexemes for an arithmetic expression"
     else:
         while (1):
-            print(acc, len(acc))
+            #print(acc, len(acc))
             if (len(acc) >= 3):
                 lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
                 secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
