@@ -6,4 +6,9 @@ HAI
     DIFF OF 9 AN 0
     I HAS A fa
     GIMMEH fa
+    var2 R 123
+    var2 R DIFF OF 9 AN 0
+    var2 R MAEK var2 NUMBR
+    var2 IS NOW A YARN
+    MAEK var2 NUMBR 
 KTHXBYE

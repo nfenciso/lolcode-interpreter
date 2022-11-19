@@ -4,7 +4,7 @@
 -comment out comment-related keywords AKA do not add them as lexemes
 
 REQUIRED TASKS LEFT:
-[x]GIMMEH
+[----]GIMMEH
 []If-Else
 [x]Assignment (R, RMAEK, IS NOW A)
 []Comparison

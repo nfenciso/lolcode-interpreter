@@ -3,6 +3,9 @@ import lexical_analyzer
 
 canBeLevelTwo = ["Arithmetic Operation","Output Keyword","Variable Declaration","Code Delimiter CLOSE"]
 mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier"]
+literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"] # add boolean
+expressions = ["Arithmetic Operation"] # add boolean
+types = ["NUMBAR keyword", "NUMBR keyword", "YARN keyword", "TROOF keyword"]
 
 class TreeNode:
     def __init__(self, data):
@@ -212,9 +215,8 @@ class Parser:
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(mathList))
                     #boolean
-            #         #comparison
-            elif (self.curr_tok[0] == "Input Keyword"):
-                print("==========================jhvjhv==")
+                    #comparison
+            elif (self.curr_tok[0] == "Input Keyword"): 
                 inputList = []
                 inputList.append(self.curr_tok)
                 # inputList.append("<output_arguments>")
@@ -230,11 +232,148 @@ class Parser:
                         self.error = "ERROR: Unexpected non-variable identifier"
                         return self.error
                 else:
-                    self.error = "ERROR: Must have variable identifier to store the input"
+                    self.error = "ERROR: Must be variable identifier to store the input"
                     return self.error
-                # pass
-                    
-                
+            elif (self.curr_tok[0] == "Variable Identifier"):
+                # assignList = []
+                # assignList.append("<assignment_arguments>")
+                # self.tree.add_child(TreeNode(assignList))
+                assignList = []
+                assignList.append(self.curr_tok)
+                self.advance()
+                if (self.curr_tok[0] == "NEWLINE"):
+                    # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                    self.tree.add_child(TreeNode(assignList))
+
+                    self.advance()
+                elif (self.curr_tok[0] == "Assignment Keyword"): # using R
+                    assignList.append(self.curr_tok)
+                    self.advance()
+                    if (self.curr_tok[0] in literals): # assigning literal
+                        assignList.append(self.curr_tok)
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):
+                            # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                            self.tree.add_child(TreeNode(assignList))
+
+                            self.advance()
+                        else:
+                            self.error = "ERROR: (R) Must only assign single literal at a time"
+                            return self.error
+                    elif (self.curr_tok[0] in expressions): # assigning value from expression
+                        if (self.curr_tok[0] == "Arithmetic Operation"):
+                            assignList.append("<math_arguments>")
+                            # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                            self.tree.add_child(TreeNode(assignList))
+
+                            mathList = []
+                            mathList.append(self.curr_tok)
+                            self.advance()
+                            while (True):
+                                if (self.curr_tok[0] in mathRelatedLex):
+                                    mathList.append(self.curr_tok)
+                                    self.advance()
+                                else:
+                                    break
+                            evalMathList = checkIfValidMathSyntax(mathList)
+                            if (isinstance(evalMathList, str)):
+                                self.error = evalMathList
+                                return self.error
+                            else:
+                                child = self.tree.children[len(self.tree.children)-1]
+                                child.add_child(TreeNode(mathList))
+                                self.advance()
+                                # self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<math_arguments>"))
+                    elif (self.curr_tok[0] == "Typecast Keyword (new value)"):  # reassign (MAEK)
+                        assignList.append("<typecasted_value>")
+                        # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                        self.tree.add_child(TreeNode(assignList))
+                        maekList = []
+                        maekList.append(self.curr_tok)
+                        self.advance()
+                        if (self.curr_tok[0] == "Variable Identifier"):
+                            maekList.append(self.curr_tok)
+                            to_be_casted = self.curr_tok # not yet used (can check the value here if it can be casted. ex. "wow" -> NUMBR, error)
+                            self.advance()
+                            if (self.curr_tok[0] in types):
+                                maekList.append(self.curr_tok)
+                                self.advance()
+                                if (self.curr_tok[0] == "NEWLINE"):
+                                    child = self.tree.children[len(self.tree.children)-1]
+                                    child.add_child(TreeNode(maekList))
+                                    self.advance()
+                                    # child.children[len(child.children)-1].add_child(TreeNode(maekList))
+                                    # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                                else:
+                                    self.error = "ERROR: (MAEK) only accepts two arguments"
+                            else:
+                                self.error = "ERROR: (MAEK) second argument should be a variable type"
+                                return self.error   
+                        else:
+                            self.error = "ERROR: (MAEK) first argument should be a variable"
+                            return self.error      
+                    else:
+                        self.error = "ERROR: Must assign value to the variable identifier"
+                        return self.error
+                elif (self.curr_tok[0] == "Typecast Keyword"): # IS NOW A
+                    assignList.append(self.curr_tok)
+                    self.advance()
+                    if (self.curr_tok[0] in types):
+                        assignList.append(self.curr_tok)
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):
+                            self.tree.add_child(TreeNode(assignList))
+                            self.advance()
+                        else:
+                            self.error = "ERROR: (IS NOW A) only accepts single argument"
+                            return self.error
+
+                    else:
+                        self.error = "ERROR: (IS NOW A) only accepts variable type)"
+                        return self.error
+            elif (self.curr_tok[0] == "Typecast Keyword (new value)"):  # reassign (MAEK)
+                assignList = []
+                assignList.append("<typecasted_value>")
+                # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                self.tree.add_child(TreeNode(assignList))
+                maekList = []
+                maekList.append(self.curr_tok)
+                self.advance()
+                if (self.curr_tok[0] == "Variable Identifier"):
+                    maekList.append(self.curr_tok)
+                    to_be_casted = self.curr_tok # not yet used (can check the value here if it can be casted. ex. "wow" -> NUMBR, error)
+                    self.advance()
+                    if (self.curr_tok[0] in types):
+                        maekList.append(self.curr_tok)
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):
+                            child = self.tree.children[len(self.tree.children)-1]
+                            child.add_child(TreeNode(maekList))
+                            self.advance()
+                            # child.children[len(child.children)-1].add_child(TreeNode(maekList))
+                            # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                        else:
+                            self.error = "ERROR: (MAEK) only accepts two arguments"
+                    else:
+                        self.error = "ERROR: (MAEK) second argument should be a variable type"
+                        return self.error   
+                else:
+                    self.error = "ERROR: (MAEK) first argument should be a variable"
+                    return self.error
+            elif (self.curr_tok[0] == "Code Delimiter CLOSE"):
+                self.tree.add_child(TreeNode(self.curr_tok))
+                self.advance()
+                if (self.curr_tok == "END OF TOKENS"):
+                    # self.advance()
+                # else:
+                    print(self.curr_tok)
+                    break
+                else:
+                    self.error = "ERROR: There must not be anything after KTHXBYE"
+                    return self.error
+            else:
+                self.error = "ERROR: Unknown function (or not yet implemented)"
+                return self.error
             cnt -= 1
                     
         #self.tree.print_tree()
