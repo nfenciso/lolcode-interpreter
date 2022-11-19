@@ -6,6 +6,7 @@ mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NU
 literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"] # add boolean
 expressions = ["Arithmetic Operation"] # add boolean
 types = ["NUMBAR keyword", "NUMBR keyword", "YARN keyword", "TROOF keyword"]
+boolOperands = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter", "Variable Identifier"]
 
 class TreeNode:
     def __init__(self, data):
@@ -417,9 +418,9 @@ class Parser:
                     self.error = "ERROR: YA RLY must be alone in its line"
                 while (1):
                     if (self.isMain == 1):
-                        print("xxx",ifList)
+                        print("xxx === ",ifList)
                     else:
-                        print("yyy",ifList)
+                        print("yyy === ",ifList)
                         print(self.curr_tok)
                     if (self.curr_tok[0] == "Else Keyword" or self.curr_tok[0] == "Conditional Delimiter"):
                         break
@@ -471,7 +472,17 @@ class Parser:
                     self.error = "ERROR: OIC must be alone in its line"
                     return self.error
                 
-            
+            # elif (self.curr_tok[0] == "Boolean Operation"):
+            #     boolList = []
+            #     boolList.append("<boolean_operation>")
+            #     # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+            #     self.tree.add_child(TreeNode(boolList))
+            #     boolList = []
+            #     boolList.append(self.curr_tok)
+            #     self.advance()
+            #     if (self.curr_tok[0] in boolOperands):
+            #         if (self.curr_tok[0] == "String Delimiter"):
+
             cnt -= 1
                     
         #self.tree.print_tree()

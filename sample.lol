@@ -20,4 +20,7 @@ HAI
     var2 R MAEK var2 NUMBR
     var2 IS NOW A YARN
     MAEK var2 NUMBR 
+
+    BOTH OF var0 AN var1
+
 KTHXBYE
