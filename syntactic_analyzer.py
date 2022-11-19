@@ -37,9 +37,7 @@ class Parser:
         self.tok_idx = -1
         self.error = "NONE"
         self.advance()
-        x = self.startParse()
-        if (isinstance(x, str)): 
-            print(self.error)
+        self.startParse()
     
     def advance(self):
         self.tok_idx += 1
@@ -62,6 +60,8 @@ class Parser:
             self.parse(numOfLvlTwoNodes)
             if (self.error != "NONE"):
                 return self.error
+            else:
+                return 1
         else:
             self.error = "ERROR: Must begin the program with HAI"
             return self.error
@@ -69,6 +69,12 @@ class Parser:
     def lookAhead(self):
         
         return self.tokens.count(["NEWLINE", "\\n"])
+
+    def getResult(self):
+        if (self.error != "NONE"):
+            return self.error
+        else:
+            return self.tree
 
     def parse(self, numOfLvlTwoNodes):
         nodeContent = []
@@ -222,7 +228,7 @@ class Parser:
                 
             cnt -= 1
                     
-        self.tree.print_tree()
+        #self.tree.print_tree()
 
 
 # returns value or string error
@@ -319,3 +325,8 @@ if (isinstance(tokens, list)):
         print(i,tokens[i])
         i +=1
     syntax = Parser(tokens)
+    if (isinstance(syntax.getResult(), str)):
+        print(syntax.getResult())
+    else:
+        syntax.getResult().print_tree()
+    
