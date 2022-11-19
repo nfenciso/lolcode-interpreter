@@ -32,10 +32,15 @@ class TreeNode:
                 child.print_tree()
 
 class Parser:
-    def __init__(self, tokens):
+    def __init__(self, tokens, arg):
         self.tokens = tokens
         self.tok_idx = -1
         self.error = "NONE"
+        if (arg == 1):
+            self.isMain = 1
+        else:
+            self.isMain = 0
+            self.tree = arg
         self.advance()
         self.startParse()
     
@@ -52,19 +57,28 @@ class Parser:
         return self.advance()
     
     def startParse(self):
-        
-        if (self.curr_tok[0] == "Code Delimiter OPEN"):
-            self.tree = TreeNode("<program>")
+        if (self.isMain == 1):
+            if (self.curr_tok[0] == "Code Delimiter OPEN"):
+                self.tree = TreeNode("<program>")
+                numOfLvlTwoNodes = self.lookAhead()
+                #print(numOfLvlTwoNodes)
+                self.parse(numOfLvlTwoNodes)
+                if (self.error != "NONE"):
+                    return self.error
+                else:
+                    return 1
+            else:
+                self.error = "ERROR: Must begin the program with HAI"
+                return self.error
+        elif (self.isMain == 0):
+            # self.tree = 
+            #
             numOfLvlTwoNodes = self.lookAhead()
-            #print(numOfLvlTwoNodes)
             self.parse(numOfLvlTwoNodes)
             if (self.error != "NONE"):
-                return self.error
+                    return self.error
             else:
                 return 1
-        else:
-            self.error = "ERROR: Must begin the program with HAI"
-            return self.error
 
     def lookAhead(self):
         
@@ -242,13 +256,80 @@ class Parser:
 
 
             elif (self.curr_tok[0] == "If-Then Delimiter"):
+                self.tree.add_child(TreeNode("<if-then block>"))
                 ifList = []
-                ifList.append(self.curr_tok)
+                # skip appending O RLY?
                 self.advance()
-                while (self.curr_tok[0] != "Conditional Delimiter"):
+                if (self.curr_tok[0] == "NEWLINE"):
+                    self.advance()
+                else:
+                    self.error = "ERROR: O RLY? must be alone in its line"
+                if (self.curr_tok[0] == "If Keyword"):
+                    # skip appending YA RLY
+                    self.advance()
+                else:
+                    self.error = "ERROR: Must have YA RLY"
+                    return self.error
+                if (self.curr_tok[0] == "NEWLINE"):
+                    self.advance()
+                else:
+                    self.error = "ERROR: YA RLY must be alone in its line"
+                while (1):
+                    if (self.isMain == 1):
+                        print("xxx",ifList)
+                    else:
+                        print("yyy",ifList)
+                        print(self.curr_tok)
+                    if (self.curr_tok[0] == "Else Keyword" or self.curr_tok[0] == "Conditional Delimiter"):
+                        break
                     if (self.curr_tok == "END OF TOKENS"):
                         self.error = "ERROR: Lacking OIC"
                         return self.error
+                    ifList.append(self.curr_tok)
+                    self.advance()
+                ifSyntax = Parser(ifList, TreeNode("<if>"))
+                if (isinstance(ifSyntax.getResult(), str)):
+                    self.error = ifSyntax.getResult()
+                    return self.error
+                else:
+                    self.tree.children[len(self.tree.children)-1].add_child(ifSyntax.getResult())
+
+                print(ifList)
+                ifList = []
+                # skip appending OIC or NO WAI
+                if (self.curr_tok[0] == "Else Keyword"):
+                    self.advance()
+                    if (self.curr_tok[0] == "NEWLINE"):
+                        self.advance()
+                    else:
+                        self.error = "ERROR: NO WAI must be alone in its line"
+                    while (1):
+                        if (self.curr_tok[0] == "Else Keyword"):
+                            self.error = "ERROR: There cannot be more than one NO WAI of the same level in a single IF-THEN code block"
+                            return self.error
+                        if (self.curr_tok[0] == "Conditional Delimiter"):
+                            break
+                        if (self.curr_tok == "END OF TOKENS"):
+                            self.error = "ERROR: Lacking OIC"
+                            return self.error
+                        ifList.append(self.curr_tok)
+                        self.advance()
+                    
+                    elseSyntax = Parser(ifList, TreeNode("<else>"))
+                    if (isinstance(elseSyntax.getResult(), str)):
+                        self.error = elseSyntax.getResult()
+                        return self.error
+                    else:
+                        self.tree.children[len(self.tree.children)-1].add_child(elseSyntax.getResult())
+                
+                print(self.curr_tok)
+                self.advance()
+                if (self.curr_tok[0] == "NEWLINE"):
+                    self.advance()
+                else:
+                    self.error = "ERROR: OIC must be alone in its line"
+                    return self.error
+                
             cnt -= 1
                     
         #self.tree.print_tree()
@@ -347,7 +428,7 @@ if (isinstance(tokens, list)):
     while (i < len(tokens)):
         print(i,tokens[i])
         i +=1
-    syntax = Parser(tokens)
+    syntax = Parser(tokens,1)
     if (isinstance(syntax.getResult(), str)):
         print(syntax.getResult())
     else:
