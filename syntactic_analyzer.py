@@ -225,7 +225,21 @@ class Parser:
 
                 # pass
                     
-                
+
+
+
+
+
+
+
+            elif (self.curr_tok[0] == "If-Then Delimiter"):
+                ifList = []
+                ifList.append(self.curr_tok)
+                self.advance()
+                while (self.curr_tok[0] != "Conditional Delimiter"):
+                    if (self.curr_tok == "END OF TOKENS"):
+                        self.error = "ERROR: Lacking OIC"
+                        return self.error
             cnt -= 1
                     
         #self.tree.print_tree()
