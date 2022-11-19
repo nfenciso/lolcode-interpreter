@@ -8,6 +8,7 @@ expressions = ["Arithmetic Operation"] # add boolean
 types = ["NUMBAR keyword", "NUMBR keyword", "YARN keyword", "TROOF keyword"]
 boolTwoOperands = ["BOTH OF", "EITHER OF", "WON OF"]
 boolMoreOperand = ["ANY OF", "ALL OF"]
+comparator = ["BIGGR OF", "SMALLR OF"]
 
 class TreeNode:
     def __init__(self, data):
@@ -515,10 +516,27 @@ class Parser:
                     self.tree.children[len(self.tree.children)-1].add_child(TreeNode(boolList))
                     self.advance()
                 
+            elif (self.curr_tok[1] in comparator):
+                compareList = []
+                compareList.append("<comparison_operation>")
+                # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                self.tree.add_child(TreeNode(compareList))
+
+                compareList = []
+                pass
 
             cnt -= 1
                     
         #self.tree.print_tree()
+
+def getComparison(self):
+    own_list = ['', '', '']
+
+    return own_list
+
+
+
+# use this to get Boolean Operation
 def generateBooleanStatement(self):
     if (self.curr_tok[1] in boolTwoOperands):
         boolList = solveBooleanStatement_2(self) # 2 operand boolean
@@ -529,6 +547,7 @@ def generateBooleanStatement(self):
 
     return boolList
 
+# boolean with 2 operands
 def solveBooleanStatement_2(self):
     own_list = ['','','']
     # if(self.curr_tok[1] in boolTwoOperands):
@@ -585,6 +604,7 @@ def solveBooleanStatement_2(self):
 
     return own_list        
 
+# boolean with 1 operand
 def solveBooleanStatement_1(self):
     own_list = ['', '']
 
@@ -612,6 +632,7 @@ def solveBooleanStatement_1(self):
 
     return own_list
 
+# boolean with infinite operands
 def solveBooleanStatement(self):
     own_list = []
 

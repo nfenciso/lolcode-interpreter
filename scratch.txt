@@ -8,7 +8,7 @@ REQUIRED TASKS LEFT:
 [----????]If-Else
 [----]Assignment (R, RMAEK, IS NOW A)
 []Comparison
-[]Boolean
+[----]Boolean
 []Switch-Case
 []Typecast
 []Loops
