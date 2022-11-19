@@ -245,7 +245,7 @@ class Parser:
                                     else:
                                         break
                             else: break
-                            print(evalMathList)
+                            #print(evalMathList)
 
                         if (isinstance(evalMathList, str)):
                             self.error = evalMathList
@@ -414,6 +414,8 @@ class Parser:
             elif (self.curr_tok[0] == "Code Delimiter CLOSE"):
                 self.tree.add_child(TreeNode(self.curr_tok))
                 self.advance()
+                while (self.curr_tok[0] == "NEWLINE"):
+                    self.advance()
                 if (self.curr_tok == "END OF TOKENS"):
                     # self.advance()
                 # else:
