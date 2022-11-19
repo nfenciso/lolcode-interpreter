@@ -242,7 +242,7 @@ class Parser:
                                     else:
                                         break
                             else: break
-                            print(evalMathList)
+                            #print(evalMathList)
 
                         if (isinstance(evalMathList, str)):
                             self.error = evalMathList
@@ -403,6 +403,8 @@ class Parser:
             elif (self.curr_tok[0] == "Code Delimiter CLOSE"):
                 self.tree.add_child(TreeNode(self.curr_tok))
                 self.advance()
+                while (self.curr_tok[0] == "NEWLINE"):
+                    self.advance()
                 if (self.curr_tok == "END OF TOKENS"):
                     # self.advance()
                 # else:
@@ -488,9 +490,123 @@ class Parser:
                 else:
                     self.error = "ERROR: OIC must be alone in its line"
                     return self.error
-                
             
-            cnt -= 1
+            elif (self.curr_tok[0] == "Switch-Case Delimiter"):
+                self.tree.add_child(TreeNode("<switch-case block>"))
+                hasAtLeastOneCase = False
+                calledDefault = False
+                switchList = []
+                #switchList.append(self.curr_tok)
+                self.advance()
+                if (self.curr_tok[0] == "NEWLINE"):
+                    #switchList.append(self.curr_tok)
+                    self.advance()
+                else:
+                    self.error = "ERROR: WTF? must be alone in its line"
+                while (1):
+                    
+                    if (self.curr_tok[0] == "Case Keyword" and not calledDefault):
+                        #switchList.append(self.curr_tok)
+                        switchList = []
+                        self.advance()
+                        if (self.curr_tok[0] in ["String Delimiter","NUMBAR Literal","NUMBR Literal","TROOF Literal"]):
+                            caseValue = ""
+                            if (self.curr_tok[0] == "String Delimiter"):
+                                #switchList.append(self.curr_tok)
+                                self.advance()
+                                #switchList.append(self.curr_tok)
+                                caseValue = "\""+self.curr_tok[1]+"\""
+                                self.advance()
+                                #switchList.append(self.curr_tok)
+                                self.advance()
+                            else:
+                                #switchList.append(self.curr_tok)
+                                caseValue = self.curr_tok[1]
+                                self.advance()
+
+                            if (self.curr_tok[0] == "NEWLINE"):
+                                #switchList.append(self.curr_tok)
+                                self.advance()
+                                print("x",self.curr_tok)
+                                while (1):
+                                    if (self.curr_tok[0] in ["Case Keyword", "Default Case Keyword", "Conditional Delimiter"]):
+                                        break
+                                    if (self.curr_tok == "END OF TOKENS"):
+                                        self.error = "ERROR: Switch-case must end with OIC"
+                                        return self.error
+                                    switchList.append(self.curr_tok)
+                                    self.advance()
+
+                                switchSyntax = Parser(switchList, TreeNode("<case: "+caseValue+">"))
+                                if (isinstance(switchSyntax.getResult(), str)):
+                                    self.error = switchSyntax.getResult()
+                                    return self.error
+                                else:
+                                    self.tree.children[len(self.tree.children)-1].add_child(switchSyntax.getResult())
+                                
+                                switchList = []
+                                if (self.curr_tok[0] in ["Case Keyword", "Default Case Keyword", "Conditional Delimiter"]):
+                                    hasAtLeastOneCase = True
+                                    continue
+                                
+                            else:
+                                self.error = "ERROR: OMG and one literal must be alone in their own line"
+                                return self.error
+                        else:
+                            self.error = "ERROR: There must be a constant value next to OMG"
+                            return self.error
+                    elif (not hasAtLeastOneCase and self.curr_tok[0] not in ["Case Keyword", "Default Case Keyword", "Conditional Delimiter"]):
+                        self.error = "ERROR: Must have OMG"
+                        return self.error
+                    
+                    elif (self.curr_tok[0] == "Default Case Keyword" and not calledDefault and hasAtLeastOneCase):
+                        calledDefault = True
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):
+                            self.advance()
+                            switchList = []
+                            while (1):
+                                if (self.curr_tok[0] == "Conditional Delimiter"):
+                                    break
+                                if (self.curr_tok[0] == "Default Case Keyword"):
+                                    self.error = "ERROR: OMGWTF can only be used once"
+                                    return self.error
+                                if (self.curr_tok[0] == "Case Keyword"):
+                                    self.error = "ERROR: OMG cannot be used after OMGWTF"
+                                    return self.error
+                                if (self.curr_tok == "END OF TOKENS"):
+                                    self.error = "ERROR: Switch-case must end with OIC"
+                                    return self.error
+                                switchList.append(self.curr_tok)
+                                self.advance()
+                                print(self.curr_tok)
+                            print(switchList)
+                            switchSyntax = Parser(switchList, TreeNode("<default_case>"))
+                            if (isinstance(switchSyntax.getResult(), str)):
+                                self.error = switchSyntax.getResult()
+                                return self.error
+                            else:
+                                self.tree.children[len(self.tree.children)-1].add_child(switchSyntax.getResult())
+                            switchList = []
+                        else:
+                            self.error = "ERROR: OMGWTF must be alone in its line"
+                            return self.error
+                    elif (self.curr_tok[0] == "Conditional Delimiter" and hasAtLeastOneCase):
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):           
+                            self.advance()                     
+                            break
+                        else:
+                            self.error = "ERROR: OIC must be alone in its line"
+                            return self.error
+                    elif (self.curr_tok[0] == "Default Case Keyword" and not hasAtLeastOneCase):
+                        self.error = "ERROR: Must have at least one OMG"
+                        return self.error
+                        
+                    
+            cnt -= 1     
+                    
+
                     
         #self.tree.print_tree()
 

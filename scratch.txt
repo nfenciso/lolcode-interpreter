@@ -6,13 +6,14 @@
 REQUIRED TASKS LEFT:
 [----]GIMMEH
 [----????]If-Else
-[----]Assignment (R, RMAEK, IS NOW A)
+[----]Assignment 
 []Comparison
-[]Boolean
-[]Switch-Case
-[]Typecast
+[----]Boolean
+[----]Switch-Case
+[----]Typecast (R, RMAEK, IS NOW A)
 []Loops
 []SMOOSH
+[]Just a literal
 
 HAI
     I HAS A var ITZ SUM OF BIGGR OF SUM OF 4 AN 2 AN 2 AN DIFF OF 10 AN 7 I HAS A var4
@@ -20,6 +21,30 @@ HAI
     VISIBLE "NUMS: " var DIFF OF var AN 6
     I HAS A var3
 KTHXBYE
+
+if (self.curr_tok[0] == "Default Case Keyword"):
+                                    switchList.append(self.curr_tok)
+                                    self.advance()
+                                    if (self.curr_tok[0] == "NEWLINE"):
+                                        switchList.append(self.curr_tok)
+                                        self.advance()
+                                        
+                                        while (1):
+                                            if (self.curr_tok[0] == "Conditional Delimiter"):
+                                                switchList.append(self.curr_tok)
+                                                self.advance()
+                                                if (self.curr_tok[0] == "NEWLINE"):
+                                                    self.advance()
+                                                    break
+                                                else:
+                                                    self.error = "ERROR: OIC must be alone in its line"
+                                                    return self.error
+                                            if (self.curr_tok == "END OF TOKENS"):
+                                                self.error = "ERROR: WTF? must end with OIC"
+                                            switchList.append(self.curr_tok)
+                                            self.advance()
+                                    else:
+                                        self.error = "ERROR: OMGWTF must be alone in its line"
 
 ===code that is no longer applicable
 
