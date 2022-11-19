@@ -189,8 +189,10 @@ def LexAnalyze(results, main):
                     return lexemes
         
         elif (i[3]):
-        
-            lexemes.append(["NEWLINE", "\\n"])
+            if (len(lexemes) != 0):
+                previousCategory = lexemes[len(lexemes)-1][0]
+                if (previousCategory != "NEWLINE"):
+                    lexemes.append(["NEWLINE", "\\n"])
         # captured by fourth capture group (not a LOL lexeme)
         else:
             error = i[3].replace(" ","").replace("\t","").replace("\n","")
@@ -227,10 +229,10 @@ def lex_main():
         print("INTERRUPT!\n"+error)
     else:
         for i in categoriesAndLexemes:
-            if (i[0] != "NEWLINE"):
-                print("\n\t",i[0].ljust(27," ")+":\t"+i[1], end="")
-                if (i[0] == "Output Keyword"):
-                    print(" ("+str(i[2])+" next lexemes)",end="")
+            
+            print("\n\t",i[0].ljust(27," ")+":\t"+i[1], end="")
+            if (i[0] == "Output Keyword"):
+                print(" ("+str(i[2])+" next lexemes)",end="")
                 
 
         if (error != "NONE"):
