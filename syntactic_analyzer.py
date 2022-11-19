@@ -180,6 +180,7 @@ class Parser:
                 while (1):
                     #print("XX", self.curr_tok)
                     if (self.curr_tok[0] == "NEWLINE"):
+                        self.advance()
                         break
                     if (self.curr_tok[0] in ["Variable Identifier","NUMBAR Literal","NUMBR Literal","TROOF Literal"]):
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
@@ -213,6 +214,7 @@ class Parser:
                     #boolean
             #         #comparison
             elif (self.curr_tok[0] == "Input Keyword"):
+                print("==========================jhvjhv==")
                 inputList = []
                 inputList.append(self.curr_tok)
                 # inputList.append("<output_arguments>")
@@ -221,8 +223,15 @@ class Parser:
                     inputList.append(self.curr_tok)
                     self.advance()
                     if (self.curr_tok[0] == "NEWLINE"):
-                        pass
+                        self.advance()
+                        self.tree.add_child(TreeNode(inputList))
 
+                    else:
+                        self.error = "ERROR: Unexpected non-variable identifier"
+                        return self.error
+                else:
+                    self.error = "ERROR: Must have variable identifier to store the input"
+                    return self.error
                 # pass
                     
 
