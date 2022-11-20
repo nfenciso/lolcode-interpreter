@@ -8,7 +8,7 @@ expressions = ["Arithmetic Operation"] # add boolean
 types = ["NUMBAR keyword", "NUMBR keyword", "YARN keyword", "TROOF keyword"]
 boolTwoOperands = ["BOTH OF", "EITHER OF", "WON OF"]
 boolMoreOperand = ["ANY OF", "ALL OF"]
-comparator = ["BIGGR OF", "SMALLR OF"]
+comparator = ["BIGGR OF", "SMALLR OF", "BOTH SAEM", "DIFFRINT"]
 
 class TreeNode:
     def __init__(self, data):
@@ -256,13 +256,29 @@ class Parser:
                             child.children[len(child.children)-1].add_child(TreeNode(mathList))
                     elif (self.curr_tok[0] == "Boolean Operation"):
                         boolList = generateBooleanStatement(self)
-                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<boolean_operation>"))
-                        child = self.tree.children[len(self.tree.children)-1]
-                        child.children[len(child.children)-1].add_child(TreeNode(boolList))
+                        if (isinstance(boolList, str)):
+                            self.error = boolList
+                            return self.error
+                        else:
+                            self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<boolean_operation>"))
+                            child = self.tree.children[len(self.tree.children)-1]
+                            child.children[len(child.children)-1].add_child(TreeNode(boolList))
+
+                    elif (self.curr_tok[0] == "Comparison Operation"):
+                        operand_type = ["NULL"]
+                        compareList = getComparison(self, operand_type)
+
+                        if (isinstance(compareList, str)):
+                            self.error = compareList
+                            return self.error
+                        else:
+                            self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<comparison_operation>"))
+                            child = self.tree.children[len(self.tree.children)-1]
+                            child.children[len(child.children)-1].add_child(TreeNode(compareList))
+
                     else:
-                        self.error = "ERROR: Token not valid"
+                        self.error = "ERROR: (VISIBLE) Token not valid: " + str(self.curr_tok)
                         return self.error
-                    #boolean
                     #comparison
             elif (self.curr_tok[0] == "Input Keyword"): 
                 inputList = []
@@ -282,8 +298,7 @@ class Parser:
                 else:
                     self.error = "ERROR: Must be variable identifier to store the input"
                     return self.error
-                # pass
-                    
+                # pass      
             elif (self.curr_tok[0] == "Variable Identifier"):
                 # assignList = []
                 # assignList.append("<assignment_arguments>")
@@ -428,11 +443,6 @@ class Parser:
             #     self.error = "ERROR: Unknown function (or not yet implemented)"
             #     return self.error
 
-
-
-
-
-
             elif (self.curr_tok[0] == "If-Then Delimiter"):
                 self.tree.add_child(TreeNode("<if-then block>"))
                 ifList = []
@@ -505,9 +515,7 @@ class Parser:
             elif (self.curr_tok[0] == "Boolean Operation"):
                 boolList = []
                 boolList.append("<boolean_operation>")
-                # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
                 self.tree.add_child(TreeNode(boolList))
-                # boolTokens=[0]
                 
                 boolList = generateBooleanStatement(self) # infinite operand boolean
 
@@ -518,25 +526,91 @@ class Parser:
                     self.tree.children[len(self.tree.children)-1].add_child(TreeNode(boolList))
                     self.advance()
                 
-            elif (self.curr_tok[1] in comparator):
+            elif (self.curr_tok[0] == "Comparison Operation"):
                 compareList = []
                 compareList.append("<comparison_operation>")
                 # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
                 self.tree.add_child(TreeNode(compareList))
+                operand_type = ["NULL"]
+                compareList = getComparison(self, operand_type)
 
-                compareList = []
-                pass
+                if (isinstance(compareList, str)):
+                    self.error = compareList
+                    return self.error
+                else:
+                    self.tree.children[len(self.tree.children)-1].add_child(TreeNode(compareList))
+                    self.advance()
 
             cnt -= 1
                     
         #self.tree.print_tree()
 
-def getComparison(self):
+# def greater_less_than(self, operand_type):
+#     own_list = ['', '', '']
+
+#     own_list[0] = self.curr_tok[1]
+#     self.advance()
+
+    
+
+#     # ========= first operand ==============
+         
+
+#     return own_list
+
+def getComparison(self, operand_type):
     own_list = ['', '', '']
 
+    own_list[0] = self.curr_tok[1]
+    self.advance()
+
+    if (operand_type[0] == "NULL"):
+        if (self.curr_tok[0] == "Variable Identifier"):
+            # check the type of this variable using third index and then save to operand_type
+            operand_type[0] = "NUMBAR Literal"  # VARIABLES ARE IMPLICITLY TYPECASTED TO NUMBAR ------- MUST CHANGE TO REAL TYPE OF VARIABLE
+            pass
+        elif ((self.curr_tok[0] == "NUMBAR Literal") or (self.curr_tok[0] == "NUMBR Literal")):
+            operand_type[0] = self.curr_tok[0]
+        elif (self.curr_tok[1] in comparator):
+            pass
+        else:
+            self.error = "ERROR: (Comparison) Invalid operand type. Must be NUMBAR or NUMBR " + str(self.curr_tok)
+            return self.error
+
+    # ========= first operand ==============
+    if (self.curr_tok[0] == "Variable Identifier"):         # first operand is a variable 
+        own_list[1] = self.curr_tok[1]                          # check if type is same of operand_type. ------ NOT CURRENTLY CHECKING TYPE SO ERROR MIGHT NOT BE CATCHED
+        self.advance()
+    elif (self.curr_tok[1] in comparator):      # first operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
+        own_list[1] = getComparison(self, operand_type)
+    elif ((self.curr_tok[0] in literals) and (self.curr_tok[0] == operand_type[0])):    # first operand is a literal
+        own_list[1] = self.curr_tok[1]
+        self.advance()
+    else:
+        self.error = "ERROR: (Comparison) Operand must be of the same types. (NUMBR or NUMBAR)"
+        return self.error
+
+    # ========= AN seperator ==============
+    if(self.curr_tok[0] == "Operand Separator"): # AN keyword
+        self.advance()
+    else:
+        self.error = "ERROR: (Comparison) Missing AN seperator"
+        return self.error
+
+    # ========= second operand ==============
+    if (self.curr_tok[0] == "Variable Identifier"):         # second operand is a variable 
+        own_list[2] = self.curr_tok[1]                              # -------------------------------- check if type is same of operand_type.
+        self.advance()
+    elif (self.curr_tok[1] in comparator):       # second operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
+        own_list[2] = getComparison(self, operand_type)
+    elif ((self.curr_tok[0] in literals) and (self.curr_tok[0] == operand_type[0])):    # second operand is a literal
+        own_list[2] = self.curr_tok[1]
+        self.advance()
+    else:
+        self.error = "ERROR: (Comparison) Operand must be of the same types. (NUMBR or NUMBAR)"
+        return self.error
+
     return own_list
-
-
 
 # use this to get Boolean Operation
 def generateBooleanStatement(self):
@@ -567,11 +641,11 @@ def solveBooleanStatement_2(self):
         else:
             own_list[1] = self.curr_tok
             self.advance()
-    elif (self.curr_tok[1] in boolTwoOperands): # first operand is another 2 operand bool
+    elif (self.curr_tok[1] in boolTwoOperands):      # first operand is another 2 operand bool (BOTH OF ...)
         own_list[1] = solveBooleanStatement_2(self)
-    elif (self.curr_tok[1] == "NOT"): # first operand is 1 operand bool
+    elif (self.curr_tok[1] == "NOT"):                # first operand is 1 operand bool (NOT)
         own_list[1] = solveBooleanStatement_1(self)
-    elif (self.curr_tok[1] in boolMoreOperand):   
+    elif (self.curr_tok[1] in boolMoreOperand):      # first operand has infinite operand (ALL OF, ANY OF)
         own_list[1] = solveBooleanStatement(self)  
     else:
         self.error = "ERROR: (Bool) Unexpected first operand"
@@ -594,11 +668,11 @@ def solveBooleanStatement_2(self):
         else:
             own_list[2] = self.curr_tok
             self.advance()
-    elif (self.curr_tok[1] in boolTwoOperands): # second operand is another 2 operand bool
+    elif (self.curr_tok[1] in boolTwoOperands):         # second operand is another 2 operand bool (BOTH OF ...)
         own_list[2] = solveBooleanStatement_2(self)
-    elif (self.curr_tok[1] == "NOT"): # second operand is 1 operand bool
+    elif (self.curr_tok[1] == "NOT"):                   # second operand is 1 operand bool (NOT)
         own_list[2] = solveBooleanStatement_1(self)
-    elif (self.curr_tok[1] in boolMoreOperand):   
+    elif (self.curr_tok[1] in boolMoreOperand):         # second operand has infinite operand (ALL OF, ANY OF)
         own_list[2] = solveBooleanStatement(self)  
     else:
         self.error = "ERROR: (Bool) Unexpected second operand"
