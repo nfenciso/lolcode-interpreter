@@ -1,6 +1,7 @@
 import random
 import lexical_analyzer
 
+
 canBeLevelTwo = ["Arithmetic Operation","Output Keyword","Variable Declaration","Code Delimiter CLOSE"]
 mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier","String Delimiter"]
 literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"] # add boolean
@@ -42,6 +43,7 @@ class Parser:
         self.tokens = tokens
         self.tok_idx = -1
         self.error = "NONE"
+        self.HAI_used = False
         if (arg == 1):
             self.isMain = 1
         else:
@@ -103,13 +105,18 @@ class Parser:
         while (cnt > 0): 
             #print(self.curr_tok)
             if (self.curr_tok[0] == "Code Delimiter OPEN"):
-                self.tree.add_child(TreeNode(self.curr_tok))
-                self.advance()
-                if (self.curr_tok[0] == "NEWLINE"):
+                if (not self.HAI_used):
+                    self.tree.add_child(TreeNode(self.curr_tok))
                     self.advance()
+                    if (self.curr_tok[0] == "NEWLINE"):
+                        self.advance()
+                        self.HAI_used = True
+                    else:
+                        self.error = "ERROR: There must not be anything after HAI"
+                        return self.error
                 else:
-                    self.error = "ERROR: There must not be anything after HAI"
-                    return self.error
+                    self.error = "ERROR: Can only use HAI once"
+                    return self.error   
             elif (self.curr_tok[0] == "Variable Declaration"):
                 nodeContent = []
                 nodeContent.append(self.curr_tok)
