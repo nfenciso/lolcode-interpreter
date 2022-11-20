@@ -1,38 +1,16 @@
 HAI
 
-	I HAS A choice
-	I HAS A input
+	I HAS A num1 ITZ DIFF OF 4 AN 2
+	I HAS A num2
 
-	BTW if w/o MEBBE, 1 only, everything else is invalid
-	VISIBLE "1. Compute age"
-	VISIBLE "2. Compute tip"
-	VISIBLE "3. Compute square area"
-	VISIBLE "0. Exit"
+	VISIBLE "Gimmeh a number: "
+	GIMMEH num1
 
-	VISIBLE "Choice: "
-	GIMMEH choice
+	num2 R 0
 
-	choice
-	WTF?
-		OMG 1
-			VISIBLE "Enter birth year: "
-			GIMMEH input
-			VISIBLE DIFF OF 2022 AN input
-			GTFO
-		OMG 2
-			VISIBLE "Enter bill cost: "
-			GIMMEH input
-			VISIBLE "Tip: " PRODUKT OF input AN 0.1
-			GTFO
-		OMG 3
-			VISIBLE "Enter width: "
-			GIMMEH input
-			VISIBLE "Square Area: " PRODUKT OF input AN input
-			GTFO
-		OMG 0
-			VISIBLE "Goodbye"
-		OMGWTF
-			VISIBLE "Invalid Input!"
-	OIC
+	IM IN YR asc UPPIN YR num2 WILE WIN
+		VISIBLE num2
+        SUM OF 4 AN num2
+	IM OUTTA YR asc
 
 KTHXBYE
