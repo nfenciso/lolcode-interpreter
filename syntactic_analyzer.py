@@ -524,7 +524,7 @@ class Parser:
                 boolList.append("<boolean_operation>")
                 self.tree.add_child(TreeNode(boolList))
                 
-                boolList = generateBooleanStatement(self) # infinite operand boolean
+                boolList = generateBooleanStatement(self) 
 
                 if (isinstance(boolList, str)):
                     self.error = boolList
