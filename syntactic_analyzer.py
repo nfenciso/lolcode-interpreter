@@ -676,7 +676,14 @@ class Parser:
                     elif (self.curr_tok[0] == "Default Case Keyword" and not hasAtLeastOneCase):
                         self.error = "ERROR: Must have at least one OMG"
                         return self.error
-            
+            elif (self.curr_tok[0] == "Break Keyword" and self.isMain == 0 and "case" in self.tree.data):
+                self.tree.add_child(TreeNode(self.curr_tok))
+                self.advance()
+                if (self.curr_tok[0] != "NEWLINE"):
+                    self.error = "ERROR: GTFO must be alone in its line"
+                    return self.error
+                self.advance()
+
             
             cnt -= 1
                     
