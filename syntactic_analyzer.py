@@ -4,8 +4,8 @@ import lexical_analyzer
 
 canBeLevelTwo = ["Arithmetic Operation","Output Keyword","Variable Declaration","Code Delimiter CLOSE"]
 mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier","String Delimiter"]
-literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"] # add boolean
-expressions = ["Arithmetic Operation"] # add boolean
+literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"]
+expressions = ["Arithmetic Operation"]
 types = ["NUMBAR keyword", "NUMBR keyword", "YARN keyword", "TROOF keyword"]
 boolTwoOperands = ["BOTH OF", "EITHER OF", "WON OF"]
 boolMoreOperand = ["ANY OF", "ALL OF"]
@@ -160,8 +160,31 @@ class Parser:
                             elif (self.curr_tok[0] == "Arithmetic Operation"):
                                 finishedNode = False
                                 continue
-                            #boolean
-                            #comparison
+                            elif (self.curr_tok[0] == "Boolean Operation"):
+                                nodeContent.append("<boolean_operation>")
+                                self.tree.add_child(TreeNode(nodeContent))
+                                
+                                boolList = generateBooleanStatement(self) 
+
+                                if (isinstance(boolList, str)):
+                                    self.error = boolList
+                                    return self.error
+                                else:
+                                    self.tree.children[len(self.tree.children)-1].add_child(TreeNode(boolList))
+                                    self.advance()
+                            elif (self.curr_tok[0] == "Comparison Operation"):
+                                nodeContent.append("<comparison_operation>")
+
+                                self.tree.add_child(TreeNode(nodeContent))
+                                operand_type = ["NULL"]
+                                compareList = getComparison(self, operand_type)
+
+                                if (isinstance(compareList, str)):
+                                    self.error = compareList
+                                    return self.error
+                                else:
+                                    self.tree.children[len(self.tree.children)-1].add_child(TreeNode(compareList))
+                                    self.advance()
                             else:
                                 self.error = "ERROR: ITZ expression must have a value, variable, or expression as argument"
                                 return self.error
@@ -772,12 +795,42 @@ class Parser:
                                     loopCondition = self.curr_tok[1]
                                     self.advance()
                                     if (self.curr_tok[0] in ["Arithmetic Operation","Boolean Operation","Comparison Operation","NUMBAR Literal","NUMBR Literal","TROOF Literal","Variable Identifier","String Delimiter"]):
-                                        if (self.curr_tok[0] in ["Arithmetic Operation","Boolean Operation","Comparison Operation"]):
+                                        if (self.curr_tok[0] == "Arithmetic Operation"):
                                             nodeContent = []
                                             nodeContent.append("<loop>")
                                             nodeContent.append(loopCondition)
                                             finishedNode = False
                                             continue
+                                        elif (self.curr_tok[0] == "Boolean Operation"):
+                                            nodeContent = []
+                                            nodeContent.append("<loop>")
+                                            nodeContent.append(loopCondition)
+                                            nodeContent.append("<boolean_operation>")
+                                            self.tree.add_child(TreeNode(nodeContent))
+                                            
+                                            boolList = generateBooleanStatement(self) 
+
+                                            if (isinstance(boolList, str)):
+                                                self.error = boolList
+                                                return self.error
+                                            else:
+                                                self.tree.children[len(self.tree.children)-1].add_child(TreeNode(boolList))
+                                        elif (self.curr_tok[0] == "Comparison Operation"):
+                                            nodeContent = []
+                                            nodeContent.append("<loop>")
+                                            nodeContent.append(loopCondition)
+                                            nodeContent.append("<comparison_operation>")
+
+                                            self.tree.add_child(TreeNode(nodeContent))
+                                            operand_type = ["NULL"]
+                                            compareList = getComparison(self, operand_type)
+
+                                            if (isinstance(compareList, str)):
+                                                self.error = compareList
+                                                return self.error
+                                            else:
+                                                self.tree.children[len(self.tree.children)-1].add_child(TreeNode(compareList))
+         
                                         elif (self.curr_tok[0] in ["NUMBAR Literal","NUMBR Literal","TROOF Literal","Variable Identifier"]):
                                             self.tree.add_child(TreeNode(["<loop>",loopCondition,self.curr_tok[1]]))
                                             self.advance()
@@ -820,7 +873,7 @@ class Parser:
                                             else:
                                                 self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
                                         else:
-                                            self.error = "ERROR: Unexpected end of Loop IM IN YR line"
+                                            self.error = "ERROR: Unexpected end of Loop IM IN YR line: " + str(self.curr_tok )
                                             return self.error
                                     else:
                                         self.error = "ERROR: Problem with expression after TIL/WILE"
