@@ -239,7 +239,7 @@ class Parser:
                                         return self.error
                                     loopList.append(self.curr_tok)
                                     self.advance()
-                                print(loopList)
+                                #print(loopList)
                                 loopSyntax = Parser(loopList, TreeNode("<loop content>"))
                                 loopList = []
                                 if (isinstance(loopSyntax.getResult(), str)):
@@ -864,7 +864,7 @@ class Parser:
                                                     return self.error
                                                 loopList.append(self.curr_tok)
                                                 self.advance()
-                                            print(loopList)
+                                            #print(loopList)
                                             loopSyntax = Parser(loopList, TreeNode("<loop content>"))
                                             loopList = []
                                             if (isinstance(loopSyntax.getResult(), str)):
