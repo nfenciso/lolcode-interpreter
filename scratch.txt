@@ -7,13 +7,13 @@ REQUIRED TASKS LEFT:
 [----]GIMMEH
 [----????]If-Else
 [----]Assignment 
-[]Comparison
+[----]Comparison
 [----]Boolean
 [----]Switch-Case
 [----]Typecast (R, RMAEK, IS NOW A)
 []Loops
 []SMOOSH
-[]Just a literal
+[----]Just a literal
 
 HAI
     I HAS A var ITZ SUM OF BIGGR OF SUM OF 4 AN 2 AN 2 AN DIFF OF 10 AN 7 I HAS A var4

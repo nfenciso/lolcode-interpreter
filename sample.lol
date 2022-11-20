@@ -1,28 +1,38 @@
 HAI
-    I HAS A x
-    I HAS A y
-    
-    VISIBLE "Value 1: "
-    GIMMEH x
-    VISIBLE "Value 2: "
-    GIMMEH y
 
-    BTW x==y
-    VISIBLE BOTH SAEM x AN y
-    BTW x!=y
-    VISIBLE DIFFRINT x AN y
+	I HAS A choice
+	I HAS A input
 
-    OBTW
-        x >= y
-        x <= y
-        x < y
-        x > y
-    TLDR
-    VISIBLE BOTH SAEM BIGGR OF x AN y AN x
-    VISIBLE BOTH SAEM x AN SMALLR OF x AN y
-    VISIBLE DIFFRINT BIGGR OF x AN y AN x
-    VISIBLE DIFFRINT x AN SMALLR OF x AN y
+	BTW if w/o MEBBE, 1 only, everything else is invalid
+	VISIBLE "1. Compute age"
+	VISIBLE "2. Compute tip"
+	VISIBLE "3. Compute square area"
+	VISIBLE "0. Exit"
 
-    HAI
+	VISIBLE "Choice: "
+	GIMMEH choice
+
+	choice
+	WTF?
+		OMG 1
+			VISIBLE "Enter birth year: "
+			GIMMEH input
+			VISIBLE DIFF OF 2022 AN input
+			GTFO
+		OMG 2
+			VISIBLE "Enter bill cost: "
+			GIMMEH input
+			VISIBLE "Tip: " PRODUKT OF input AN 0.1
+			GTFO
+		OMG 3
+			VISIBLE "Enter width: "
+			GIMMEH input
+			VISIBLE "Square Area: " PRODUKT OF input AN input
+			GTFO
+		OMG 0
+			VISIBLE "Goodbye"
+		OMGWTF
+			VISIBLE "Invalid Input!"
+	OIC
 
 KTHXBYE
