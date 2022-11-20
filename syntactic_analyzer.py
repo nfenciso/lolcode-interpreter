@@ -1142,7 +1142,7 @@ def checkIfValidMathSyntax(tokens):
         if (i[0] == 'Arithmetic Operation' or i[0] == 'Operand Separator'):
             sublistTokens.append(i[1])
         else:
-            sublistTokens.append(random.randint(1,999)) # para san etong randomize? pangcheck?
+            sublistTokens.append(random.randint(1,999)) 
     #print(sublistTokens)
     if (len(tokens) < 4):
         eval = "ERROR: Not enough lexemes for an arithmetic expression"
