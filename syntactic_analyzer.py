@@ -118,6 +118,8 @@ class Parser:
                     self.error = "ERROR: Can only use HAI once"
                     return self.error   
             elif (self.curr_tok[0] == "Variable Declaration"):
+                if (self.isMain != 1):
+                    self.error = "ERROR: Variables must not be declared inside any program block (if-else, loops, etc)"
                 nodeContent = []
                 nodeContent.append(self.curr_tok)
                 self.advance()
@@ -189,6 +191,42 @@ class Parser:
                         nodeContent.append("<math_arguments>")
                         self.tree.add_child(TreeNode(nodeContent))
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(mathList)) # connect to last child
+                        finishedNode = True
+                        if (nodeContent[0] == "<loop>"):
+                            if (self.curr_tok[0] == "NEWLINE"):
+                                self.advance()
+
+                                while (1):
+                                    if (self.curr_tok[0] == "Loop Delimiter CLOSE"):
+                                        loopList.append(self.curr_tok)
+                                        self.advance()
+                                        if (self.curr_tok[0] == "Loop Identifier"):
+                                            if (loopLabel == self.curr_tok[1]):
+                                                loopList.pop()
+                                                self.advance()
+                                                if (self.curr_tok[0] == "NEWLINE"):
+                                                    break
+                                                else:
+                                                    self.error = "ERROR: IM OUTTA YR <label> must be alone in its line"
+                                                    return self.error
+                                            else:
+                                                continue
+                                    if (self.curr_tok == "END OF TOKENS"):
+                                        self.error = "ERROR: Lacking IM OUTTA YR"
+                                        return self.error
+                                    loopList.append(self.curr_tok)
+                                    self.advance()
+                                print(loopList)
+                                loopSyntax = Parser(loopList, TreeNode("<loop content>"))
+                                loopList = []
+                                if (isinstance(loopSyntax.getResult(), str)):
+                                    self.error = loopSyntax.getResult()
+                                    return self.error
+                                else:
+                                    self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
+                            else:
+                                self.error = "ERROR: Unexpected end of Loop IM IN YR line"
+                                return self.error
                     else:
                         self.tree.add_child(TreeNode(mathList))
                     nodeContent = []
@@ -676,7 +714,133 @@ class Parser:
                     elif (self.curr_tok[0] == "Default Case Keyword" and not hasAtLeastOneCase):
                         self.error = "ERROR: Must have at least one OMG"
                         return self.error
-            
+            elif (self.curr_tok[0] == "Break Keyword" and self.isMain == 0 and ("case" in self.tree.data)):
+                self.tree.add_child(TreeNode(self.curr_tok))
+                self.advance()
+                if (self.curr_tok[0] != "NEWLINE"):
+                    self.error = "ERROR: GTFO must be alone in its line"
+                    return self.error
+                self.advance()
+            elif (self.curr_tok[0] == "Loop Delimiter OPEN"):
+                loopList = []
+                loopLabel = ""
+                loopCondition = ""
+                self.advance()
+                if (self.curr_tok[0] == "Loop Identifier"):
+                    loopLabel = self.curr_tok[1]
+                    self.advance()
+                    if (self.curr_tok[0] == "Loop Operation"):
+                        self.advance()
+                        if (self.curr_tok[0] == "Loop Keyword"):
+                            self.advance()
+                            if (self.curr_tok[0] == "Variable Identifier"):
+                                self.advance()
+                                if (self.curr_tok[0] == "NEWLINE"):
+                                    self.advance()
+
+                                    while (1):
+                                        if (self.curr_tok[0] == "Loop Delimiter CLOSE"):
+                                            loopList.append(self.curr_tok)
+                                            self.advance()
+                                            if (self.curr_tok[0] == "Loop Identifier"):
+                                                if (loopLabel == self.curr_tok[1]):
+                                                    loopList.pop()
+                                                    self.advance()
+                                                    if (self.curr_tok[0] == "NEWLINE"):
+                                                        self.advance()
+                                                        break
+                                                    else:
+                                                        self.error = "ERROR: IM OUTTA YR <label> must be alone in its line"
+                                                        return self.error
+                                                else:
+                                                    continue
+                                        if (self.curr_tok == "END OF TOKENS"):
+                                            self.error = "ERROR: Lacking IM OUTTA YR"
+                                            return self.error
+                                        loopList.append(self.curr_tok)
+                                        self.advance()
+                                    self.tree.add_child(TreeNode("<loop>"))
+                                    loopSyntax = Parser(loopList, TreeNode("<loop content>"))
+                                    loopList = []
+                                    if (isinstance(loopSyntax.getResult(), str)):
+                                        self.error = loopSyntax.getResult()
+                                        return self.error
+                                    else:
+                                        self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
+                                    
+                                elif (self.curr_tok[0] == "Loop Condition"):
+                                    loopCondition = self.curr_tok[1]
+                                    self.advance()
+                                    if (self.curr_tok[0] in ["Arithmetic Operation","Boolean Operation","Comparison Operation","NUMBAR Literal","NUMBR Literal","TROOF Literal","Variable Identifier","String Delimiter"]):
+                                        if (self.curr_tok[0] in ["Arithmetic Operation","Boolean Operation","Comparison Operation"]):
+                                            nodeContent = []
+                                            nodeContent.append("<loop>")
+                                            nodeContent.append(loopCondition)
+                                            finishedNode = False
+                                            continue
+                                        elif (self.curr_tok[0] in ["NUMBAR Literal","NUMBR Literal","TROOF Literal","Variable Identifier"]):
+                                            self.tree.add_child(TreeNode(["<loop>",loopCondition,self.curr_tok[1]]))
+                                            self.advance()
+                                        elif (self.curr_tok[0] == "String Delimiter"):
+                                            self.advance()
+                                            self.tree.add_child(TreeNode(["<loop>",loopCondition,("\""+self.curr_tok[1]+"\"")]))
+                                            self.advance()
+                                            self.advance()
+                                        
+                                        if (self.curr_tok[0] == "NEWLINE"):
+                                            self.advance()
+
+                                            while (1):
+                                                if (self.curr_tok[0] == "Loop Delimiter CLOSE"):
+                                                    loopList.append(self.curr_tok)
+                                                    self.advance()
+                                                    if (self.curr_tok[0] == "Loop Identifier"):
+                                                        if (loopLabel == self.curr_tok[1]):
+                                                            loopList.pop()
+                                                            self.advance()
+                                                            if (self.curr_tok[0] == "NEWLINE"):
+                                                                self.advance()
+                                                                break
+                                                            else:
+                                                                self.error = "ERROR: IM OUTTA YR <label> must be alone in its line"
+                                                                return self.error
+                                                        else:
+                                                            continue
+                                                if (self.curr_tok == "END OF TOKENS"):
+                                                    self.error = "ERROR: Lacking IM OUTTA YR"
+                                                    return self.error
+                                                loopList.append(self.curr_tok)
+                                                self.advance()
+                                            print(loopList)
+                                            loopSyntax = Parser(loopList, TreeNode("<loop content>"))
+                                            loopList = []
+                                            if (isinstance(loopSyntax.getResult(), str)):
+                                                self.error = loopSyntax.getResult()
+                                                return self.error
+                                            else:
+                                                self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
+                                        else:
+                                            self.error = "ERROR: Unexpected end of Loop IM IN YR line"
+                                            return self.error
+                                    else:
+                                        self.error = "ERROR: Problem with expression after TIL/WILE"
+                                        return self.error
+                                else:
+                                    self.error = "ERROR: Unexpected end of Loop IM IN YR line"
+                                    return self.error
+                            else:
+                                self.error = "ERROR: There must be a variable identifier after YR"
+                                return self.error
+                        else:
+                            self.error = "ERROR: There must be a YR after the UPPIN/NERFIN"
+                            return self.error
+                    else:
+                        self.error = "ERROR: There must be an UPPIN/NERFIN after the function identifier/label"
+                        return self.error
+                else:
+                    self.error = "ERROR: There must be an identifier after the IM IN YR"
+                    return self.error
+
             
             cnt -= 1
                     
