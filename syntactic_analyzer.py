@@ -118,6 +118,8 @@ class Parser:
                     self.error = "ERROR: Can only use HAI once"
                     return self.error   
             elif (self.curr_tok[0] == "Variable Declaration"):
+                if (self.isMain != 1):
+                    self.error = "ERROR: Variables must not be declared inside any program block (if-else, loops, etc)"
                 nodeContent = []
                 nodeContent.append(self.curr_tok)
                 self.advance()
