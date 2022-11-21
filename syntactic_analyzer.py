@@ -1342,6 +1342,6 @@ if (isinstance(tokens, list)):
         print(syntax.getResult())
     else:
         syntax.getResult().print_tree()
-        print("\SYNTACTIC ANALYSIS COMPLETE!")
+        print("\nSYNTACTIC ANALYSIS COMPLETE!")
         print("===================================================================")
     
