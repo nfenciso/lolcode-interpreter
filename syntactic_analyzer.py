@@ -287,6 +287,7 @@ class Parser:
                         mathList.append(self.curr_tok)
                         self.advance()
                         while (True):
+                            #print(self.curr_tok)
                             if (self.curr_tok[0] in mathRelatedLex):
                                 if (self.curr_tok[0] != "String Delimiter"):
                                     mathList.append(self.curr_tok)
@@ -321,6 +322,7 @@ class Parser:
                                         evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
                                     else:
                                         break
+                                else: break
                             else: break
                             #print(evalMathList)
 
