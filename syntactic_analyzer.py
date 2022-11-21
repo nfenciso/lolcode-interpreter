@@ -307,7 +307,7 @@ class Parser:
                                         if (mathList[len(mathList)-1][0] == "Operand Separator"):
                                             mathList.pop()
                                             evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
-                                    elif (mathList[len(mathList)-1][0] in ["Variable Identifier", "TROOF Literal"]): 
+                                    elif (mathList[len(mathList)-1][0] in ["Variable Identifier", "TROOF Literal","NUMBR Literal","NUMBAR Literal"]): 
                                         mathList.pop()
                                         self.tok_idx -= 3
                                         self.advance()
