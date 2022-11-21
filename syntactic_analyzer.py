@@ -275,9 +275,9 @@ class Parser:
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
 
-                        if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
-                            self.error = "ERROR: Operands in VISIBLE must be separated by AN"
-                            return self.error
+                        # if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                        #     self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                        #     return self.error
                     elif (self.curr_tok[0] == "String Delimiter"):
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
@@ -286,9 +286,9 @@ class Parser:
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
 
-                        if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
-                            self.error = "ERROR: Operands in VISIBLE must be separated by AN"
-                            return self.error
+                        # if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                        #     self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                        #     return self.error
                         #print(self.curr_tok)
                     elif (self.curr_tok[0] == "Arithmetic Operation"):
                         mathList = []
@@ -347,9 +347,9 @@ class Parser:
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(mathList))
 
-                            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
-                                self.error = "ERROR: Operands in VISIBLE must be separated by AN"
-                                return self.error
+                            # if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                            #     self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                            #     return self.error
                     elif (self.curr_tok[0] == "Boolean Operation"):
                         boolList = generateBooleanStatement(self)
                         if (isinstance(boolList, str)):
@@ -360,9 +360,9 @@ class Parser:
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(boolList))
 
-                            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
-                                self.error = "ERROR: Operands in VISIBLE must be separated by AN"
-                                return self.error
+                            # if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                            #     self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                            #     return self.error
 
                     elif (self.curr_tok[0] == "Comparison Operation"):
                         operand_type = ["NULL"]
@@ -376,9 +376,9 @@ class Parser:
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(compareList))
 
-                            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
-                                self.error = "ERROR: Operands in VISIBLE must be separated by AN"
-                                return self.error
+                            # if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                            #     self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                            #     return self.error
                     elif (self.curr_tok[0] == "Operand Separator"):
                         self.advance()
                         if (self.curr_tok[0] == "NEWLINE"):
@@ -1317,4 +1317,6 @@ if (isinstance(tokens, list)):
         print(syntax.getResult())
     else:
         syntax.getResult().print_tree()
+        print("\nSEMANTIC ANALYSIS COMPLETE!")
+        print("===================================================================")
     
