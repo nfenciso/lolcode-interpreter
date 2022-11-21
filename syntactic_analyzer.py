@@ -385,6 +385,9 @@ class Parser:
                             #     return self.error
                     elif (self.curr_tok[0] == "Operand Separator"):
                         self.advance()
+                        if (self.curr_tok[0] == "Operand Separator"):
+                            self.error = "ERROR: Another AN after AN"
+                            return self.error
                         if (self.curr_tok[0] == "NEWLINE"):
                             self.error = "ERROR: Extra AN at end of VISIBLE line"
                             return self.error

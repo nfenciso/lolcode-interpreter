@@ -1,38 +1,22 @@
 HAI
+    BTW variable dec
+    I HAS A x
+    I HAS A y
+    
+    VISIBLE "Hello! Please enter two strings:"
+    VISIBLE "String 1: "
+    GIMMEH x
+    VISIBLE "String 2: "
+    GIMMEH y
 
-	I HAS A choice
-	I HAS A input
+    y R 100
+    VISIBLE x AN 52615 AN y AN MOD OF 10 AN 6 "End!"
 
-	BTW if w/o MEBBE, 1 only, everything else is invalid
-	VISIBLE "1. Compute age"
-	VISIBLE "2. Compute tip"
-	VISIBLE "3. Compute square area"
-	VISIBLE "0. Exit"
+    VISIBLE 10 AN y
+    y IS NOW A NUMBAR
+    VISIBLE 10 AN y
 
-	VISIBLE "Choice: "
-	GIMMEH choice
-
-	choice
-	WTF?
-		OMG 1
-			VISIBLE "Enter birth year: "
-			GIMMEH input
-			VISIBLE DIFF OF 2022 AN input
-			GTFO
-		OMG 2
-			VISIBLE "Enter bill cost: "
-			GIMMEH input
-			VISIBLE "Tip: " PRODUKT OF input AN 0.1
-			GTFO
-		OMG 3
-			VISIBLE "Enter width: "
-			GIMMEH input
-			VISIBLE "Square Area: " PRODUKT OF input AN input
-			GTFO
-		OMG 0
-			VISIBLE "Goodbye"
-		OMGWTF
-			VISIBLE "Invalid Input!"
-	OIC
-
+    y R 0
+    y R MAEK y TROOF
+    VISIBLE y
 KTHXBYE
