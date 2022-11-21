@@ -1,46 +1,22 @@
 HAI
+    BTW variable dec
+    I HAS A x
+    I HAS A y
+    
+    VISIBLE "Hello! Please enter two strings:"
+    VISIBLE "String 1: "
+    GIMMEH x
+    VISIBLE "String 2: "
+    GIMMEH y
+	
+    y R 100
+    VISIBLE x AN 52615 AN y AN MOD OF 10 AN 6 AN "End!"
 
-	I HAS A choice
-	I HAS A input
+    VISIBLE 10 AN y
+    y IS NOW A NUMBAR
+    VISIBLE 10 AN y
 
-	BTW if w/o MEBBE, 1 only, everything else is invalid
-	VISIBLE "1. Compute age"
-	VISIBLE "2. Compute tip"
-	VISIBLE "3. Compute square area"
-	VISIBLE "0. Exit"
-
-	VISIBLE "Choice: "
-	GIMMEH choice
-
-	BOTH SAEM choice AN 1
-	O RLY?
-		YA RLY
-			VISIBLE "Enter birth year: "
-			GIMMEH input
-			VISIBLE DIFF OF 2022 AN input
-OBTW
-	BTW uncomment this portion if you have MEBBE
-	BTW else, this portion should be ignored
-
-		MEBBE BOTH SAEM choice AN 2
-			VISIBLE "Enter bill cost: "
-			GIMMEH input
-			VISIBLE "Tip: " PRODUCKT OF input AN 0.1
-		MEBBE BOTH SAEM choice AN 3
-			VISIBLE "Enter width: "
-			GIMMEH input
-			VISIBLE "Square Area: " PRODUCKT OF input AN input
-		MEBBE BOTH SAEM choice AN 0
-			VISIBLE "Goodbye"
-TLDR
-		NO WAI
-			VISIBLE "Invalid Input!"
-	OIC
-
-	DIFFRINT BIGGR OF 3 AN choice AN 3
-	O RLY?
-		YA RLY
-			VISIBLE "Invalid input is > 3."
-	OIC
-
+    y R 0
+    y R MAEK y TROOF
+    VISIBLE y
 KTHXBYE

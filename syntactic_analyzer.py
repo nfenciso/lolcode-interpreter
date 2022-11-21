@@ -302,14 +302,23 @@ class Parser:
                                 if (evalMathList == "ERROR: Lacking arithmetic operation"):
                                     if (mathList[len(mathList)-1][0] == "YARN Literal"): 
                                         mathList.pop()
-                                        evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
-                                        self.tok_idx -= 4
+                                        self.tok_idx -= 5
                                         self.advance()
-                                    elif (mathList[len(mathList)-1][0] == "Variable Identifier"): 
+                                        if (mathList[len(mathList)-1][0] == "Operand Separator"):
+                                            mathList.pop()
+                                            evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                    elif (mathList[len(mathList)-1][0] in ["Variable Identifier", "TROOF Literal"]): 
                                         mathList.pop()
-                                        evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                        self.tok_idx -= 3
+                                        self.advance()
+                                        if (mathList[len(mathList)-1][0] == "Operand Separator"):
+                                            mathList.pop()
+                                            evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                    elif (mathList[len(mathList)-1][0] in "Operand Separator"):
+                                        mathList.pop()
                                         self.tok_idx -= 2
                                         self.advance()
+                                        evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
                                     else:
                                         break
                             else: break
@@ -343,7 +352,12 @@ class Parser:
                             self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<comparison_operation>"))
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(compareList))
-
+                    elif (self.curr_tok[0] == "Operand Separator"):
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):
+                            self.error = "ERROR: Extra AN at end of VISIBLE line"
+                            return self.error
+                        continue
                     else:
                         self.error = "ERROR: (VISIBLE) Token not valid: " + str(self.curr_tok)
                         return self.error
