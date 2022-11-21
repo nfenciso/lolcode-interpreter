@@ -10,7 +10,7 @@ HAI
     GIMMEH y
 
     y R 100
-    VISIBLE x AN 52615 AN y AN MOD OF 10 AN 6 AN "End!"
+    VISIBLE x AN 52615 AN y AN MOD OF 10 AN 6 AN "fun"
 
     VISIBLE 10 AN y
     y IS NOW A NUMBAR

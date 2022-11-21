@@ -274,6 +274,10 @@ class Parser:
                     if (self.curr_tok[0] in ["Variable Identifier","NUMBAR Literal","NUMBR Literal","TROOF Literal"]):
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
+
+                        if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                            self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                            return self.error
                     elif (self.curr_tok[0] == "String Delimiter"):
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
@@ -281,6 +285,10 @@ class Parser:
                         self.advance()
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
+
+                        if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                            self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                            return self.error
                         #print(self.curr_tok)
                     elif (self.curr_tok[0] == "Arithmetic Operation"):
                         mathList = []
@@ -300,6 +308,7 @@ class Parser:
 
                         while (1):
                             if (isinstance(evalMathList, str)):
+                                #print(str(mathList))
                                 if (evalMathList == "ERROR: Lacking arithmetic operation"):
                                     if (mathList[len(mathList)-1][0] == "YARN Literal"): 
                                         mathList.pop()
@@ -307,14 +316,18 @@ class Parser:
                                         self.advance()
                                         if (mathList[len(mathList)-1][0] == "Operand Separator"):
                                             mathList.pop()
-                                            evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                            evalMathList = checkIfValidMathSyntax(mathList)
+                                        else:
+                                            evalMathList = checkIfValidMathSyntax(mathList)
                                     elif (mathList[len(mathList)-1][0] in ["Variable Identifier", "TROOF Literal","NUMBR Literal","NUMBAR Literal"]): 
                                         mathList.pop()
                                         self.tok_idx -= 3
                                         self.advance()
                                         if (mathList[len(mathList)-1][0] == "Operand Separator"):
                                             mathList.pop()
-                                            evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                            evalMathList = checkIfValidMathSyntax(mathList)
+                                        else:
+                                            evalMathList = checkIfValidMathSyntax(mathList)
                                     elif (mathList[len(mathList)-1][0] in "Operand Separator"):
                                         mathList.pop()
                                         self.tok_idx -= 2
@@ -333,6 +346,10 @@ class Parser:
                             self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<math_arguments>"))
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(mathList))
+
+                            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                                self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                                return self.error
                     elif (self.curr_tok[0] == "Boolean Operation"):
                         boolList = generateBooleanStatement(self)
                         if (isinstance(boolList, str)):
@@ -342,6 +359,10 @@ class Parser:
                             self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<boolean_operation>"))
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(boolList))
+
+                            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                                self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                                return self.error
 
                     elif (self.curr_tok[0] == "Comparison Operation"):
                         operand_type = ["NULL"]
@@ -354,6 +375,10 @@ class Parser:
                             self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<comparison_operation>"))
                             child = self.tree.children[len(self.tree.children)-1]
                             child.children[len(child.children)-1].add_child(TreeNode(compareList))
+
+                            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                                self.error = "ERROR: Operands in VISIBLE must be separated by AN"
+                                return self.error
                     elif (self.curr_tok[0] == "Operand Separator"):
                         self.advance()
                         if (self.curr_tok[0] == "NEWLINE"):
