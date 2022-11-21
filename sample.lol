@@ -1,16 +1,22 @@
 HAI
 
+	I HAS A num1
 	I HAS A num2
-	I HAS A num1 ITZ DIFFRINT 1 AN 1
 
 	VISIBLE "Gimmeh a number: "
 	GIMMEH num1
 
 	num2 R 0
 
-	IM IN YR asc UPPIN YR num2 WILE DIFFRINT BIGGR OF num2 AN num2 AN num2
+	IM IN YR asc UPPIN YR num2 TIL BOTH SAEM num2 AN SMALLR OF 12 AN 5.0
 		VISIBLE num2
-        SUM OF 4 AN num2
 	IM OUTTA YR asc
+
+	VISIBLE "***"
+
+	IM IN YR desc NERFIN YR num2 TIL BOTH SAEM num2 AN 0
+		VISIBLE num2
+	IM OUTTA YR desc
+
 
 KTHXBYE

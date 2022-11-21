@@ -909,7 +909,7 @@ def getComparison(self, operand_type):
     if (operand_type[0] == "NULL"):
         if (self.curr_tok[0] == "Variable Identifier"):
             # check the type of this variable using third index and then save to operand_type
-            operand_type[0] = "NUMBAR Literal"  # VARIABLES ARE IMPLICITLY TYPECASTED TO NUMBAR ------- MUST CHANGE TO REAL TYPE OF VARIABLE
+            # operand_type[0] = "NUMBAR Literal"  # VARIABLES ARE IMPLICITLY TYPECASTED TO NUMBAR ------- MUST CHANGE TO REAL TYPE OF VARIABLE
             pass
         elif ((self.curr_tok[0] == "NUMBAR Literal") or (self.curr_tok[0] == "NUMBR Literal")):
             operand_type[0] = self.curr_tok[0]
@@ -923,9 +923,14 @@ def getComparison(self, operand_type):
     if (self.curr_tok[0] == "Variable Identifier"):         # first operand is a variable 
         own_list[1] = self.curr_tok[1]                          # check if type is same of operand_type. ------ NOT CURRENTLY CHECKING TYPE SO ERROR MIGHT NOT BE CATCHED
         self.advance()
+        # print(str(self.curr_tok))
     elif (self.curr_tok[1] in comparator):      # first operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
         own_list[1] = getComparison(self, operand_type)
-    elif ((self.curr_tok[0] in literals) and (self.curr_tok[0] == operand_type[0])):    # first operand is a literal
+        if (self.error != "NONE"):
+            return self.error
+    elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # first operand is a literal
+        print("first " + str(self.curr_tok) + " ; " + operand_type[0])
+        operand_type[0] = self.curr_tok[0]
         own_list[1] = self.curr_tok[1]
         self.advance()
     else:
@@ -936,7 +941,7 @@ def getComparison(self, operand_type):
     if(self.curr_tok[0] == "Operand Separator"): # AN keyword
         self.advance()
     else:
-        self.error = "ERROR: (Comparison) Missing AN seperator"
+        self.error = "ERROR: (Comparison) Missing AN seperator: " + str(self.curr_tok) + " : " + operand_type[0]
         return self.error
 
     # ========= second operand ==============
@@ -945,13 +950,19 @@ def getComparison(self, operand_type):
         self.advance()
     elif (self.curr_tok[1] in comparator):       # second operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
         own_list[2] = getComparison(self, operand_type)
-    elif ((self.curr_tok[0] in literals) and (self.curr_tok[0] == operand_type[0])):    # second operand is a literal
+        if (self.error != "NONE"):
+            return self.error
+    elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # second operand is a literal
+        print("second " + str(self.curr_tok) + " ; " + operand_type[0])
+        operand_type[0] = self.curr_tok[0]
         own_list[2] = self.curr_tok[1]
         self.advance()
     else:
         self.error = "ERROR: (Comparison) Operand must be of the same types. (NUMBR or NUMBAR):\n\tCurrent token: " + str(self.curr_tok) + "\n\tPrevious types: " + str(operand_type[0])
         return self.error
 
+    if (self.error != "NONE"):
+        return self.error
     return own_list
 
 # use this to catch Boolean Operation
@@ -985,10 +996,16 @@ def solveBooleanStatement_2(self):
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands):      # first operand is another 2 operand bool (BOTH OF ...)
         own_list[1] = solveBooleanStatement_2(self)
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] == "NOT"):                # first operand is 1 operand bool (NOT)
         own_list[1] = solveBooleanStatement_1(self)
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] in boolMoreOperand):      # first operand has infinite operand (ALL OF, ANY OF)
         own_list[1] = solveBooleanStatement(self)  
+        if (self.error != "NONE"):
+            return self.error
     else:
         self.error = "ERROR: (Bool) Unexpected first operand"
         return self.error
@@ -1012,14 +1029,22 @@ def solveBooleanStatement_2(self):
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands):         # second operand is another 2 operand bool (BOTH OF ...)
         own_list[2] = solveBooleanStatement_2(self)
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] == "NOT"):                   # second operand is 1 operand bool (NOT)
         own_list[2] = solveBooleanStatement_1(self)
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] in boolMoreOperand):         # second operand has infinite operand (ALL OF, ANY OF)
         own_list[2] = solveBooleanStatement(self)  
+        if (self.error != "NONE"):
+            return self.error
     else:
         self.error = "ERROR: (Bool) Unexpected second operand"
         return self.error
 
+    if (self.error != "NONE"):
+        return self.error
     return own_list        
 
 # boolean with 1 operand
@@ -1040,14 +1065,22 @@ def solveBooleanStatement_1(self):
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands): # second operand is another 2 operand bool
         own_list[1] = solveBooleanStatement_2(self)
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] == "NOT"): # second operand is 1 operand bool
         own_list[1] = solveBooleanStatement_1(self)
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] in boolMoreOperand):   
         own_list[1] = solveBooleanStatement(self)  
+        if (self.error != "NONE"):
+            return self.error
     else:
         self.error = "ERROR: (Bool-not) Unexpected operand"
         return self.error
 
+    if (self.error != "NONE"):
+        return self.error
     return own_list
 
 # boolean with infinite operands
@@ -1069,8 +1102,12 @@ def solveBooleanStatement(self):
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands): # first operand is another 2 operand bool
         own_list.append(solveBooleanStatement_2(self))
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] == "NOT"): # first operand is 1 operand bool
         own_list.append(solveBooleanStatement_1(self))
+        if (self.error != "NONE"):
+            return self.error
     else:
         self.error = "ERROR: (Bool) Unexpected first operand"
         return self.error
@@ -1094,8 +1131,12 @@ def solveBooleanStatement(self):
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands): # second operand is another 2 operand bool
         own_list.append(solveBooleanStatement_2(self))
+        if (self.error != "NONE"):
+            return self.error
     elif (self.curr_tok[1] == "NOT"): # second operand is 1 operand bool
         own_list.append(solveBooleanStatement_1(self))
+        if (self.error != "NONE"):
+            return self.error
     else:
         self.error = "ERROR: (Bool) Unexpected second operand"
         return self.error
@@ -1123,12 +1164,18 @@ def solveBooleanStatement(self):
                 self.advance()
         elif (self.curr_tok[1] in boolTwoOperands): # second operand is another 2 operand bool
             own_list.append(solveBooleanStatement_2(self))
+            if (self.error != "NONE"):
+                return self.error
         elif (self.curr_tok[1] == "NOT"): # second operand is 1 operand bool
             own_list.append(solveBooleanStatement_1(self))
+            if (self.error != "NONE"):
+                return self.error
         else:
             self.error = "ERROR: (Bool) Unexpected second operand"
             return self.error
 
+    if (self.error != "NONE"):
+        return self.error
     return own_list
 
 # returns value or string error
