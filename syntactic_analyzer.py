@@ -322,6 +322,7 @@ class Parser:
                                             mathList.pop()
                                             evalMathList = checkIfValidMathSyntax(mathList)
                                         else:
+                                            self.advance()
                                             evalMathList = checkIfValidMathSyntax(mathList)
                                     elif (mathList[len(mathList)-1][0] in ["Variable Identifier", "TROOF Literal","NUMBR Literal","NUMBAR Literal"]): 
                                         mathList.pop()
@@ -331,6 +332,7 @@ class Parser:
                                             mathList.pop()
                                             evalMathList = checkIfValidMathSyntax(mathList)
                                         else:
+                                            self.advance()
                                             evalMathList = checkIfValidMathSyntax(mathList)
                                     elif (mathList[len(mathList)-1][0] in "Operand Separator"):
                                         mathList.pop()
