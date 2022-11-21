@@ -1244,6 +1244,20 @@ def checkIfValidMathSyntax(tokens):
     if (len(tokens) < 4):
         eval = "ERROR: Not enough lexemes for an arithmetic expression"
     else:
+        formerToken = ""
+        latterToken = ""
+        copy_tokens = []
+        for i in tokens:
+            copy_tokens.append(i)
+        while (1):
+            #print(copy_tokens)
+            formerToken = copy_tokens.pop(0)
+            latterToken = copy_tokens[0]
+            if (formerToken[0] == "Operand Separator" and latterToken[0] == "Operand Separator"):
+                eval = "ERROR: Another AN after AN in arithmetic expression"
+            if (len(copy_tokens) == 1):break
+        if (eval != "NO ERRORS"):
+            return eval
         while (1):
             #print(acc, len(acc))
             if (len(acc) >= 3):
@@ -1328,6 +1342,6 @@ if (isinstance(tokens, list)):
         print(syntax.getResult())
     else:
         syntax.getResult().print_tree()
-        print("\nSEMANTIC ANALYSIS COMPLETE!")
+        print("\SYNTACTIC ANALYSIS COMPLETE!")
         print("===================================================================")
     
