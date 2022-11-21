@@ -929,7 +929,7 @@ def getComparison(self, operand_type):
         if (self.error != "NONE"):
             return self.error
     elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # first operand is a literal
-        print("first " + str(self.curr_tok) + " ; " + operand_type[0])
+        #print("first " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
         own_list[1] = self.curr_tok[1]
         self.advance()
@@ -953,7 +953,7 @@ def getComparison(self, operand_type):
         if (self.error != "NONE"):
             return self.error
     elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # second operand is a literal
-        print("second " + str(self.curr_tok) + " ; " + operand_type[0])
+        #print("second " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
         own_list[2] = self.curr_tok[1]
         self.advance()
