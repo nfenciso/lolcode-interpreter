@@ -66,15 +66,19 @@ class Parser:
     
     def startParse(self):
         if (self.isMain == 1):
+            self.tree = TreeNode("<program>")
             if (self.curr_tok[0] == "Code Delimiter OPEN"):
-                self.tree = TreeNode("<program>")
                 numOfLvlTwoNodes = self.lookAhead()
                 #print(numOfLvlTwoNodes)
                 self.parse(numOfLvlTwoNodes)
                 if (self.error != "NONE"):
                     return self.error
                 else:
-                    return 1
+                    if (self.tree.children[len(self.tree.children)-1].data[0] == "Code Delimiter CLOSE"):
+                        return 1
+                    else:
+                        self.error = "ERROR: Program must end with KTHXBYE"
+                        return self.error
             else:
                 self.error = "ERROR: Must begin the program with HAI"
                 return self.error
@@ -1314,6 +1318,8 @@ if (isinstance(tokens, list)):
         i +=1
     syntax = Parser(tokens,1)
     if (isinstance(syntax.getResult(), str)):
+        syntax.tree.print_tree()
+        print()
         print(syntax.getResult())
     else:
         syntax.getResult().print_tree()

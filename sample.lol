@@ -1,29 +1,38 @@
 HAI
-    BTW variable dec
-    I HAS A x
-    I HAS A y
-    
-    GIMMEH x
-    GIMMEH y
 
-    VISIBLE x "+" y " = " SUM OF x AN y
-    VISIBLE x "-" y " = " DIFF OF x AN y
-    VISIBLE x "*" y " = " PRODUKT OF x AN y
-    VISIBLE x "/" y " = " QUOSHUNT OF x AN y
-    VISIBLE x "%" y " = " MOD OF x AN y
+	I HAS A choice
+	I HAS A input
 
-    VISIBLE "max(" x "," y ") = " BIGGR OF x AN y
-    VISIBLE "min(" x "," y ") = " SMALLR OF x AN y
-    
-    BTW x^2 + y^2
-    VISIBLE SUM OF PRODUKT OF x AN x AN PRODUKT OF y AN y
-    BTW (x+y)^2
-    VISIBLE PRODUKT OF SUM OF x AN y AN SUM OF x AN y
-    BTW max(x,y) - min(x,y)
-    VISIBLE DIFF OF BIGGR OF x AN y AN SMALLR OF x AN y
+	BTW if w/o MEBBE, 1 only, everything else is invalid
+	VISIBLE "1. Compute age"
+	VISIBLE "2. Compute tip"
+	VISIBLE "3. Compute square area"
+	VISIBLE "0. Exit"
 
-    BTW x + y/x + 0
-    VISIBLE SUM OF x AN SUM OF QUOSHUNT OF y AN x AN FAIL
+	VISIBLE "Choice: "
+	GIMMEH choice
 
-    VISIBLE SUM OF x AN SUM OF QUOSHUNT OF "17" AN x AN FAIL
+	choice
+	WTF?
+		OMG 1
+			VISIBLE "Enter birth year: "
+			GIMMEH input
+			VISIBLE DIFF OF 2022 AN input
+			GTFO
+		OMG 2
+			VISIBLE "Enter bill cost: "
+			GIMMEH input
+			VISIBLE "Tip: " PRODUKT OF input AN 0.1
+			GTFO
+		OMG 3
+			VISIBLE "Enter width: "
+			GIMMEH input
+			VISIBLE "Square Area: " PRODUKT OF input AN input
+			GTFO
+		OMG 0
+			VISIBLE "Goodbye"
+		OMGWTF
+			VISIBLE "Invalid Input!"
+	OIC
+
 KTHXBYE
