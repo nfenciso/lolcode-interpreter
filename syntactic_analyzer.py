@@ -580,7 +580,7 @@ class Parser:
                     ifList.append(self.curr_tok)
                     self.advance()
                 ifSyntax = Parser(ifList, TreeNode("<if>"))
-                print(ifList)
+                #print(ifList)
                 if (isinstance(ifSyntax.getResult(), str)):
                     self.error = ifSyntax.getResult()
                     return self.error
@@ -703,7 +703,7 @@ class Parser:
                             if (self.curr_tok[0] == "NEWLINE"):
                                 #switchList.append(self.curr_tok)
                                 self.advance()
-                                print("x",self.curr_tok)
+                                #print("x",self.curr_tok)
                                 while (1):
                                     if (self.curr_tok[0] in ["Case Keyword", "Default Case Keyword", "Conditional Delimiter"]):
                                         break
@@ -755,8 +755,8 @@ class Parser:
                                     return self.error
                                 switchList.append(self.curr_tok)
                                 self.advance()
-                                print(self.curr_tok)
-                            print(switchList)
+                                #print(self.curr_tok)
+                            #print(switchList)
                             switchSyntax = Parser(switchList, TreeNode("<default_case>"))
                             if (isinstance(switchSyntax.getResult(), str)):
                                 self.error = switchSyntax.getResult()
@@ -1236,7 +1236,7 @@ def checkIfValidMathSyntax(tokens):
         eval = "ERROR: Not enough lexemes for an arithmetic expression"
     else:
         while (1):
-            print(acc, len(acc))
+            #print(acc, len(acc))
             if (len(acc) >= 3):
                 lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
                 secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
