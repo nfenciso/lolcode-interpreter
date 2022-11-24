@@ -174,7 +174,11 @@ def semanticAnalyze(lst):
                 if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
                     temp += str(value)
                 elif (lexType == "Variable Identifier"):
-                    temp += str(symbolTable[value])
+                    if (symbolTable[value] == None):
+                        eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
+                        return eval
+                    else:
+                        temp += str(symbolTable[value])
             print(temp)
         else:
             pass
