@@ -407,6 +407,7 @@ class Parser:
                             #     self.error = "ERROR: Operands in VISIBLE must be separated by AN"
                             #     return self.error
                     elif (self.curr_tok[0] == "Operand Separator"):
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
                         if (self.curr_tok[0] == "Operand Separator"):
                             self.error = "ERROR: Another AN after AN"
@@ -1110,6 +1111,7 @@ def produceConcatSubtree(self, tree):
                     self.error = "ERROR: Operands in SMOOSH must be separated by AN"
                     return self.error
         elif (self.curr_tok[0] == "Operand Separator"):
+            tree.children[len(tree.children)-1].add_child(TreeNode(self.curr_tok))
             self.advance()
             if (self.curr_tok[0] == "Operand Separator"):
                 self.error = "ERROR: Another AN after AN"

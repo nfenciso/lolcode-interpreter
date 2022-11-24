@@ -166,10 +166,7 @@ def LexAnalyze(results, main):
             elif (kw == "WILE"):                    lexemes.append(["Loop Condition",kw])
             elif (kw == "IM OUTTA YR"):             lexemes.append(["Loop Delimiter CLOSE",kw])
             elif (kw == "GTFO"):                    lexemes.append(["Break Keyword",kw])
-            elif (kw == "AN"):                      
-                lexemes.append(["Operand Separator",kw])
-                if (main == -1):    numVisibleLex -= 1
-                elif (main == -2):  numSmooshLex -= 1
+            elif (kw == "AN"):                      lexemes.append(["Operand Separator",kw])
             elif (kw == "HOW IZ I"):                lexemes.append(["Function Delimiter",kw])
             elif (kw == "IF U SAY SO"):             lexemes.append(["Function Delimiter",kw])
             elif (kw == "I IZ"):                    lexemes.append(["Function Call",kw])
