@@ -283,11 +283,11 @@ class Parser:
                         #     self.error = "ERROR: Operands in VISIBLE must be separated by AN"
                         #     return self.error
                     elif (self.curr_tok[0] == "String Delimiter"):
-                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
+                        #self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
-                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
+                        #self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
                         self.advance()
 
                         # if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):

@@ -195,7 +195,7 @@ def LexAnalyze(results, main):
                     lexemes.append(["NEWLINE", "\\n"])
         # captured by fourth capture group (not a LOL lexeme)
         else:
-            error = i[3].replace(" ","").replace("\t","").replace("\n","")
+            error = i[4].replace(" ","").replace("\t","").replace("\n","")
             error = "ERROR: "+error
             lexemes.insert(0, error)
             return lexemes
