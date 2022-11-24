@@ -339,6 +339,16 @@ class Parser:
                                         self.tok_idx -= 2
                                         self.advance()
                                         evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                                    elif (mathList[len(mathList)-1][0] == "Arithmetic Operation"): 
+                                        mathList.pop()
+                                        self.tok_idx -= 3
+                                        self.advance()
+                                        if (mathList[len(mathList)-1][0] == "Operand Separator"):
+                                            mathList.pop()
+                                            evalMathList = checkIfValidMathSyntax(mathList)
+                                        else:
+                                            self.advance()
+                                            evalMathList = checkIfValidMathSyntax(mathList)
                                     else:
                                         break
                                 else: break
@@ -1255,11 +1265,13 @@ def checkIfValidMathSyntax(tokens):
             latterToken = copy_tokens[0]
             if (formerToken[0] == "Operand Separator" and latterToken[0] == "Operand Separator"):
                 eval = "ERROR: Another AN after AN in arithmetic expression"
+            # if (formerToken[0] in ["NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal"] and latterToken[0] == "Arithmetic Operation"):
+            #     eval = "ERROR: Missing AN after an operand"
             if (len(copy_tokens) == 1):break
         if (eval != "NO ERRORS"):
             return eval
         while (1):
-            #print(acc, len(acc))
+            print(acc, len(acc))
             if (len(acc) >= 3):
                 lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
                 secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
