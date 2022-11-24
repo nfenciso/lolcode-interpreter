@@ -195,8 +195,6 @@ def LexAnalyze(results, main):
                 lexemes.append(["String Delimiter", "\""])
                 lexemes.append(["YARN Literal", (lit)[1:-1].replace("   ", " ").replace("\t\t\t","\t") ]) # removing double quotes
                 lexemes.append(["String Delimiter", "\""])
-                if (main == -1):
-                    numVisibleLex += 2
         # captured by third capture group (identifiers)
         elif (i[2]):
             ident = i[2]

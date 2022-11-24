@@ -151,7 +151,34 @@ def semanticAnalyze(lst):
             var = line[1][1]
             symbolTable[var] = temp
         elif (line[0][0] == "Output Keyword"):
+            numVisibleArgs = line[0][2]
+            tempList = []
+            smooshIndex = -1
+            for i in range(0,numVisibleArgs):
+                cnt += 1
+                tempList.append(lst[cnt])
+
+                if (lst[cnt][0][0] == "Concatenation Keyword"):
+                    smooshIndex = cnt
+            if (smooshIndex != -1):
+                numSmooshArgs = lst[smooshIndex][0][2]
+                for i in range(0, numSmooshArgs):
+                    cnt += 1
+                    tempList.append(lst[cnt])
+            
+            temp = ""
+            for i in tempList:
+                #print("::",str(i))
+                lexType = i[0][0]
+                value = i[0][1]
+                if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
+                    temp += str(value)
+                elif (lexType == "Variable Identifier"):
+                    temp += str(symbolTable[value])
+            print(temp)
+        else:
             pass
+            
             
         cnt += 1
     
