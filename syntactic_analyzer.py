@@ -139,11 +139,11 @@ class Parser:
                             nodeContent.append(self.curr_tok)
                             self.advance()
                             if (self.curr_tok[0] == "String Delimiter"):
-                                nodeContent.append(self.curr_tok)
+                                #nodeContent.append(self.curr_tok)
                                 self.advance()
                                 nodeContent.append(self.curr_tok)
                                 self.advance()
-                                nodeContent.append(self.curr_tok)
+                                #nodeContent.append(self.curr_tok)
                                 self.advance()
                                 if (self.curr_tok[0] == "NEWLINE"):
                                     self.tree.add_child(TreeNode(nodeContent))
@@ -1491,21 +1491,22 @@ def checkIfValidMathSyntax(tokens):
     else:
         return eval
 
-#accumulatedMathTokens = [['Arithmetic Operation', 'SUM OF'], ['Arithmetic Operation', 'BIGGR OF'], ['Arithmetic Operation', 'SUM OF'], ['NUMBR Literal', '4'], ['Operand Separator', 'AN'], ['NUMBR Literal', '2'], ['Operand Separator', 'AN'], ['NUMBR Literal', '2'], ['Operand Separator', 'AN'], ['Arithmetic Operation', 'DIFF OF'], ['NUMBR Literal', '10'], ['Operand Separator', 'AN'], ['NUMBR Literal', '7']]
-#print(checkIfValidMathSyntax(accumulatedMathTokens))
-tokens = lexical_analyzer.lex_main()
-i = 0
-if (isinstance(tokens, list)):
-    while (i < len(tokens)):
-        #print(i,tokens[i])
-        i +=1
-    syntax = Parser(tokens,1)
-    if (isinstance(syntax.getResult(), str)):
-        syntax.tree.print_tree()
-        print()
-        print(syntax.getResult())
-    else:
-        syntax.getResult().print_tree()
-        print("\nSYNTACTIC ANALYSIS COMPLETE!")
-        print("===================================================================")
-    
+def syntax_main():
+    tokens = lexical_analyzer.lex_main()
+    i = 0
+    if (isinstance(tokens, list)):
+        while (i < len(tokens)):
+            #print(i,tokens[i])
+            i +=1
+        syntax = Parser(tokens,1)
+        if (isinstance(syntax.getResult(), str)):
+            syntax.tree.print_tree()
+            print()
+            print(syntax.getResult())
+        else:
+            syntax.getResult().print_tree()
+            print("\nSYNTACTIC ANALYSIS COMPLETE!")
+            print("===================================================================")
+
+if __name__ == "__main__":
+    syntax_main()
