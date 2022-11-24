@@ -153,7 +153,12 @@ def semanticAnalyze(lst):
 
 def semantic_main():
     syntax = syntactic_analyzer.syntax_main()
-    if (isinstance(syntax.getResult(), str)):
+    
+    try:
+        tmp = isinstance(syntax.getResult(), str)
+    except:
+        tmp = True
+    if (tmp):
         pass
     else:
         lst = syntax.getResult().get_list([])
