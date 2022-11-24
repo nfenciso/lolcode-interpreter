@@ -1,5 +1,6 @@
 HAI
     BTW variable dec
+    I HAS A input
     I HAS A a ITZ 2
     I HAS A b ITZ 1.5
     I HAS A c ITZ "hello"

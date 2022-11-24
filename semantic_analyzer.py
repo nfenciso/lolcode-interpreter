@@ -146,6 +146,10 @@ def semanticAnalyze(lst):
                     symbolTable["IT"] = True
                 else:
                     symbolTable["IT"] = False
+        elif (line[0][0] == "Input Keyword"):
+            temp = input()
+            var = line[1][1]
+            symbolTable[var] = temp
             
         cnt += 1
     
