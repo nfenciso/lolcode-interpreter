@@ -27,7 +27,6 @@ class TreeNode:
         while p:
             level += 1
             p = p.parent
-
         return level
 
     def print_tree(self):
@@ -37,6 +36,18 @@ class TreeNode:
         if self.children:
             for child in self.children:
                 child.print_tree()
+
+    def get_list(self, acc):
+        if self.children:
+            for child in self.children:
+                if (len(child.data) == 2 and isinstance(child.data[0], str) and isinstance(child.data[1], str)):
+                    acc.append([child.data])
+                elif (isinstance(child.data, str)):
+                    acc.append([child.data])
+                else:
+                    acc.append(child.data)
+                child.get_list(acc)
+        return acc
 
 class Parser:
     def __init__(self, tokens, arg):
@@ -1507,6 +1518,7 @@ def syntax_main():
             syntax.getResult().print_tree()
             print("\nSYNTACTIC ANALYSIS COMPLETE!")
             print("===================================================================")
+        return syntax
 
 if __name__ == "__main__":
     syntax_main()

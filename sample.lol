@@ -1,27 +1,14 @@
 HAI
     BTW variable dec
-    I HAS A x
-    I HAS A y
-    
-    VISIBLE "Hello! Please enter two strings:"
-    VISIBLE "String 1: "
-    GIMMEH x
-    VISIBLE "String 2: "
-    GIMMEH y
+    I HAS A a ITZ 2
+    I HAS A b ITZ 1.5
+    I HAS A c ITZ "hello"
+    I HAS A d ITZ WIN
+    I HAS A e ITZ FAIL
+    I HAS A f ITZ QUOSHUNT OF DIFF OF 100 AN WIN AN 3
+    DIFF OF PRODUKT OF SUM OF 9 AN 9 AN "2" AN WIN
+    OBTW
+    I HAS A z ITZ BOTH OF WIN AN FAIL
+    TLDR
 
-    VISIBLE SMOOSH x AN y
-
-    VISIBLE SMOOSH x AN x AN x AN y AN y
-
-    x R SMOOSH x AN y
-    y R 100
-    VISIBLE x AN 52615 AN y AN MOD OF 10 AN 6 AN "End!"
-
-    VISIBLE 10 AN y
-    y IS NOW A NUMBAR
-    VISIBLE 10 AN y
-
-    y R 0
-    y R MAEK y TROOF
-    VISIBLE y
 KTHXBYE
