@@ -33,12 +33,12 @@ def LexAnalyze(results, main):
     if (main == -1):
         results = re.findall(rxVisible, results)
         numVisibleLex = 0
-        print(">>>>")
-        print(results)
+        #print(">>>>")
+        #print(results)
     if (main == -2):
         results = re.findall(rxSmoosh, results)
-        print("<<<<<")
-        print(results)
+        #print("<<<<<")
+        #print(results)
 
     for i in results:
         if (main == -1):
@@ -53,7 +53,7 @@ def LexAnalyze(results, main):
                 kw = kw[:-1]
 
             kw = ' '.join(kw.split())
-            print(kw)
+            #print(kw)
 
             # storing valid keyword lexemes and their classifications
             if (kw == "HAI"):                       lexemes.append(["Code Delimiter OPEN",kw])
@@ -91,14 +91,14 @@ def LexAnalyze(results, main):
             elif (kw == "DIFFRINT"):                lexemes.append(["Comparison Operation",kw])
             elif (kw[0:6] == "SMOOSH"):                  
                 if (main != -2):
-                    print("***")
-                    print(kw)
+                    #print("***")
+                    #print(kw)
                     smooshContent = kw[6:].replace(" ","   ").replace("\t","\t\t\t")
                     smooshContent = " "+smooshContent+" "
                     
                     smooshLex = LexAnalyze(smooshContent, -2)
-                    print(":***:")
-                    print(smooshLex)
+                    #print(":***:")
+                    #print(smooshLex)
                     if (smooshLex == "ERROR"):
                         error = "ERROR: Another SMOOSH cannot be an argument of SMOOSH"
                         lexemes.insert(0, error)
@@ -240,12 +240,13 @@ def LexAnalyze(results, main):
             return lexemes
     
     if (main == -1):
-        lexemes.insert(0,["Output Keyword", "VISIBLE", numVisibleLex])
-        print(lexemes)
+        #lexemes.insert(0,["Output Keyword", "VISIBLE", numVisibleLex])
+        lexemes.insert(0,["Output Keyword", "VISIBLE"])
+        #print(lexemes)
     elif (main == -2):
         lexemes.insert(0,["Concatenation Keyword", "SMOOSH"])
-        print("::::")
-        print(lexemes)
+        #print("::::")
+        #print(lexemes)
     return lexemes
 
 def lex_main():

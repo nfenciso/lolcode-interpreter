@@ -244,7 +244,7 @@ class Parser:
                                     loopList.append(self.curr_tok)
                                     self.advance()
                                 #print(loopList)
-                                loopSyntax = Parser(loopList, TreeNode("<loop content>"))
+                                loopSyntax = Parser(loopList, TreeNode("<loop_content>"))
                                 loopList = []
                                 if (isinstance(loopSyntax.getResult(), str)):
                                     self.error = loopSyntax.getResult()
@@ -404,6 +404,11 @@ class Parser:
                             self.error = "ERROR: Extra AN at end of VISIBLE line"
                             return self.error
                         continue
+                    elif (self.curr_tok[0] == "Concatenation Keyword"):
+                        produceConcatSubtree(self, self.tree.children[len(self.tree.children)-1])
+                        self.tok_idx -= 2
+                        self.advance()
+                        continue
                     else:
                         self.error = "ERROR: (VISIBLE) Token not valid: " + str(self.curr_tok)
                         return self.error
@@ -505,7 +510,11 @@ class Parser:
                                 return self.error   
                         else:
                             self.error = "ERROR: (MAEK) first argument should be a variable"
-                            return self.error      
+                            return self.error    
+                    elif (self.curr_tok[0] == "Concatenation Keyword"):
+                        assignList.append("<concat>")
+                        self.tree.add_child(TreeNode(assignList))
+                        produceConcatSubtree(self, self.tree.children[len(self.tree.children)-1])
                     else:
                         self.error = "ERROR: Must assign value to the variable identifier"
                         return self.error
@@ -953,11 +962,154 @@ class Parser:
                 else:
                     self.error = "ERROR: There must be an identifier after the IM IN YR"
                     return self.error
-
+            elif (self.curr_tok[0] == "Concatenation Keyword"):
+                produceConcatSubtree(self, self.tree)
             
             cnt -= 1
                     
         #self.tree.print_tree()
+
+def produceConcatSubtree(self, tree):
+    concatList = []
+    concatList.append(self.curr_tok)
+    concatList.append("<concat_arguments>")
+    tree.add_child(TreeNode(concatList))
+    concatList = []
+    self.advance()
+    while (1):
+        if (self.curr_tok[0] == "NEWLINE"):
+            self.advance()
+            break
+        if (self.curr_tok[0] in ["Variable Identifier","NUMBAR Literal","NUMBR Literal","TROOF Literal"]):
+            tree.children[len(tree.children)-1].add_child(TreeNode(self.curr_tok))
+            self.advance()
+
+            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                self.error = "ERROR: Operands in SMOOSH must be separated by AN"
+                return self.error
+        elif (self.curr_tok[0] == "String Delimiter"):
+            #tree.children[len(tree.children)-1].add_child(TreeNode(self.curr_tok))
+            self.advance()
+            tree.children[len(tree.children)-1].add_child(TreeNode(self.curr_tok))
+            self.advance()
+            #tree.children[len(tree.children)-1].add_child(TreeNode(self.curr_tok))
+            self.advance()
+
+            if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                self.error = "ERROR: Operands in SMOOSH must be separated by AN"
+                return self.error
+            #print(self.curr_tok)
+        elif (self.curr_tok[0] == "Arithmetic Operation"):
+            mathList = []
+            mathList.append(self.curr_tok)
+            self.advance()
+            while (True):
+                #print(self.curr_tok)
+                if (self.curr_tok[0] in mathRelatedLex):
+                    if (self.curr_tok[0] != "String Delimiter"):
+                        mathList.append(self.curr_tok)
+                    self.advance()
+                else:
+                    break
+            evalMathList = checkIfValidMathSyntax(mathList)
+
+            while (1):
+                if (isinstance(evalMathList, str)):
+                    #print(str(mathList))
+                    if (evalMathList == "ERROR: Lacking arithmetic operation"):
+                        if (mathList[len(mathList)-1][0] == "YARN Literal"): 
+                            mathList.pop()
+                            self.tok_idx -= 5
+                            self.advance()
+                            if (mathList[len(mathList)-1][0] == "Operand Separator"):
+                                mathList.pop()
+                                evalMathList = checkIfValidMathSyntax(mathList)
+                            else:
+                                self.advance()
+                                evalMathList = checkIfValidMathSyntax(mathList)
+                        elif (mathList[len(mathList)-1][0] in ["Variable Identifier", "TROOF Literal","NUMBR Literal","NUMBAR Literal"]): 
+                            mathList.pop()
+                            self.tok_idx -= 3
+                            self.advance()
+                            if (mathList[len(mathList)-1][0] == "Operand Separator"):
+                                mathList.pop()
+                                evalMathList = checkIfValidMathSyntax(mathList)
+                            else:
+                                self.advance()
+                                evalMathList = checkIfValidMathSyntax(mathList)
+                        elif (mathList[len(mathList)-1][0] in "Operand Separator"):
+                            mathList.pop()
+                            self.tok_idx -= 2
+                            self.advance()
+                            evalMathList = evalMathList = checkIfValidMathSyntax(mathList)
+                        elif (mathList[len(mathList)-1][0] == "Arithmetic Operation"): 
+                            mathList.pop()
+                            self.tok_idx -= 3
+                            self.advance()
+                            if (mathList[len(mathList)-1][0] == "Operand Separator"):
+                                mathList.pop()
+                                evalMathList = checkIfValidMathSyntax(mathList)
+                            else:
+                                self.advance()
+                                evalMathList = checkIfValidMathSyntax(mathList)
+                        else:
+                            break
+                    else: break
+                else: break
+                #print(evalMathList)
+
+            if (isinstance(evalMathList, str)):
+                self.error = evalMathList
+                return self.error
+            else:
+                tree.children[len(tree.children)-1].add_child(TreeNode("<math_arguments>"))
+                child = tree.children[len(tree.children)-1]
+                child.children[len(child.children)-1].add_child(TreeNode(mathList))
+
+                if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                    self.error = "ERROR: Operands in SMOOSH must be separated by AN"
+                    return self.error
+        elif (self.curr_tok[0] == "Boolean Operation"):
+            boolList = generateBooleanStatement(self)
+            if (isinstance(boolList, str)):
+                self.error = boolList
+                return self.error
+            else:
+                tree.children[len(tree.children)-1].add_child(TreeNode("<boolean_operation>"))
+                child = tree.children[len(tree.children)-1]
+                child.children[len(child.children)-1].add_child(TreeNode(boolList))
+
+                if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                    self.error = "ERROR: Operands in SMOOSH must be separated by AN"
+                    return self.error
+
+        elif (self.curr_tok[0] == "Comparison Operation"):
+            operand_type = ["NULL"]
+            compareList = getComparison(self, operand_type)
+
+            if (isinstance(compareList, str)):
+                self.error = compareList
+                return self.error
+            else:
+                tree.children[len(tree.children)-1].add_child(TreeNode("<comparison_operation>"))
+                child = tree.children[len(tree.children)-1]
+                child.children[len(child.children)-1].add_child(TreeNode(compareList))
+
+                if (self.curr_tok[0] not in ["Operand Separator", "NEWLINE"]):
+                    self.error = "ERROR: Operands in SMOOSH must be separated by AN"
+                    return self.error
+        elif (self.curr_tok[0] == "Operand Separator"):
+            self.advance()
+            if (self.curr_tok[0] == "Operand Separator"):
+                self.error = "ERROR: Another AN after AN"
+                return self.error
+            if (self.curr_tok[0] == "NEWLINE"):
+                self.error = "ERROR: Extra AN at end of SMOOSH line"
+                return self.error
+            continue
+        else:
+            self.error = "ERROR: (SMOOSH) Token not valid: " + str(self.curr_tok)
+            return self.error
 
 # use this to catch Comparison Operation
 def getComparison(self, operand_type):
@@ -1271,7 +1423,7 @@ def checkIfValidMathSyntax(tokens):
         if (eval != "NO ERRORS"):
             return eval
         while (1):
-            print(acc, len(acc))
+            #print(acc, len(acc))
             if (len(acc) >= 3):
                 lastElemIsNum = isinstance(acc[len(acc)-1], int) or isinstance(acc[len(acc)-1], float)
                 secondLastElemIsNum = isinstance(acc[len(acc)-2], int) or isinstance(acc[len(acc)-2], float)
