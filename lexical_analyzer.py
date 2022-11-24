@@ -37,12 +37,15 @@ def LexAnalyze(results, main):
         #print(results)
     if (main == -2):
         results = re.findall(rxSmoosh, results)
+        numSmooshLex = 0
         #print("<<<<<")
         #print(results)
 
     for i in results:
         if (main == -1):
             numVisibleLex += 1
+        elif (main == -2):
+            numSmooshLex += 1
         # captured by first capture group (keywords)
         if (i[0]):
             kw = i[0]
@@ -163,7 +166,10 @@ def LexAnalyze(results, main):
             elif (kw == "WILE"):                    lexemes.append(["Loop Condition",kw])
             elif (kw == "IM OUTTA YR"):             lexemes.append(["Loop Delimiter CLOSE",kw])
             elif (kw == "GTFO"):                    lexemes.append(["Break Keyword",kw])
-            elif (kw == "AN"):                      lexemes.append(["Operand Separator",kw])
+            elif (kw == "AN"):                      
+                lexemes.append(["Operand Separator",kw])
+                if (main == -1):    numVisibleLex -= 1
+                elif (main == -2):  numSmooshLex -= 1
             elif (kw == "HOW IZ I"):                lexemes.append(["Function Delimiter",kw])
             elif (kw == "IF U SAY SO"):             lexemes.append(["Function Delimiter",kw])
             elif (kw == "I IZ"):                    lexemes.append(["Function Call",kw])
@@ -240,11 +246,11 @@ def LexAnalyze(results, main):
             return lexemes
     
     if (main == -1):
-        #lexemes.insert(0,["Output Keyword", "VISIBLE", numVisibleLex])
-        lexemes.insert(0,["Output Keyword", "VISIBLE"])
+        lexemes.insert(0,["Output Keyword", "VISIBLE", numVisibleLex])
+        #lexemes.insert(0,["Output Keyword", "VISIBLE"])
         #print(lexemes)
     elif (main == -2):
-        lexemes.insert(0,["Concatenation Keyword", "SMOOSH"])
+        lexemes.insert(0,["Concatenation Keyword", "SMOOSH", numSmooshLex])
         #print("::::")
         #print(lexemes)
     return lexemes

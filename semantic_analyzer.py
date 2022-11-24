@@ -150,6 +150,8 @@ def semanticAnalyze(lst):
             temp = input()
             var = line[1][1]
             symbolTable[var] = temp
+        elif (line[0][0] == "Output Keyword"):
+            pass
             
         cnt += 1
     
@@ -172,7 +174,10 @@ def semantic_main():
 
         print("\n### SYMBOL TABLE ###")
         for i in symbolTable:
-            print(f"{i.rjust(10)}: {symbolTable[i]}")
+            if (isinstance(symbolTable[i], str)):
+                print(f"{i.rjust(10)}: \"{symbolTable[i]}\"")
+            else:
+                print(f"{i.rjust(10)}: {symbolTable[i]}")
         if (semanticResult != 1):
             print("\n"+semanticResult)
 
