@@ -96,6 +96,8 @@ def semanticAnalyze(lst):
                         if (typeChild == "<math_arguments>"):
                             cnt += 1
                             value = mathSolve(lst[cnt])
+                            if (isinstance(value, str)):
+                                return value
                             allInt = True
                             for i in lst[cnt]:
                                 if (i[0] == "NUMBAR Literal"):
@@ -146,6 +148,8 @@ def semanticAnalyze(lst):
                     symbolTable["IT"] = False
             
         cnt += 1
+    
+    return 1
 
 def semantic_main():
     syntax = syntactic_analyzer.syntax_main()
@@ -155,11 +159,13 @@ def semantic_main():
         lst = syntax.getResult().get_list([])
         for i in lst:
            print(i)
-        semanticAnalyze(lst)
+        semanticResult = semanticAnalyze(lst)
 
         print("\n### SYMBOL TABLE ###")
         for i in symbolTable:
             print(f"{i.rjust(10)}: {symbolTable[i]}")
+        if (semanticResult != 1):
+            print("\n"+semanticResult)
 
 if __name__ == "__main__":
     semantic_main()
