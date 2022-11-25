@@ -34,8 +34,12 @@ def mathSolve(tokens):
             else:               sublistTokens.append(0)
         elif (i[0] == "Variable Identifier"):
             varValue = symbolTable[i[1]]
-            cnv = float(varValue)
-            checkCnv = cnv - int(varValue)
+            try:
+                cnv = float(varValue)
+                checkCnv = cnv - int(varValue)
+            except:
+                eval = f"ERROR: {i[1]} cannot be converted to number"
+                return eval
 
             if (checkCnv == 0):
                 sublistTokens.append(int(varValue))
@@ -144,7 +148,9 @@ def semanticAnalyze(lst):
         elif (line[0][0] == "Arithmetic Operation"):
             #print(lst[cnt:])
             #print("###"+str(line))
-            value = mathSolve(line)
+            value = mathSolve(lst[cnt])
+            if (isinstance(value, str)):
+                return value
             symbolTable["IT"] = value
         elif (line[0][0] in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
             type = line[0][0]
@@ -220,7 +226,10 @@ def semanticAnalyze(lst):
                     else:
                         temp += str(symbolTable[value])
                 elif (lexType == "Arithmetic Operation"):
-                    temp += str(mathSolve(i))
+                    valueM = mathSolve(i)
+                    if (isinstance(valueM, str)):
+                        return valueM
+                    temp += str(valueM)
                 elif (lexType == "Operand Separator"):
                     pass
             # Don't comment out this print statement
@@ -258,7 +267,10 @@ def semanticAnalyze(lst):
                     else:
                         temp += str(symbolTable[value])
                 elif (lexType == "Arithmetic Operation"):
-                    temp += str(mathSolve(i))
+                    valueM = mathSolve(i)
+                    if (isinstance(valueM, str)):
+                        return valueM
+                    temp += str(valueM)
                 elif (lexType == "Operand Separator"):
                     pass
             symbolTable["IT"] = temp
