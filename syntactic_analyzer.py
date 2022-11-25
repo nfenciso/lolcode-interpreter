@@ -43,7 +43,7 @@ class TreeNode:
                 if (len(child.data) == 2 and isinstance(child.data[0], str) and isinstance(child.data[1], str)):
                     acc.append([child.data])
                 elif (isinstance(child.data, str)):
-                    if (child.data in ["<if-then block>","<if>","<if-end>","<else>","<else-end>"]):
+                    if (child.data in ["<if-then block>","<if>","<if-end>","<else>","<else-end>","<switch-case block>","<case-end>","<default_case>","<default-case-end>"] or "<case:" in child.data):
                         acc.append([[child.data]])
                     else:
                         acc.append([child.data])
