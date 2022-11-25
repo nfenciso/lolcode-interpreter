@@ -1,8 +1,6 @@
 import random
 import lexical_analyzer
 
-
-canBeLevelTwo = ["Arithmetic Operation","Output Keyword","Variable Declaration","Code Delimiter CLOSE"]
 mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier","String Delimiter"]
 literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"]
 expressions = ["Arithmetic Operation"]
@@ -43,7 +41,7 @@ class TreeNode:
                 if (len(child.data) == 2 and isinstance(child.data[0], str) and isinstance(child.data[1], str)):
                     acc.append([child.data])
                 elif (isinstance(child.data, str)):
-                    if (child.data in ["<if-then block>","<if>","<if-end>","<else>","<else-end>","<switch-case block>","<case-end>","<default_case>","<default-case-end>"] or "<case:" in child.data):
+                    if (child.data in ["<if-then block>","<if>","<if-end>","<else>","<else-end>","<switch-case block>","<case-end>","<default_case>","<default-case-end>","<switch-case end>"] or "<case:" in child.data):
                         acc.append([[child.data]])
                     else:
                         acc.append([child.data])
@@ -819,6 +817,7 @@ class Parser:
                             self.error = "ERROR: OMGWTF must be alone in its line"
                             return self.error
                     elif (self.curr_tok[0] == "Conditional Delimiter" and hasAtLeastOneCase):
+                        self.tree.add_child(TreeNode("<switch-case end>"))
                         self.advance()
                         if (self.curr_tok[0] == "NEWLINE"):           
                             self.advance()                     

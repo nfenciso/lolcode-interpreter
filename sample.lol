@@ -1,7 +1,7 @@
 HAI
 
 	I HAS A choice
-	I HAS A input
+	I HAS A input ITZ "2"
 
 	BTW if w/o MEBBE, 1 only, everything else is invalid
 	VISIBLE "1. Compute age"
@@ -14,22 +14,22 @@ HAI
 
 	choice
 	WTF?
-		OMG 1
+		OMG "1"
 			VISIBLE "Enter birth year: "
-			GIMMEH input
+			BTW GIMMEH input
 			VISIBLE DIFF OF 2022 AN input
 			GTFO
-		OMG 2
+		OMG "2"
 			VISIBLE "Enter bill cost: "
-			GIMMEH input
+			BTW GIMMEH input
 			VISIBLE "Tip: " PRODUKT OF input AN 0.1
 			GTFO
-		OMG "2"
+		OMG "3"
 			VISIBLE "Enter width: "
-			GIMMEH input
+			BTW GIMMEH input
 			VISIBLE "Square Area: " PRODUKT OF input AN input
 			GTFO
-		OMG 0
+		OMG "0"
 			VISIBLE "Goodbye"
 		OMGWTF
 			VISIBLE "Invalid Input!"

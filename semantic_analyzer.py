@@ -4,6 +4,8 @@ symbolTable = {
     "IT": None
 }
 
+switchCases = []
+
 def mathSolve(tokens):
     acc = []
     eval = "NO ERRORS"
@@ -311,6 +313,67 @@ def semanticAnalyze(lst):
             elif (len(elseList) != 0 and not eval):
                 semanticAnalyze(elseList)
 
+        elif (line[0][0] == "<switch-case block>"):
+            temp = []
+            #print("&&&")
+            while (1):
+                if (lst[cnt][0][0] == "<switch-case end>"):
+                    break
+                if (lst[cnt][0][0][0:6] == "<case:"):
+                    caseList = []
+                    endRemoved = lst[cnt][0][0][:-1]
+                    frontRemoved = endRemoved[7:]
+                    if (frontRemoved[0] == '"'):
+                        caseVal = str(frontRemoved[1:-1])
+                    elif (frontRemoved == 'WIN'):
+                        caseVal = True
+                    elif (frontRemoved == 'FAIL'):
+                        caseVal = False
+                    else:
+                        cnv = float(frontRemoved)
+                        checkCnv = cnv - int(frontRemoved)
+
+                        if (checkCnv == 0):
+                            caseVal = int(frontRemoved)
+                        else:
+                            caseVal = float(frontRemoved)
+
+                    breakEncountered = False
+                    print("$"+str(frontRemoved))
+                    while (1):
+                        if (lst[cnt][0][0] == "<case-end>"):
+                            break
+                        
+                        if (not breakEncountered):
+                            caseList.append(lst[cnt])
+
+                        if (not breakEncountered and lst[cnt][0][0] == "Break Keyword"):
+                            breakEncountered = True
+                        cnt += 1
+                    
+                    caseList.pop(0)
+                    switchCases.append((caseVal, caseList))
+                elif (lst[cnt][0][0] == "<default_case>"):
+                    caseList = []
+                    print("$")
+                    while (1):
+                        if (lst[cnt][0][0] == "<default-case-end>"):
+                            break
+                        
+                        if (not breakEncountered):
+                            caseList.append(lst[cnt])
+
+                        if (not breakEncountered and lst[cnt][0][0] == "Break Keyword"):
+                            breakEncountered = True
+                        cnt += 1
+                    
+                    caseList.pop(0)
+                    switchCases.append(("$#DEFAULT#$", caseList))
+
+                cnt += 1
+            for i in switchCases:
+                print(i)
+                
         else:
             pass
             
