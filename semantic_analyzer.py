@@ -32,6 +32,15 @@ def mathSolve(tokens):
         elif (i[0] == "TROOF Literal"):
             if (i[1] == "WIN"): sublistTokens.append(1)
             else:               sublistTokens.append(0)
+        elif (i[0] == "Variable Identifier"):
+            varValue = symbolTable[i[1]]
+            cnv = float(varValue)
+            checkCnv = cnv - int(varValue)
+
+            if (checkCnv == 0):
+                sublistTokens.append(int(varValue))
+            else:
+                sublistTokens.append(float(varValue))
     
     while (1):
         if (len(acc) >= 3):
@@ -69,6 +78,7 @@ def mathSolve(tokens):
 
             if (toBeInserted == "AN"):
                 curr += 1
+                print(sublistTokens)
                 toBeInserted = sublistTokens[curr]
             
             acc.append(toBeInserted)
@@ -130,6 +140,8 @@ def semanticAnalyze(lst):
                             else:
                                 symbolTable[var] = False
         elif (line[0][0] == "Arithmetic Operation"):
+            print(lst[cnt:])
+            print("###"+str(line))
             value = mathSolve(line)
             symbolTable["IT"] = value
         elif (line[0][0] in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):

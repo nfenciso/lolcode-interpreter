@@ -3,17 +3,18 @@
 -indicate whether delimeter is open or close
 -comment out comment-related keywords AKA do not add them as lexemes
 
-REQUIRED TASKS LEFT:
-[----]GIMMEH
-[----????]If-Else
-[----]Assignment 
-[----]Comparison
-[----]Boolean
-[----]Switch-Case
-[----]Typecast (R, RMAEK, IS NOW A)
-[]Loops
-[]SMOOSH
-[----]Just a literal
+SEMANTIC TASKS
+[X]GIMMEH
+[ ]If-Else
+[X]Assignment 
+[ ]Comparison
+[ ]Boolean
+[ ]Switch-Case
+[ ]Typecast (R, RMAEK, IS NOW A)
+[ ]Loops
+[X]SMOOSH
+[X]Just a literal
+[?]VISIBLE (incomplete, support for Boolean and Comparison)
 
 HAI
     I HAS A var ITZ SUM OF BIGGR OF SUM OF 4 AN 2 AN 2 AN DIFF OF 10 AN 7 I HAS A var4
