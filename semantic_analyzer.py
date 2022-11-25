@@ -271,8 +271,9 @@ def semanticAnalyze(lst):
                 ifList.append(lst[cnt])
                 cnt += 1
             cnt += 1
+            elseList = []
             if (lst[cnt][0][0] == "<else>"):
-                elseList = []
+                
                 cnt += 1
                 while (1):
                     if (lst[cnt][0][0] == "<else-end>"):
@@ -295,7 +296,8 @@ def semanticAnalyze(lst):
             
             #print("EVAL: "+str(eval))
             if (eval):  semanticAnalyze(ifList)
-            else:       semanticAnalyze(elseList)
+            elif (len(elseList) != 0 and not eval):
+                semanticAnalyze(elseList)
 
         else:
             pass

@@ -20,14 +20,12 @@ HAI
     I HAS A z ITZ BOTH OF WIN AN FAIL
     TLDR
 
-    choice
+    0
     O RLY?
 		YA RLY
 			VISIBLE "Enter birth year: "
 			GIMMEH input
 			VISIBLE DIFF OF 2022 AN input
-		NO WAI
-			VISIBLE "Invalid Input!"
 	OIC
 
 KTHXBYE
