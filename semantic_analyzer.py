@@ -154,17 +154,43 @@ def semanticAnalyze(lst):
             numVisibleArgs = line[0][2]
             tempList = []
             smooshIndex = -1
-            for i in range(0,numVisibleArgs):
+            tempCnt = 0
+            while (tempCnt < numVisibleArgs):
+                #print(":::"+str(lst[cnt]))
                 cnt += 1
                 tempList.append(lst[cnt])
 
-                if (lst[cnt][0][0] == "Concatenation Keyword"):
-                    smooshIndex = cnt
-            if (smooshIndex != -1):
-                numSmooshArgs = lst[smooshIndex][0][2]
-                for i in range(0, numSmooshArgs):
+                if (lst[cnt][0] == "<math_arguments>"):
+                    tempList.pop()
                     cnt += 1
                     tempList.append(lst[cnt])
+                    tempCnt += len(lst[cnt])-1
+                # boolean
+                # comparison
+
+                if (lst[cnt][0][0] == "Concatenation Keyword"):
+                    smooshIndex = cnt
+                
+                tempCnt += 1
+                #print("tempCnt: "+str(tempCnt))
+            #print("III")
+            #print(tempList)
+            if (smooshIndex != -1):
+                numSmooshArgs = lst[smooshIndex][0][2]
+                tempCnt = 0
+                while (tempCnt < numSmooshArgs):
+                    cnt += 1
+                    tempList.append(lst[cnt])
+
+                    if (lst[cnt][0] == "<math_arguments>"):
+                        tempList.pop()
+                        cnt += 1
+                        tempList.append(lst[cnt])
+                        tempCnt += len(lst[cnt])-1
+                    # boolean
+                    # comparison
+                    
+                    tempCnt += 1
             
             temp = ""
             for i in tempList:
@@ -179,7 +205,49 @@ def semanticAnalyze(lst):
                         return eval
                     else:
                         temp += str(symbolTable[value])
+                elif (lexType == "Arithmetic Operation"):
+                    temp += str(mathSolve(i))
+                elif (lexType == "Operand Separator"):
+                    pass
+            # Don't comment out this print statement
             print(temp)
+            # # # # # # # # # # # # # # # # # # # #
+
+        elif (line[0][0] == "Concatenation Keyword"):
+            numSmooshArgs = line[0][2]
+            tempList = []
+            tempCnt = 0
+            while (tempCnt < numSmooshArgs):
+                cnt += 1
+                tempList.append(lst[cnt])
+
+                if (lst[cnt][0] == "<math_arguments>"):
+                    tempList.pop()
+                    cnt += 1
+                    tempList.append(lst[cnt])
+                    tempCnt += len(lst[cnt])-1
+                # boolean
+                # comparison
+                
+                tempCnt += 1
+            
+            temp = ""
+            for i in tempList:
+                lexType = i[0][0]
+                value = i[0][1]
+                if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
+                    temp += str(value)
+                elif (lexType == "Variable Identifier"):
+                    if (symbolTable[value] == None):
+                        eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
+                        return eval
+                    else:
+                        temp += str(symbolTable[value])
+                elif (lexType == "Arithmetic Operation"):
+                    temp += str(mathSolve(i))
+                elif (lexType == "Operand Separator"):
+                    pass
+            symbolTable["IT"] = temp
         else:
             pass
             
