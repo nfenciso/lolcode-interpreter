@@ -6,7 +6,7 @@
 SEMANTIC TASKS
 [X]GIMMEH
 [X]Arithmetic
-[ ]If-Else
+[X]If-Else
 [X]Assignment 
 [ ]Comparison
 [ ]Boolean

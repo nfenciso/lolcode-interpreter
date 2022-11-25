@@ -764,6 +764,7 @@ class Parser:
                                     return self.error
                                 else:
                                     self.tree.children[len(self.tree.children)-1].add_child(switchSyntax.getResult())
+                                    self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<case-end>"))
 
                                 switchList = []
                                 if (self.curr_tok[0] in ["Case Keyword", "Default Case Keyword", "Conditional Delimiter"]):
@@ -808,6 +809,7 @@ class Parser:
                                 return self.error
                             else:
                                 self.tree.children[len(self.tree.children)-1].add_child(switchSyntax.getResult())
+                                self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<default-case-end>"))
                             switchList = []
                         else:
                             self.error = "ERROR: OMGWTF must be alone in its line"
