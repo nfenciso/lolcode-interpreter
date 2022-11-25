@@ -78,7 +78,7 @@ def mathSolve(tokens):
 
             if (toBeInserted == "AN"):
                 curr += 1
-                print(sublistTokens)
+                #print(sublistTokens)
                 toBeInserted = sublistTokens[curr]
             
             acc.append(toBeInserted)
@@ -94,6 +94,8 @@ def semanticAnalyze(lst):
         line = lst[cnt]
         if (line[0][0] == "Code Delimiter OPEN"):
             pass
+        elif (line[0][0] == "Variable Identifier"):
+            symbolTable["IT"] = symbolTable[line[0][1]]
         elif (line[0][0] == "Variable Declaration"):
             var = line[1][1]
             if var in symbolTable:
@@ -140,8 +142,8 @@ def semanticAnalyze(lst):
                             else:
                                 symbolTable[var] = False
         elif (line[0][0] == "Arithmetic Operation"):
-            print(lst[cnt:])
-            print("###"+str(line))
+            #print(lst[cnt:])
+            #print("###"+str(line))
             value = mathSolve(line)
             symbolTable["IT"] = value
         elif (line[0][0] in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
@@ -260,6 +262,41 @@ def semanticAnalyze(lst):
                 elif (lexType == "Operand Separator"):
                     pass
             symbolTable["IT"] = temp
+        elif (line[0][0] == "<if-then block>"):
+            ifList = []
+            cnt += 2
+            while (1):
+                if (lst[cnt][0][0] == "<if-end>"):
+                    break
+                ifList.append(lst[cnt])
+                cnt += 1
+            cnt += 1
+            if (lst[cnt][0][0] == "<else>"):
+                elseList = []
+                cnt += 1
+                while (1):
+                    if (lst[cnt][0][0] == "<else-end>"):
+                        break
+                    elseList.append(lst[cnt])
+                    cnt += 1
+                cnt += 1
+            
+            varIT = symbolTable["IT"]
+            if (isinstance(varIT, str)):
+                if (varIT == ""):   eval = False
+                else:               eval = True
+            elif (isinstance(varIT, int) or isinstance(varIT, float)):
+                if (float(varIT) == 0.0):   eval = False
+                else:                       eval = True
+            elif (isinstance(varIT, bool)):
+                eval = varIT
+            else:
+                eval = False
+            
+            #print("EVAL: "+str(eval))
+            if (eval):  semanticAnalyze(ifList)
+            else:       semanticAnalyze(elseList)
+
         else:
             pass
             
