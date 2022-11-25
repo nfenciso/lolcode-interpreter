@@ -203,6 +203,10 @@ class Parser:
                                 else:
                                     self.tree.children[len(self.tree.children)-1].add_child(TreeNode(compareList))
                                     self.advance()
+                            elif (self.curr_tok[0] == "Concatenation Keyword"):
+                                nodeContent.append("<concat>")
+                                self.tree.add_child(TreeNode(nodeContent))
+                                produceConcatSubtree(self, self.tree.children[len(self.tree.children)-1])
                             else:
                                 self.error = "ERROR: ITZ expression must have a value, variable, or expression as argument"
                                 return self.error
