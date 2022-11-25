@@ -626,6 +626,7 @@ class Parser:
                     return self.error
                 else:
                     self.tree.children[len(self.tree.children)-1].add_child(ifSyntax.getResult())
+                    self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<if-end>"))
 
                 ifList = []
                 # skip appending OIC or NO WAI
@@ -653,6 +654,7 @@ class Parser:
                         return self.error
                     else:
                         self.tree.children[len(self.tree.children)-1].add_child(elseSyntax.getResult())
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<else-end>"))
                 
                 self.advance()
                 if (self.curr_tok[0] == "NEWLINE"):

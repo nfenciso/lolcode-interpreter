@@ -1,6 +1,5 @@
 HAI
     BTW variable dec
-    SUM OF 2 AN 3
     I HAS A empty
     I HAS A input
     I HAS A a ITZ 2
@@ -16,7 +15,17 @@ HAI
     BTW VISIBLE a AN a AN b AN "jim"
     BTW VISIBLE SUM OF 3 AN 100 input
     BTW SMOOSH c AN d AN PRODUKT OF 9 AN 8
+    OBTW
+    I HAS A z ITZ BOTH OF WIN AN FAIL
+    TLDR
 
-    VISIBLE SUM OF 2022 AN input
+    O RLY?
+		YA RLY
+			VISIBLE "Enter birth year: "
+			GIMMEH input
+			VISIBLE DIFF OF 2022 AN input
+		NO WAI
+			VISIBLE "Invalid Input!"
+	OIC
 
 KTHXBYE
