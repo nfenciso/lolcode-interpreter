@@ -373,14 +373,180 @@ def semanticAnalyze(lst):
                 cnt += 1
             for i in switchCases:
                 print(i)
-                
+
+        elif (line[0] == "<boolean_operation>"):
+            cnt += 1
+            line = lst[cnt]
+            result = get_bool_result(line)
+
+            symbolTable["IT"] = result
+
         else:
             pass
             
-            
         cnt += 1
-    
     return 1
+
+def convert_value_to_bool(value):
+    if (value in ['WIN', 'FAIL']): # value is already a TROOF
+        return value
+    elif (isinstance(value, str)): # value is YARN
+        if (len(value) > 0): return 'WIN'
+        else: return 'FAIL'
+    else:                          # value will now fall on either NUMBR or NUMBAR
+        if (value > 0): return 'WIN'
+        else: return 'FAIL'
+
+# use this to get the value of boolean operation
+def get_bool_result(line):
+    if (line[0] in ["BOTH OF", "EITHER OF", "WON OF"]):
+        bool_arguments = [line[0], line[1], line[2]]
+        result = get_bool_result_2(bool_arguments)
+    elif (line[0] == "NOT"):
+        bool_arguments = [line[0], line[1]]
+        result = get_bool_result_not(bool_arguments)
+    else:
+        result = get_bool_result_all(line)
+
+    return result
+
+def get_bool_result_all(bool_arguments):
+
+    for i in range(1, len(bool_arguments)):
+        
+        temp = ""
+        if ((bool_arguments[i][0] == "TROOF Literal")): # if already a TROOF
+            temp = bool_arguments[i][1]
+        else: 
+            if (bool_arguments[i][0] in ["BOTH OF", "EITHER OF", "WON OF"]): 
+                temp = get_bool_result_2(bool_arguments[i])
+            elif (bool_arguments[i][0] in ["NOT"]): 
+                temp = get_bool_result_not(bool_arguments[i])
+            elif (bool_arguments[i][0] == "NUMBR Literal"):
+                if (int(bool_arguments[i][1]) > 0): temp = 'WIN'
+                else: temp = 'FAIL'
+            elif (bool_arguments[i][0] == "NUMBAR Literal"):
+                if (float(bool_arguments[i][1]) > 0): temp = 'WIN'
+                else: temp = 'FAIL'
+            elif (bool_arguments[i][0] == "YARN Literal"):
+                if (len(bool_arguments[i][1]) > 0): temp = 'WIN'
+                else: temp = 'FAIL'
+            elif (bool_arguments[i][0] == "Variable Identifier"): # get value from symbol table
+                var = bool_arguments[i][1]
+                if (symbolTable[var] == None): temp = 'FAIL'
+                else: temp = convert_value_to_bool(symbolTable[var])
+        # checker if break from loop
+        x = True if temp == 'WIN' else False
+        print(f"this is the result: {temp}")
+
+        if(bool_arguments[0] == "ALL OF"): # infinite and (break if false)
+            if (not x): return "FAIL" 
+        else:                              # infinite or (break if true)
+            if (x): return "WIN"
+
+    if(bool_arguments[0] == "ALL OF"): # infinite and (did not break, so return true)
+        return "WIN" 
+    else:                              # infinite or (did not break, so return false)
+        return "FAIL"
+
+def get_bool_result_not(bool_arguments):
+    second_arg = bool_arguments[1]
+
+    # =========== second argument ============ (first operand)
+    if ((second_arg[0] == "TROOF Literal")): # if already a TROOF
+        bool_arguments[1] = second_arg[1]
+    else:
+        if (second_arg[0] in ["BOTH OF", "EITHER OF", "WON OF"]): 
+            bool_arguments[1] = get_bool_result_2(second_arg)
+        elif (second_arg[0] in ["NOT"]): 
+            bool_arguments[1] = get_bool_result_not(second_arg)
+        elif (second_arg[0] in ["ANY OF", "ALL OF"]):
+            bool_arguments[1] = get_bool_result_all(second_arg)
+        elif (second_arg[0] == "NUMBR Literal"):
+            if (int(second_arg[1]) > 0): bool_arguments[1] = 'WIN'
+            else: bool_arguments[1] = 'FAIL'
+        elif (second_arg[0] == "NUMBAR Literal"):
+            if (float(second_arg[1]) > 0): bool_arguments[1] = 'WIN'
+            else: bool_arguments[1] = 'FAIL'
+        elif (second_arg[0] == "YARN Literal"):
+            if (len(second_arg[1]) > 0): bool_arguments[1] = 'WIN'
+            else: bool_arguments[1] = 'FAIL'
+        elif (second_arg[0] == "Variable Identifier"): # get value from symbol table
+            var = second_arg[1]
+            if (symbolTable[var] == None): bool_arguments[1] = 'FAIL'
+            else: bool_arguments[1] = convert_value_to_bool(symbolTable[var])
+
+    # ======= at this point, value can now be evaluated using second argument =========
+    x = True if bool_arguments[1] == 'WIN' else False
+    if (x): return 'FAIL'
+    else: return 'WIN'
+     
+def get_bool_result_2(bool_arguments):
+    first_arg = bool_arguments[0]
+    second_arg = bool_arguments[1]
+    third_arg = bool_arguments[2]
+
+    # =========== second argument ============ (first operand)
+    if ((second_arg[0] == "TROOF Literal")): # if already a TROOF
+        bool_arguments[1] = second_arg[1]
+    else:
+        if (second_arg[0] in ["BOTH OF", "EITHER OF", "WON OF"]): # if not, do your thing
+            bool_arguments[1] = get_bool_result_2(second_arg)
+        elif (second_arg[0] in ["NOT"]): 
+            bool_arguments[1] = get_bool_result_not(second_arg)
+        elif (second_arg[0] in ["ANY OF", "ALL OF"]):
+            bool_arguments[1] = get_bool_result_all(second_arg)
+        elif (second_arg[0] == "NUMBR Literal"):
+            if (int(second_arg[1]) > 0): bool_arguments[1] = 'WIN'
+            else: bool_arguments[1] = 'FAIL'
+        elif (second_arg[0] == "NUMBAR Literal"):
+            if (float(second_arg[1]) > 0): bool_arguments[1] = 'WIN'
+            else: bool_arguments[1] = 'FAIL'
+        elif (second_arg[0] == "YARN Literal"):
+            if (len(second_arg[1]) > 0): bool_arguments[1] = 'WIN'
+            else: bool_arguments[1] = 'FAIL'
+        elif (second_arg[0] == "Variable Identifier"): # get value from symbol table
+            var = second_arg[1]
+            if (symbolTable[var] == None): bool_arguments[1] = 'FAIL'
+            else: bool_arguments[1] = convert_value_to_bool(symbolTable[var])
+
+    # =========== third argument ============ (second operand)
+    if ((third_arg[0] == "TROOF Literal")): # if already a TROOF
+        bool_arguments[1] = third_arg[1]
+    else:
+        if (third_arg[0] in ["BOTH OF", "EITHER OF", "WON OF"]): # if not, do your thing
+            bool_arguments[2] = get_bool_result_2(third_arg)
+        elif (third_arg[0] in ["NOT"]): 
+            bool_arguments[2] = get_bool_result_not(third_arg)
+        elif (second_arg[0] in ["ANY OF", "ALL OF"]):
+            bool_arguments[2] = get_bool_result_all(third_arg)
+        elif (third_arg[0] == "NUMBR Literal"):
+            if (int(third_arg[1]) > 0): bool_arguments[2] = 'WIN'
+            else: bool_arguments[2] = 'FAIL'
+        elif (third_arg[0] == "NUMBAR Literal"):
+            if (float(third_arg[1]) > 0): bool_arguments[2] = 'WIN'
+            else: bool_arguments[2] = 'FAIL'
+        elif (third_arg[0] == "YARN Literal"):
+            if (len(third_arg[1]) > 0): bool_arguments[2] = 'WIN'
+            else: bool_arguments[2] = 'FAIL'
+        elif (third_arg[0] == "Variable Identifier"): # get value from symbol table
+            var = third_arg[1]
+            if (symbolTable[var] == None): bool_arguments[2] = 'FAIL'
+            else: bool_arguments[2] = convert_value_to_bool(symbolTable[var])
+
+    # ======= at this point, value can now be evaluated using second and third argument =========
+    x = True if bool_arguments[1] == 'WIN' else False
+    y = True if bool_arguments[2] == 'WIN' else False
+    if (first_arg == "BOTH OF"): # and
+        if (x and y): return 'WIN'
+        else: return 'FAIL'
+    elif (first_arg == "EITHER OF"): # or
+        if (x or y): return 'WIN'
+        else: return 'FAIL'
+    else:                         # fall in xor
+        if (x ^ y): return 'WIN'
+        else: return 'FAIL'      
+
 
 def semantic_main():
     syntax = syntactic_analyzer.syntax_main()

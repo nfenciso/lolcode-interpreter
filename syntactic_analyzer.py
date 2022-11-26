@@ -1287,7 +1287,7 @@ def solveBooleanStatement_2(self):
         if (self.error != "NONE"):
             return self.error
     else:
-        self.error = "ERROR: (Bool) Unexpected second operand"
+        self.error = "ERROR: (Bool) Missing or unexpected second operand"
         return self.error
 
     if (self.error != "NONE"):
@@ -1385,7 +1385,7 @@ def solveBooleanStatement(self):
         if (self.error != "NONE"):
             return self.error
     else:
-        self.error = "ERROR: (Bool) Unexpected second operand"
+        self.error = "ERROR: (Bool) Missing or unexpected second operand"
         return self.error
 
     while(1):
@@ -1396,7 +1396,7 @@ def solveBooleanStatement(self):
         if(self.curr_tok[0] == "Operand Separator"): # AN keyword
             self.advance()
         else:
-            self.error = "ERROR: (Bool) Missing AN seperator"
+            self.error = "ERROR: (Bool) Missing AN seperator or MKAY keyword"
             return self.error
 
         # ========= next operand ==============
@@ -1418,7 +1418,7 @@ def solveBooleanStatement(self):
             if (self.error != "NONE"):
                 return self.error
         else:
-            self.error = "ERROR: (Bool) Unexpected second operand"
+            self.error = "ERROR: (Bool) Missing or unexpected next operand"
             return self.error
 
     if (self.error != "NONE"):
