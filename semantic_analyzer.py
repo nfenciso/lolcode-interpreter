@@ -339,7 +339,7 @@ def semanticAnalyze(lst):
                             caseVal = float(frontRemoved)
 
                     breakEncountered = False
-                    print("$"+str(frontRemoved))
+                    #print("$"+str(frontRemoved))
                     while (1):
                         if (lst[cnt][0][0] == "<case-end>"):
                             break
@@ -354,8 +354,9 @@ def semanticAnalyze(lst):
                     caseList.pop(0)
                     switchCases.append((caseVal, caseList))
                 elif (lst[cnt][0][0] == "<default_case>"):
+                    breakEncountered = False
                     caseList = []
-                    print("$")
+                    #print("$")
                     while (1):
                         if (lst[cnt][0][0] == "<default-case-end>"):
                             break
@@ -366,13 +367,40 @@ def semanticAnalyze(lst):
                         if (not breakEncountered and lst[cnt][0][0] == "Break Keyword"):
                             breakEncountered = True
                         cnt += 1
-                    
                     caseList.pop(0)
                     switchCases.append(("$#DEFAULT#$", caseList))
 
                 cnt += 1
+            matchedCase = False
+            execSucceeding = True
+            #for i in switchCases:
+            #    print(i)
             for i in switchCases:
-                print(i)
+                if (i[0] == "$#DEFAULT#$" and not matchedCase):
+                    if (i[1][len(i[1])-1][0][0] == "Break Keyword"):
+                        i[1].pop()
+                        semanticAnalyze(i[1])
+                        break
+                    else:
+                        semanticAnalyze(i[1])
+                if (matchedCase and execSucceeding and i[0] != "$#DEFAULT#$"):
+                    if (i[1][len(i[1])-1][0][0] == "Break Keyword"):
+                        i[1].pop()
+                        semanticAnalyze(i[1])
+                        break
+                    else:
+                        semanticAnalyze(i[1])
+                    continue
+                if (not matchedCase and i[0] == symbolTable["IT"]):
+                    matchedCase = True
+                    #print("QQQ:"+str(i[1][len(i[1])-1][0]))
+                    if (i[1][len(i[1])-1][0][0] == "Break Keyword"):
+                        i[1].pop()
+                        semanticAnalyze(i[1])
+                        break
+                    else:
+                        semanticAnalyze(i[1])
+
 
         elif (line[0] == "<boolean_operation>"):
             cnt += 1

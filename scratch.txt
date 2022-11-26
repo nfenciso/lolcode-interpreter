@@ -10,7 +10,7 @@ SEMANTIC TASKS
 [X]Assignment 
 [x]Comparison
 [X]Boolean
-[ ]Switch-Case
+[X]Switch-Case
 [----]Typecast (R, RMAEK, IS NOW A)
 [ ]Loops
 [X]SMOOSH
