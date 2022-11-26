@@ -8,7 +8,7 @@ SEMANTIC TASKS
 [X]Arithmetic
 [X]If-Else
 [X]Assignment 
-[----]Comparison
+[x]Comparison
 [X]Boolean
 [ ]Switch-Case
 [----]Typecast (R, RMAEK, IS NOW A)
