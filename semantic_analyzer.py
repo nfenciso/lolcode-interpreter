@@ -6,6 +6,8 @@ symbolTable = {
 
 switchCases = []
 
+inLoop = False
+
 def mathSolve(tokens):
     acc = []
     eval = "NO ERRORS"
@@ -286,15 +288,18 @@ def semanticAnalyze(lst):
                 cnt += 1
             cnt += 1
             elseList = []
-            if (lst[cnt][0][0] == "<else>"):
-                
-                cnt += 1
-                while (1):
-                    if (lst[cnt][0][0] == "<else-end>"):
-                        break
-                    elseList.append(lst[cnt])
+            if (cnt >= len(lst)):
+                pass
+            else:
+                if (lst[cnt][0][0] == "<else>"):
+                    
                     cnt += 1
-                cnt += 1
+                    while (1):
+                        if (lst[cnt][0][0] == "<else-end>"):
+                            break
+                        elseList.append(lst[cnt])
+                        cnt += 1
+                    cnt += 1
             
             varIT = symbolTable["IT"]
             if (isinstance(varIT, str)):
@@ -416,6 +421,49 @@ def semanticAnalyze(lst):
             if (result not in [True, False]): return result
 
             symbolTable["IT"] = result
+
+        elif (line[0][0] == "<loop>"):
+            cnt += 1
+            loopList = []
+            inLoop = True
+            while (1):
+                if (lst[cnt][0][0] == "<loop-content-end>"):
+                    break
+                loopList.append(lst[cnt])
+                cnt += 1
+            loopList.pop(0)
+            print("***")
+            print(loopList)
+            #while (1):
+            #    if (not inLoop):
+            #        break
+            #    else:
+            #        semanticAnalyze(loopList)
+        
+        elif (line[0] == "<loop>" and len(line) == 3):
+            loopConditionType = line[1]
+            print(loopConditionType)
+            cnt += 1
+            
+            if (lst[cnt][0][0] == "<loop content>"):
+                cnt -= 1
+                loopCondition = lst[cnt][2]
+            else:
+                loopCondition = lst[cnt]
+            print(loopCondition)
+
+            loopList = []
+            while (1):
+                if (lst[cnt][0][0] == "<loop-content-end>"):
+                    break
+                loopList.append(lst[cnt])
+                cnt += 1
+            print("***")
+            print(loopList)
+
+        elif (line[0][0] == "Break Keyword" and inLoop):
+            inLoop = False
+            return
 
         else:
             pass

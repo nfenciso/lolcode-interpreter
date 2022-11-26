@@ -850,16 +850,20 @@ class Parser:
             elif (self.curr_tok[0] == "Loop Delimiter OPEN"):
                 loopList = []
                 loopLabel = ""
+                loopOperation = ""
+                loopVar = ""
                 loopCondition = ""
                 self.advance()
                 if (self.curr_tok[0] == "Loop Identifier"):
                     loopLabel = self.curr_tok[1]
                     self.advance()
                     if (self.curr_tok[0] == "Loop Operation"):
+                        loopOperation = self.curr_tok[1]
                         self.advance()
                         if (self.curr_tok[0] == "Loop Keyword"):
                             self.advance()
                             if (self.curr_tok[0] == "Variable Identifier"):
+                                loopVar = self.curr_tok[1]
                                 self.advance()
                                 if (self.curr_tok[0] == "NEWLINE"):
                                     self.advance()
@@ -892,6 +896,7 @@ class Parser:
                                         self.error = loopSyntax.getResult()
                                         return self.error
                                     else:
+                                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode([loopOperation, loopVar]))
                                         self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
                                         self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<loop-content-end>"))
                                     
@@ -975,6 +980,7 @@ class Parser:
                                                 self.error = loopSyntax.getResult()
                                                 return self.error
                                             else:
+                                                self.tree.children[len(self.tree.children)-1].add_child(TreeNode([loopOperation, loopVar]))
                                                 self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
                                                 self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<loop-content-end>"))
                                         else:
