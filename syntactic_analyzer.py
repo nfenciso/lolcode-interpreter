@@ -9,6 +9,9 @@ boolTwoOperands = ["BOTH OF", "EITHER OF", "WON OF"]
 boolMoreOperand = ["ANY OF", "ALL OF"]
 comparator = ["BIGGR OF", "SMALLR OF", "BOTH SAEM", "DIFFRINT"]
 
+global loopOperation
+global loopVar
+
 class TreeNode:
     def __init__(self, data):
         self.data = data
@@ -260,13 +263,15 @@ class Parser:
                                     loopList.append(self.curr_tok)
                                     self.advance()
                                 #print(loopList)
-                                loopSyntax = Parser(loopList, TreeNode("<loop_content>"))
+                                loopSyntax = Parser(loopList, TreeNode("<loop content>"))
                                 loopList = []
                                 if (isinstance(loopSyntax.getResult(), str)):
                                     self.error = loopSyntax.getResult()
                                     return self.error
                                 else:
+                                    self.tree.children[len(self.tree.children)-1].add_child(TreeNode([loopOperation, loopVar]))
                                     self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
+                                    self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<loop-content-end>"))
                             else:
                                 self.error = "ERROR: Unexpected end of Loop IM IN YR line"
                                 return self.error

@@ -1,7 +1,7 @@
 HAI
 
-	I HAS A cnt ITZ 0
-	IM IN YR loop UPPIN YR cnt TIL BOTH SAEM cnt AN 5
+	I HAS A cnt ITZ 4
+	IM IN YR loop NERFIN YR cnt WILE SUM OF cnt AN 0
 	BTW IM IN YR loop UPPIN YR cnt
 		VISIBLE cnt
 		BOTH SAEM cnt AN 10

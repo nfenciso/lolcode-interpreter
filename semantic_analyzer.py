@@ -478,9 +478,11 @@ def semanticAnalyze(lst):
                 #print(":"+str(loopVar))
                 cnt += 2
             else:
+                print("^^^"+str(lst[cnt]))
                 loopCondition = lst[cnt]
                 cnt += 1
                 loopIterOperation = lst[cnt][0][0]
+                print("^^^"+str(lst[cnt]))
                 loopVar = lst[cnt][0][1]
                 #print(":"+str(loopCondition))
                 #print(":"+str(loopIterOperation))
@@ -502,6 +504,8 @@ def semanticAnalyze(lst):
                 if (isinstance(loopCondition, list)):
                     if (loopCondition[0] in ["BOTH OF", "EITHER OF", "WON OF", "ANY OF", "ALL OF","NOT"]):
                         fulfilledExpr = get_bool_result(loopCondition)
+                    elif (loopCondition[0][0] == "Arithmetic Operation"):
+                        fulfilledExpr = bool(mathSolve(loopCondition))
                     else:
                         fulfilledExpr = get_comparison_result(loopCondition)
                     if (loopConditionType == "TIL" and fulfilledExpr):
