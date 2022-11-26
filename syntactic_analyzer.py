@@ -450,14 +450,10 @@ class Parser:
                     return self.error
                 # pass      
             elif (self.curr_tok[0] == "Variable Identifier"):
-                # assignList = []
-                # assignList.append("<assignment_arguments>")
-                # self.tree.add_child(TreeNode(assignList))
                 assignList = []
                 assignList.append(self.curr_tok)
                 self.advance()
                 if (self.curr_tok[0] == "NEWLINE"):
-                    # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
                     self.tree.add_child(TreeNode(assignList))
 
                     self.advance()
@@ -465,7 +461,12 @@ class Parser:
                     assignList.append(self.curr_tok)
                     self.advance()
                     if (self.curr_tok[0] in literals): # assigning literal
-                        assignList.append(self.curr_tok)
+                        if(self.curr_tok[0] == "String Delimiter"):
+                            self.advance()
+                            assignList.append(self.curr_tok)
+                            self.advance()
+                        else: assignList.append(self.curr_tok)
+
                         self.advance()
                         if (self.curr_tok[0] == "NEWLINE"):
                             # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
@@ -474,6 +475,17 @@ class Parser:
                             self.advance()
                         else:
                             self.error = "ERROR: (R) Must only assign single literal at a time"
+                            return self.error
+                    elif (self.curr_tok[0] in "Variable Identifier"):
+                        assignList.append(self.curr_tok)
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):
+                            # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                            self.tree.add_child(TreeNode(assignList))
+
+                            self.advance()
+                        else:
+                            self.error = "ERROR: (R) Must only assign single value"
                             return self.error
                     elif (self.curr_tok[0] in expressions): # assigning value from expression
                         if (self.curr_tok[0] == "Arithmetic Operation"):

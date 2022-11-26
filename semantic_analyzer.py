@@ -384,7 +384,10 @@ def semanticAnalyze(lst):
 
 def semantic_main():
     syntax = syntactic_analyzer.syntax_main()
-    
+
+    # print("==============")
+    # print(syntax.getResult().print_tree())
+
     try:
         tmp = isinstance(syntax.getResult(), str)
     except:
