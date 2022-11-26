@@ -13,4 +13,6 @@
 
 # tryy = ""
 
-print(False ^ False)
+he = "ad"
+
+print(isinstance(1.2, float))

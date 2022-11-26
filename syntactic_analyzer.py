@@ -1178,7 +1178,8 @@ def getComparison(self, operand_type):
     elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # first operand is a literal
         #print("first " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
-        own_list[1] = self.curr_tok[1]
+        if (self.curr_tok[0] == "NUMBAR Literal"): own_list[1] = float(self.curr_tok[1])
+        else: own_list[1] = int(self.curr_tok[1])
         self.advance()
     else:
         self.error = "ERROR: (Comparison) Operand must be of the same types. (NUMBR or NUMBAR):\n\tCurrent token: " + str(self.curr_tok) + "\n\tPrevious types: " + str(operand_type[0])
@@ -1202,7 +1203,8 @@ def getComparison(self, operand_type):
     elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # second operand is a literal
         #print("second " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
-        own_list[2] = self.curr_tok[1]
+        if (self.curr_tok[0] == "NUMBAR Literal"): own_list[2] = float(self.curr_tok[1])
+        else: own_list[2] = int(self.curr_tok[1])
         self.advance()
     else:
         self.error = "ERROR: (Comparison) Operand must be of the same types. (NUMBR or NUMBAR):\n\tCurrent token: " + str(self.curr_tok) + "\n\tPrevious types: " + str(operand_type[0])

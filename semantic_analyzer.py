@@ -381,11 +381,231 @@ def semanticAnalyze(lst):
 
             symbolTable["IT"] = result
 
+        elif (line[0] == "<comparison_operation>"):
+            cnt += 1
+            line = lst[cnt]
+            result = get_comparison_result(line)
+            if (result not in ["WIN", "FAIL"]): return result
+
+            symbolTable["IT"] = result
+
         else:
             pass
             
         cnt += 1
     return 1
+
+
+def get_comparison_value(comp_arguments, comp_type):
+    UNMATCH_TYPE_ERROR = f"ERROR: Values must be of the same type (NUMBR or NUMBAR)"
+    comp_type = comp_type
+    to_evaluate = [comp_arguments[0], "", ""]
+
+    # ============= first value ===================
+    if (isinstance(comp_arguments[1], str)): # if string, sure to be a variable
+        value = symbolTable[comp_arguments[1]]
+        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
+            return f"ERROR: (Comparison) Value of '{comp_arguments[1]}' must be of type NUMBR or NUMBAR"
+        else:
+            if (isinstance(value, int)):
+                temp_type = "integer"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value
+            else:
+                temp_type = "float"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value   
+    elif (isinstance(comp_arguments[1], list)):       # if another comparison, BIGGR SMALLR OF
+        value = get_comparison_value(comp_arguments[1], comp_type)
+        if (isinstance(value, str)): return value
+        if (isinstance(value, int)):
+            temp_type = "integer"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = value
+        else:
+            temp_type = "float"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = value  
+    elif (isinstance(comp_arguments[1], int)):             # integer
+        temp_type = "integer"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[1] = comp_arguments[1]
+    else:                                   # float
+        temp_type = "float"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[1] = comp_arguments[1]  
+
+    # ============= second value ===================
+    if (isinstance(comp_arguments[2], str)): # if string, sure to be a variable
+        value = symbolTable[comp_arguments[2]]
+        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
+            return f"ERROR: (Comparison) Value of '{comp_arguments[2]}' must be of type NUMBR or NUMBAR"
+        else:
+            if (isinstance(value, int)):
+                temp_type = "integer"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value
+            else:
+                temp_type = "float"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value   
+    elif (isinstance(comp_arguments[2], list)):       # if another comparison, BIGGR SMALLR OF
+        value = get_comparison_value(comp_arguments[2], comp_type)
+        if (isinstance(value, str)): return value
+        if (isinstance(value, int)):
+            temp_type = "integer"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = value
+        else:
+            temp_type = "float"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = value  
+    elif (isinstance(comp_arguments[2], int)):             # integer
+        temp_type = "integer"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[2] = comp_arguments[2]
+    else:                                   # float
+        temp_type = "float"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[2] = comp_arguments[2]  
+
+    # ====== at this point, we can now compare the value of index 1 and 2 ========
+    if (comp_arguments[0] == "BIGGR OF"):
+        return max(to_evaluate[1], to_evaluate[2])
+    else: # SMALLR OF
+        return min(to_evaluate[1], to_evaluate[2])
+
+def get_comparison_result(line):
+    UNMATCH_TYPE_ERROR = f"ERROR: Values must be of the same type (NUMBR or NUMBAR)"
+    comp_type = ""
+    to_evaluate = [line[0], "", ""]
+    # line[0] contains if == or !=
+
+    # ============= first value ===================
+    if (isinstance(line[1], str)): # if string, sure to be a variable
+        value = symbolTable[line[1]]
+        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
+            return f"ERROR: (Comparison) Value of '{line[1]}' must be of type NUMBR or NUMBAR"
+        else:
+            if (isinstance(value, int)):
+                temp_type = "integer"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value
+            else:
+                temp_type = "float"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value   
+    elif (isinstance(line[1], list)):       # if another comparison, BIGGR SMALLR OF
+        value = get_comparison_value(line[1], comp_type)
+        if (isinstance(value, str)): return value
+        if (isinstance(value, int)):
+            temp_type = "integer"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = value
+        else:
+            temp_type = "float"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = value  
+    elif (isinstance(line[1], int)):             # integer
+        temp_type = "integer"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[1] = line[1]
+    else:                                   # float
+        temp_type = "float"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[1] = line[1]  
+
+    # ============= second value ===================
+    if (isinstance(line[2], str)): # if string, sure to be a variable
+        value = symbolTable[line[2]]
+        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
+            return f"ERROR: (Comparison) Value of '{line[2]}' must be of type NUMBR or NUMBAR"
+        else:
+            if (isinstance(value, int)):
+                temp_type = "integer"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value
+            else:
+                temp_type = "float"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value   
+    elif (isinstance(line[2], list)):       # if another comparison, BIGGR SMALLR OF
+        value = get_comparison_value(line[2], comp_type)
+        if (isinstance(value, str)): return value
+        if (isinstance(value, int)):
+            temp_type = "integer"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = value
+        else:
+            temp_type = "float"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = value  
+    elif (isinstance(line[2], int)):             # integer
+        temp_type = "integer"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[2] = line[2]
+    else:                                   # float
+        temp_type = "float"
+        if (comp_type == ""): comp_type = temp_type
+        else:
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[2] = line[2]  
+
+    # ====== at this point, we can now compare the value of index 1 and 2 ========
+    if (line[0] == "BOTH SAEM"):
+        if (to_evaluate[1] == to_evaluate[2]): return "WIN"
+        else: return "FAIL"
+    else: # DIFFRINT
+        if (to_evaluate[1] != to_evaluate[2]): return "WIN"
+        else: return "FAIL"
+
+
 
 def convert_value_to_bool(value):
     if (value in ['WIN', 'FAIL']): # value is already a TROOF
@@ -437,7 +657,6 @@ def get_bool_result_all(bool_arguments):
                 else: temp = convert_value_to_bool(symbolTable[var])
         # checker if break from loop
         x = True if temp == 'WIN' else False
-        print(f"this is the result: {temp}")
 
         if(bool_arguments[0] == "ALL OF"): # infinite and (break if false)
             if (not x): return "FAIL" 
