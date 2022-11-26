@@ -314,9 +314,14 @@ def semanticAnalyze(lst):
                 eval = False
             
             #print("EVAL: "+str(eval))
-            if (eval):  semanticAnalyze(ifList)
+            if (eval):
+                tmp = semanticAnalyze(ifList)
+                if (tmp == "ENDLOOP"):
+                    return "ENDLOOP"
             elif (len(elseList) != 0 and not eval):
-                semanticAnalyze(elseList)
+                tmp = semanticAnalyze(elseList)
+                if (tmp == "ENDLOOP"):
+                    return "ENDLOOP"
 
         elif (line[0][0] == "<switch-case block>"):
             temp = []
@@ -425,33 +430,63 @@ def semanticAnalyze(lst):
         elif (line[0][0] == "<loop>"):
             cnt += 1
             loopList = []
+            global inLoop
             inLoop = True
+            loopIterOperation = lst[cnt][0][0]
+            loopVar = lst[cnt][0][1]
+            #print(":"+str(loopIterOperation))
+            #print(":"+str(loopVar))
+            cnt += 1
             while (1):
                 if (lst[cnt][0][0] == "<loop-content-end>"):
                     break
                 loopList.append(lst[cnt])
                 cnt += 1
             loopList.pop(0)
-            print("***")
-            print(loopList)
-            #while (1):
-            #    if (not inLoop):
-            #        break
-            #    else:
-            #        semanticAnalyze(loopList)
+            #print("***")
+            #print(loopList)
+            while (1):
+                iterResult = semanticAnalyze(loopList)
+                #print("///"+str(iterResult))
+                if (iterResult == "ENDLOOP"):
+                    break
+                
+                try:
+                    temp = int(symbolTable[loopVar])
+                    if (loopIterOperation == "UPPIN"):
+                        temp += 1
+                    else:
+                        temp -= 1
+                    symbolTable[loopVar] = temp
+                except:
+                    return f"ERROR: {loopVar} cannot be typecast to a number"
         
         elif (line[0] == "<loop>" and len(line) == 3):
             loopConditionType = line[1]
-            print(loopConditionType)
+            #print(loopConditionType)
             cnt += 1
             
-            if (lst[cnt][0][0] == "<loop content>"):
+            #print(":::"+str(lst[cnt]))
+            if (lst[cnt][0][0] == "UPPIN" or lst[cnt][0][0] == "NERFIN"):
                 cnt -= 1
                 loopCondition = lst[cnt][2]
+                cnt += 1
+                loopIterOperation = lst[cnt][0][0]
+                loopVar = lst[cnt][0][1]
+                #print(":"+str(loopCondition))
+                #print(":"+str(loopIterOperation))
+                #print(":"+str(loopVar))
+                cnt += 2
             else:
                 loopCondition = lst[cnt]
-            print(loopCondition)
-
+                cnt += 1
+                loopIterOperation = lst[cnt][0][0]
+                loopVar = lst[cnt][0][1]
+                #print(":"+str(loopCondition))
+                #print(":"+str(loopIterOperation))
+                #print(":"+str(loopVar))
+                cnt += 2
+            
             loopList = []
             while (1):
                 if (lst[cnt][0][0] == "<loop-content-end>"):
@@ -463,7 +498,7 @@ def semanticAnalyze(lst):
 
         elif (line[0][0] == "Break Keyword" and inLoop):
             inLoop = False
-            return
+            return "ENDLOOP"
 
         else:
             pass
