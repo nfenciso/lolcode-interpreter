@@ -413,7 +413,7 @@ def semanticAnalyze(lst):
             cnt += 1
             line = lst[cnt]
             result = get_comparison_result(line)
-            if (result not in ["WIN", "FAIL"]): return result
+            if (result not in [True, False]): return result
 
             symbolTable["IT"] = result
 

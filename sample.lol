@@ -1,38 +1,16 @@
 HAI
 
-	I HAS A choice
-	I HAS A input
+	I HAS A cnt ITZ 0
+	DIFFRINT cnt AN SMALLR OF cnt AN 5
 
-	BTW if w/o MEBBE, 1 only, everything else is invalid
-	VISIBLE "1. Compute age"
-	VISIBLE "2. Compute tip"
-	VISIBLE "3. Compute square area"
-	VISIBLE "0. Exit"
-
-	VISIBLE "Choice: "
-	GIMMEH choice
-
-	choice
-	WTF?
-		OMG "1"
-			VISIBLE "Enter birth year: "
-			GIMMEH input
-			VISIBLE DIFF OF 2022 AN input
-			GTFO
-		OMG "2"
-			VISIBLE "Enter bill cost: "
-			GIMMEH input
-			VISIBLE "Tip: " PRODUKT OF input AN 0.1
-			GTFO
-		OMG "3"
-			VISIBLE "Enter width: "
-			GIMMEH input
-			VISIBLE "Square Area: " PRODUKT OF input AN input
-			GTFO
-		OMG "0"
-			VISIBLE "Goodbye"
-		OMGWTF
-			VISIBLE "Invalid Input!"
-	OIC
+	OBTW
+	IM IN YR loop UPPIN YR cnt
+		DIFFRINT cnt AN SMALLR OF cnt AN 5
+		O RLY?
+			YA RLY
+				GTFO
+		OIC
+	IM OUTTA YR loop
+	TLDR
 
 KTHXBYE
