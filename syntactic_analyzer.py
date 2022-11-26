@@ -893,6 +893,7 @@ class Parser:
                                         return self.error
                                     else:
                                         self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
+                                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<loop-content-end>"))
                                     
                                 elif (self.curr_tok[0] == "Loop Condition"):
                                     loopCondition = self.curr_tok[1]
@@ -975,6 +976,7 @@ class Parser:
                                                 return self.error
                                             else:
                                                 self.tree.children[len(self.tree.children)-1].add_child(loopSyntax.getResult())
+                                                self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<loop-content-end>"))
                                         else:
                                             self.error = "ERROR: Unexpected end of Loop IM IN YR line: " + str(self.curr_tok )
                                             return self.error
