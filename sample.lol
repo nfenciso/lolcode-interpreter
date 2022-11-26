@@ -1,10 +1,10 @@
 HAI
 
 	I HAS A cnt ITZ 0
-	BTW IM IN YR loop UPPIN YR cnt TIL BOTH SAEM cnt AN 5
-	IM IN YR loop UPPIN YR cnt
+	IM IN YR loop UPPIN YR cnt TIL BOTH SAEM cnt AN 5
+	BTW IM IN YR loop UPPIN YR cnt
 		VISIBLE cnt
-		BOTH SAEM cnt AN 5
+		BOTH SAEM cnt AN 10
 		O RLY?
 			YA RLY
 				GTFO

@@ -25,8 +25,8 @@ rxVisible = r"([ \t]TROOF[ \t]|[ \t]YARN[ \t]|[ \t]NUMBR[ \t]|[ \t]NUMBAR[ \t]|[
 rxSmoosh = r"([ \t]TROOF[ \t]|[ \t]YARN[ \t]|[ \t]NUMBR[ \t]|[ \t]NUMBAR[ \t]|[ \t]HAI[ \t]|[ \t]KTHXBYE[ \t]|[ \t]BTW.*[ \t]|[ \t]OBTW[\r\w\W]*TLDR[ \t]|[ \t]I[ \t]+HAS[ \t]+A[ \t]|[ \t]ITZ[ \t]|[ \t]R[ \t]|[ \t]SUM[ \t]+OF[ \t]|[ \t]DIFF[ \t]+OF[ \t]|[ \t]PRODUKT[ \t]+OF[ \t]|[ \t]QUOSHUNT[ \t]+OF[ \t]|[ \t]MOD[ \t]+OF[ \t]|[ \t]BIGGR[ \t]+OF[ \t]|[ \t]SMALLR[ \t]+OF[ \t]|[ \t]BOTH[ \t]+OF[ \t]|[ \t]EITHER[ \t]+OF[ \t]|[ \t]WON[ \t]+OF[ \t]|[ \t]NOT[ \t]|[ \t]ANY[ \t]+OF[ \t]|[ \t]ALL[ \t]+OF[ \t]|[ \t]BOTH[ \t]+SAEM[ \t]|[ \t]DIFFRINT[ \t]|[ \t]SMOOSH[ \t]|[ \t]MAEK[ \t]|[ \t]A[ \t]|[ \t]IS[ \t]+NOW[ \t]+A[ \t]|[ \t]VISIBLE.*[ \t]|[ \t]GIMMEH[ \t]|[ \t]O[ \t]+RLY\?[ \t]|[ \t]YA[ \t]+RLY[ \t]|[ \t]MEBBE[ \t]|[ \t]NO[ \t]+WAI[ \t]|[ \t]OIC[ \t]|[ \t]WTF\?[ \t]|[ \t]OMG[ \t]|[ \t]OMGWTF[ \t]|[ \t]IM[ \t]+IN[ \t]+YR[ \t]|[ \t]UPPIN[ \t]|[ \t]NERFIN[ \t]|[ \t]YR[ \t]|[ \t]TIL[ \t]|[ \t]WILE[ \t]|[ \t]IM[ \t]+OUTTA[ \t]+YR[ \t]|[ \t]GTFO[ \t]|[ \t]AN[ \t]|[ \t]HOW[ \t]+IZ[ \t]+I[ \t]|[ \t]IF[ \t]+U[ \t]+SAY[ \t]+SO[ \t]|[ \t]I[ \t]+IZ[ \t]|[ \t]MKAY[ \t])|([ \t]-?[0-9]+[ \t]|[ \t]-?[0-9]*\.[0-9]+[ \t]|\"[^\"]*\"|[ \t]WIN[ \t]|[ \t]FAIL[ \t])|([ \t][a-zA-Z]\w*[ \t])|([\n]+)|([^ \t]+)"
 #(keywords)|(literals)|(identifiers)|(newlines)|(errors)
 
-declaredIdentifiers = []
-declaredIdentifiersType = []
+declaredIdentifiers = ["IT"]
+declaredIdentifiersType = ["Variable Identifier"]
 
 def LexAnalyze(results, main):
     lexemes = []

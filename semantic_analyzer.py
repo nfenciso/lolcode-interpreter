@@ -488,6 +488,7 @@ def semanticAnalyze(lst):
                 cnt += 2
             
             loopList = []
+            inLoop = True
             while (1):
                 if (lst[cnt][0][0] == "<loop-content-end>"):
                     break
@@ -495,6 +496,33 @@ def semanticAnalyze(lst):
                 cnt += 1
             print("***")
             print(loopList)
+            print(loopIterOperation,loopVar)
+            print(loopConditionType,loopCondition)
+            while (1):
+                if (isinstance(loopCondition, list)):
+                    if (loopCondition[0] in ["BOTH OF", "EITHER OF", "WON OF", "ANY OF", "ALL OF","NOT"]):
+                        fulfilledExpr = get_bool_result(loopCondition)
+                    else:
+                        fulfilledExpr = get_comparison_result(loopCondition)
+                    if (loopConditionType == "TIL" and fulfilledExpr):
+                        break
+                    if (loopConditionType == "WILE" and not fulfilledExpr):
+                        break
+
+                iterResult = semanticAnalyze(loopList)
+                #print("///"+str(iterResult))
+                if (iterResult == "ENDLOOP"):
+                    break
+                
+                try:
+                    temp = int(symbolTable[loopVar])
+                    if (loopIterOperation == "UPPIN"):
+                        temp += 1
+                    else:
+                        temp -= 1
+                    symbolTable[loopVar] = temp
+                except:
+                    return f"ERROR: {loopVar} cannot be typecast to a number"
 
         elif (line[0][0] == "Break Keyword" and inLoop):
             inLoop = False
