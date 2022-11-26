@@ -12,7 +12,7 @@ SEMANTIC TASKS
 [X]Boolean
 [X]Switch-Case
 [----]Typecast (R, RMAEK, IS NOW A)
-[ ]Loops
+[X]Loops
 [X]SMOOSH
 [X]Just a literal
 [----]VISIBLE (incomplete, support for Boolean and Comparison)

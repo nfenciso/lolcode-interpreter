@@ -478,11 +478,11 @@ def semanticAnalyze(lst):
                 #print(":"+str(loopVar))
                 cnt += 2
             else:
-                print("^^^"+str(lst[cnt]))
+                #print("^^^"+str(lst[cnt]))
                 loopCondition = lst[cnt]
                 cnt += 1
                 loopIterOperation = lst[cnt][0][0]
-                print("^^^"+str(lst[cnt]))
+                #print("^^^"+str(lst[cnt]))
                 loopVar = lst[cnt][0][1]
                 #print(":"+str(loopCondition))
                 #print(":"+str(loopIterOperation))
@@ -496,10 +496,10 @@ def semanticAnalyze(lst):
                     break
                 loopList.append(lst[cnt])
                 cnt += 1
-            print("***")
-            print(loopList)
-            print(loopIterOperation,loopVar)
-            print(loopConditionType,loopCondition)
+            #print("***")
+            #print(loopList)
+            #print(loopIterOperation,loopVar)
+            #print(loopConditionType,loopCondition)
             while (1):
                 if (isinstance(loopCondition, list)):
                     if (loopCondition[0] in ["BOTH OF", "EITHER OF", "WON OF", "ANY OF", "ALL OF","NOT"]):
@@ -508,10 +508,39 @@ def semanticAnalyze(lst):
                         fulfilledExpr = bool(mathSolve(loopCondition))
                     else:
                         fulfilledExpr = get_comparison_result(loopCondition)
-                    if (loopConditionType == "TIL" and fulfilledExpr):
-                        break
-                    if (loopConditionType == "WILE" and not fulfilledExpr):
-                        break
+                elif (isinstance(loopCondition, str)):
+                    #print("*"+loopCondition)
+                    if (loopCondition == "WIN"):
+                        fulfilledExpr = True
+                    elif (loopCondition == "FAIL"):
+                        fulfilledExpr = False
+                    elif (loopCondition[0] == '"'):
+                        #print("\nYARN\n")
+                        if (len(loopCondition) > 0):
+                            fulfilledExpr = True
+                        else:
+                            fulfilledExpr = False
+                    elif (loopCondition[0] in ["-","0","1","2","3","4","5","6","7","8","9"]):
+                        fulfilledExpr = bool(float(loopCondition))
+                    else:
+                        varVal = symbolTable[loopCondition]
+                        if (varVal in [True,False]):
+                            fulfilledExpr = varVal
+                        elif (isinstance(varVal, str)):
+                            if (len(varVal) > 0):
+                                fulfilledExpr = True
+                            else:
+                                fulfilledExpr = False
+                        elif (isinstance(varVal,int) or isinstance(varVal,float)):
+                            fulfilledExpr = bool(varVal)
+                        else:
+                            fulfilledExpr = False
+
+
+                if (loopConditionType == "TIL" and fulfilledExpr):
+                    break
+                if (loopConditionType == "WILE" and not fulfilledExpr):
+                    break
 
                 iterResult = semanticAnalyze(loopList)
                 #print("///"+str(iterResult))
