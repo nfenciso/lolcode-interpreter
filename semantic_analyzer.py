@@ -599,11 +599,11 @@ def get_comparison_result(line):
 
     # ====== at this point, we can now compare the value of index 1 and 2 ========
     if (line[0] == "BOTH SAEM"):
-        if (to_evaluate[1] == to_evaluate[2]): return "WIN"
-        else: return "FAIL"
+        if (to_evaluate[1] == to_evaluate[2]): return True
+        else: return False
     else: # DIFFRINT
-        if (to_evaluate[1] != to_evaluate[2]): return "WIN"
-        else: return "FAIL"
+        if (to_evaluate[1] != to_evaluate[2]): return True
+        else: return False
 
 
 
@@ -627,6 +627,8 @@ def get_bool_result(line):
         result = get_bool_result_not(bool_arguments)
     else:
         result = get_bool_result_all(line)
+
+    result = True if result=="WIN" else False
 
     return result
 
@@ -731,7 +733,7 @@ def get_bool_result_2(bool_arguments):
 
     # =========== third argument ============ (second operand)
     if ((third_arg[0] == "TROOF Literal")): # if already a TROOF
-        bool_arguments[1] = third_arg[1]
+        bool_arguments[2] = third_arg[1]
     else:
         if (third_arg[0] in ["BOTH OF", "EITHER OF", "WON OF"]): # if not, do your thing
             bool_arguments[2] = get_bool_result_2(third_arg)
@@ -756,6 +758,8 @@ def get_bool_result_2(bool_arguments):
     # ======= at this point, value can now be evaluated using second and third argument =========
     x = True if bool_arguments[1] == 'WIN' else False
     y = True if bool_arguments[2] == 'WIN' else False
+    print(f" ====== {bool_arguments[1]} :::: {bool_arguments[2]}")
+
     if (first_arg == "BOTH OF"): # and
         if (x and y): return 'WIN'
         else: return 'FAIL'
