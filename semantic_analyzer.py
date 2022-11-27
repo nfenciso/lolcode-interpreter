@@ -126,16 +126,105 @@ def semanticAnalyze(lst):
                                     symbolTable[line[0][1]] = False
 
                     elif (value == "<typecasted_value>"):
+                        var = line[0][1]
                         cnt += 1
                         line = lst[cnt]
-                        # TODO: add the MAEK function
-                        pass
-                    elif (value == "<comparison_operation>"): # TODO: add the comparison and boolean
-                        pass
-                    else: # TODO: add the variable identifier
-                        print(f"================= {line}")
-                        pass
 
+                        new_value = symbolTable[line[1][1]]
+
+                        if (line[2][0] == "YARN keyword"):      # converting to YARN
+                            symbolTable[var] = str(new_value)
+                        elif (line[2][0] == "TROOF keyword"):   # to TROOF
+                            if (new_value == None): symbolTable[var] = False
+                            elif (isinstance(new_value, int) or isinstance(new_value, float)):
+                                if (new_value == 0) : symbolTable[var] = False
+                                else: symbolTable[var] = True
+                            elif (isinstance(new_value, str)):
+                                if (len(new_value) == 0) : symbolTable[var] = False
+                                else: symbolTable[var] = True
+                            else:
+                                symbolTable[var] = new_value
+                        elif (line[2][0] == "NUMBAR keyword"):  # to float
+                            if (new_value == None): 
+                                symbolTable[var] = 0.0
+                            elif (isinstance(new_value, int)):
+                                symbolTable[var] = float(new_value)
+                            elif (isinstance(new_value, float)):
+                                symbolTable[var] = new_value
+                            elif (isinstance(new_value, str)):
+                                if (check_string_to_float(new_value)) : symbolTable[var] = float(new_value)
+                                else: return f"ERROR: {new_value} can't be typecasted to float"
+                            else:
+                                if (new_value == True): symbolTable[var] = 1.0
+                                else: symbolTable[var] = 0.0
+                        elif (line[2][0] == "NUMBR keyword"):  # to integer
+                            if (new_value == None): 
+                                symbolTable[var] = 0
+                            elif (isinstance(new_value, int)): # TROOF are also fall here
+                                symbolTable[var] = int(new_value)
+                            elif (isinstance(new_value, float)):
+                                symbolTable[var] = int(new_value)
+                            else:
+                                if (check_string_to_int(new_value)) : symbolTable[var] = int(float(new_value))
+                                else: return f"ERROR: {new_value} can't be typecasted to integer"
+
+                    elif (value == "<comparison_operation>"): # TODO: add the comparison and boolean
+                        var = line[0][1]
+                        cnt += 1
+                        line = lst[cnt]
+                        result = get_comparison_result(line)
+                        if (result not in [True, False]): return result
+
+                        symbolTable[var] = result
+
+                    elif (value == "<boolean_operation>"):
+                        var = line[0][1]
+                        cnt += 1
+                        line = lst[cnt]
+                        result = get_bool_result(line)
+
+                        symbolTable[var] = result
+
+                    else: # Math operations
+                        var = line[0][1]
+                        cnt += 1
+                        line = lst[cnt]
+
+                        value = mathSolve(lst[cnt])
+                        if (isinstance(value, str)):
+                            return value
+
+                        symbolTable[var] = value
+                else: # IS NOW A -> "Typecast Keyword"
+                    print(f":=;=;+;=:=: {line}")
+                    val = symbolTable[line[0][1]]
+                    new_type = line[2][0]
+                    if (new_type == "NUMBAR keyword"):
+                        if (val == None): symbolTable[line[0][1]] = 0.0
+                        else:
+                            if(check_string_to_float(val)): symbolTable[line[0][1]] = float(val)
+                            else: return f"ERROR: {val} can't be typecasted to float"
+                    elif (new_type == "NUMBR keyword"):
+                        if (val == None): symbolTable[line[0][1]] = 0
+                        else:
+                            if(check_string_to_int(val)): symbolTable[line[0][1]] = int(float(val))
+                            else: return f"ERROR: {val} can't be typecasted to integer"
+                    elif (new_type == "YARN keyword"):
+                        if (val == None): symbolTable[line[0][1]] = ""
+                        else:
+                            symbolTable[line[0][1]] = str(val)
+                    else: # TROOF
+                        if(val == None): symbolTable[line[0][1]] = False
+                        else:
+                            if (val == None): symbolTable[line[0][1]] = False
+                            elif (isinstance(val, int) or isinstance(val, float)):
+                                if (val == 0) : symbolTable[line[0][1]] = False
+                                else: symbolTable[line[0][1]] = True
+                            elif (isinstance(val, str)):
+                                if (len(val) == 0) : symbolTable[line[0][1]] = False
+                                else: symbolTable[line[0][1]] = True
+                            else: # True or False
+                                symbolTable[line[0][1]] = val
         elif (line[0][0] == "Variable Declaration"):
             var = line[1][1]
             if var in symbolTable:
@@ -272,7 +361,6 @@ def semanticAnalyze(lst):
             # Don't comment out this print statement
             print(temp)
             # # # # # # # # # # # # # # # # # # # #
-
         elif (line[0][0] == "Concatenation Keyword"):
             numSmooshArgs = line[0][2]
             tempList = []
@@ -444,7 +532,6 @@ def semanticAnalyze(lst):
                     else:
                         semanticAnalyze(i[1])
 
-
         elif (line[0] == "<boolean_operation>"):
             cnt += 1
             line = lst[cnt]
@@ -600,6 +687,19 @@ def semanticAnalyze(lst):
         cnt += 1
     return 1
 
+def check_string_to_int(value):
+    try:
+        int(float(value)) # weirdly "1.1" (with deci) cant be typecasted to int
+        return True       # so typecast first to float, since we can typecast float to int
+    except:
+        return False
+
+def check_string_to_float(value):
+    try:
+        float(value)
+        return True
+    except:
+        return False
 
 def get_comparison_value(comp_arguments, comp_type):
     UNMATCH_TYPE_ERROR = f"ERROR: Values must be of the same type (NUMBR or NUMBAR)"
@@ -963,7 +1063,6 @@ def get_bool_result_2(bool_arguments):
     # ======= at this point, value can now be evaluated using second and third argument =========
     x = True if bool_arguments[1] == 'WIN' else False
     y = True if bool_arguments[2] == 'WIN' else False
-    print(f" ====== {bool_arguments[1]} :::: {bool_arguments[2]}")
 
     if (first_arg == "BOTH OF"): # and
         if (x and y): return 'WIN'

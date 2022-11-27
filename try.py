@@ -11,8 +11,20 @@
 # #     else:
 # #         print(f"{i.rjust(10)}: {dicta[i]}")
 
-# tryy = ""
+def check_string_to_int(value):
+    try:
+        int(value)
+        return True
+    except:
+        return False
 
-he = "ad"
+def check_string_to_float(value):
+    try:
+        float(value)
+        return True
+    except:
+        return False
 
-print(isinstance(1.2, float))
+he = "223"
+
+print(float(False))

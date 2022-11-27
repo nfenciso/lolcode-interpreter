@@ -1,11 +1,7 @@
 HAI
 
-	I HAS A cnt ITZ 10
-	I HAS A k ITZ 5
+	I HAS A cnt
 
-	cnt R WIN
-
-
-	
+	cnt IS NOW A TROOF
 
 KTHXBYE

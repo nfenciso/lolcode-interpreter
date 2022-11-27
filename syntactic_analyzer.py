@@ -556,7 +556,8 @@ class Parser:
                             maekList.append(self.curr_tok)
                             to_be_casted = self.curr_tok # not yet used (can check the value here if it can be casted. ex. "wow" -> NUMBR, error)
                             self.advance()
-                            if (self.curr_tok[0] in types):
+                            if ((self.curr_tok[0] in types) or (self.curr_tok[0] == "Typecast Noise Word")):
+                                if (self.curr_tok[0] == "Typecast Noise Word"): self.advance()
                                 maekList.append(self.curr_tok)
                                 self.advance()
                                 if (self.curr_tok[0] == "NEWLINE"):
@@ -594,7 +595,7 @@ class Parser:
                             return self.error
 
                     else:
-                        self.error = "ERROR: (IS NOW A) only accepts variable type)"
+                        self.error = "ERROR: (IS NOW A) only accepts variable type"
                         return self.error
             elif (self.curr_tok[0] == "Typecast Keyword (new value)"):  # reassign (MAEK)
                 assignList = []
