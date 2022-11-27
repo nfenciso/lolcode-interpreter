@@ -106,14 +106,31 @@ def semanticAnalyze(lst):
             if (len(line) == 1):
                 symbolTable["IT"] = symbolTable[line[0][1]]
             else:
-                
+                # in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]
                 if (line[1][0] == "Assignment Keyword"):
-                    if (line[2] == "<typecasted_value>"):
+                    value = line[2]
+                    if (isinstance(value, list)): 
+                        if (value[0] == "Variable Identifier"): # assigning value from variable
+                            symbolTable[line[0][1]] = symbolTable[value[1]]
+                        else:                                   # assigning value from a literal            
+                            if (value[0] == "NUMBR Literal"): 
+                                symbolTable[line[0][1]] = int(value[1])
+                            elif (value[0] == "NUMBAR Literal"):
+                                symbolTable[line[0][1]] = float(value[1])
+                            elif (value[0] ==  "YARN Literal"):
+                                symbolTable[line[0][1]] = value[1]
+                            else:
+                                if (value[1] == "WIN"):
+                                    symbolTable[line[0][1]] = True
+                                else:
+                                    symbolTable[line[0][1]] = False
+
+                    elif (value == "<typecasted_value>"):
                         cnt += 1
                         line = lst[cnt]
                         # TODO: add the MAEK function
                         pass
-                    elif (line[2] == "<comparison_operation>"): # TODO: add the comparison and boolean
+                    elif (value == "<comparison_operation>"): # TODO: add the comparison and boolean
                         pass
                     else: # TODO: add the variable identifier
                         print(f"================= {line}")

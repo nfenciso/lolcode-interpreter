@@ -1,9 +1,10 @@
 HAI
 
 	I HAS A cnt ITZ 10
+	I HAS A k ITZ 5
 
+	cnt R WIN
 
-	cnt R BOTH SAEM 651 AN BOTH SAEM 2 AN 3
 
 	
 
