@@ -168,7 +168,7 @@ def semanticAnalyze(lst):
                                 if (check_string_to_int(new_value)) : symbolTable[var] = int(float(new_value))
                                 else: return f"ERROR: {new_value} can't be typecasted to integer"
 
-                    elif (value == "<comparison_operation>"): # TODO: add the comparison and boolean
+                    elif (value == "<comparison_operation>"):
                         var = line[0][1]
                         cnt += 1
                         line = lst[cnt]
@@ -254,8 +254,25 @@ def semanticAnalyze(lst):
                                 symbolTable[var] = int(value)
                             else:
                                 symbolTable[var] = value
-                        elif(): pass 
+                        elif(typeChild == "<boolean_operation>"): 
+                            var = line[1][1]
+                            cnt += 1
+                            line = lst[cnt]
+                            result = get_bool_result(line)
+
+                            symbolTable[var] = result
+                        
+                        elif (typeChild == "<comparison_operation>"):
+                            var = line[1][1]
+                            cnt += 1
+                            line = lst[cnt]
+                            result = get_comparison_result(line)
+                            if (result not in [True, False]): return result
+
+                            symbolTable[var] = result
+
                             # TODO: add boolean and comparison catcher here
+                        
                     elif (isinstance(line[3], list)):
                         valType = line[3][0]
                         value = line[3][1]

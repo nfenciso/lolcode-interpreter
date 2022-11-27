@@ -1,7 +1,5 @@
 HAI
 
-	I HAS A cnt
-
-	cnt IS NOW A TROOF
+	I HAS A cnt ITZ BOTH SAEM 2 AN 2
 
 KTHXBYE
