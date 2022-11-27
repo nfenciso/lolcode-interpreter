@@ -111,10 +111,12 @@ def semanticAnalyze(lst):
                     if (line[2] == "<typecasted_value>"):
                         cnt += 1
                         line = lst[cnt]
-                        # DO THE MAEK HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+                        # TODO: add the MAEK function
                         pass
+                    elif (line[2] == "<comparison_operation>"): # TODO: add the comparison and boolean
+                        pass
+                    else: # TODO: add the variable identifier
                         print(f"================= {line}")
-                    else:
                         pass
 
         elif (line[0][0] == "Variable Declaration"):
@@ -146,7 +148,8 @@ def semanticAnalyze(lst):
                                 symbolTable[var] = int(value)
                             else:
                                 symbolTable[var] = value
-
+                        elif(): pass 
+                            # TODO: add boolean and comparison catcher here
                     elif (isinstance(line[3], list)):
                         valType = line[3][0]
                         value = line[3][1]
