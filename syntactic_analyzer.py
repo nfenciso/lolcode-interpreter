@@ -463,6 +463,7 @@ class Parser:
 
                     self.advance()
                 elif (self.curr_tok[0] == "Assignment Keyword"): # using R
+
                     assignList.append(self.curr_tok)
                     self.advance()
                     if (self.curr_tok[0] in literals): # assigning literal
@@ -517,6 +518,33 @@ class Parser:
                                 child.add_child(TreeNode(mathList))
                                 self.advance()
                                 # self.tree.children[len(self.tree.children)-1].add_child(TreeNode("<math_arguments>"))
+                    elif (self.curr_tok[0] == "Boolean Operation"):
+                        assignList.append("<boolean_operation>")
+                        self.tree.add_child(TreeNode(assignList))
+                        
+                        boolList = generateBooleanStatement(self) 
+
+                        if (isinstance(boolList, str)):
+                            self.error = boolList
+                            return self.error
+                        else:
+                            self.tree.children[len(self.tree.children)-1].add_child(TreeNode(boolList))
+                            self.advance()
+
+                    elif (self.curr_tok[0] == "Comparison Operation"):
+                        assignList.append("<comparison_operation>")
+
+                        self.tree.add_child(TreeNode(assignList))
+                        operand_type = ["NULL"]
+                        compareList = getComparison(self, operand_type)
+
+                        if (isinstance(compareList, str)):
+                            self.error = compareList
+                            return self.error
+                        else:
+                            self.tree.children[len(self.tree.children)-1].add_child(TreeNode(compareList))
+                            self.advance()
+
                     elif (self.curr_tok[0] == "Typecast Keyword (new value)"):  # reassign (MAEK)
                         assignList.append("<typecasted_value>")
                         # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))

@@ -103,7 +103,20 @@ def semanticAnalyze(lst):
         if (line[0][0] == "Code Delimiter OPEN"):
             pass
         elif (line[0][0] == "Variable Identifier"):
-            symbolTable["IT"] = symbolTable[line[0][1]]
+            if (len(line) == 1):
+                symbolTable["IT"] = symbolTable[line[0][1]]
+            else:
+                
+                if (line[1][0] == "Assignment Keyword"):
+                    if (line[2] == "<typecasted_value>"):
+                        cnt += 1
+                        line = lst[cnt]
+                        # DO THE MAEK HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+                        pass
+                        print(f"================= {line}")
+                    else:
+                        pass
+
         elif (line[0][0] == "Variable Declaration"):
             var = line[1][1]
             if var in symbolTable:
