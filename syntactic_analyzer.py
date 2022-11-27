@@ -1190,8 +1190,17 @@ def produceConcatSubtree(self, tree):
 
 # use this to catch Comparison Operation
 def getComparison(self, operand_type):
+    elements = []
+
+    result = getComparison_helper(self, operand_type, elements)
+
+    result.append(len(elements))
+    return result
+
+def getComparison_helper(self, operand_type, elements):
     own_list = ['', '', '']
 
+    elements.append(self.curr_tok)
     own_list[0] = self.curr_tok[1]
     self.advance()
 
@@ -1210,16 +1219,18 @@ def getComparison(self, operand_type):
 
     # ========= first operand ==============
     if (self.curr_tok[0] == "Variable Identifier"):         # first operand is a variable 
+        elements.append(self.curr_tok)
         own_list[1] = self.curr_tok[1]                          # check if type is same of operand_type. ------ NOT CURRENTLY CHECKING TYPE SO ERROR MIGHT NOT BE CATCHED
         self.advance()
         # print(str(self.curr_tok))
     elif (self.curr_tok[1] in comparator):      # first operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
-        own_list[1] = getComparison(self, operand_type)
+        own_list[1] = getComparison_helper(self, operand_type, elements)
         if (self.error != "NONE"):
             return self.error
     elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # first operand is a literal
         #print("first " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
+        elements.append(self.curr_tok)
         if (self.curr_tok[0] == "NUMBAR Literal"): own_list[1] = float(self.curr_tok[1])
         else: own_list[1] = int(self.curr_tok[1])
         self.advance()
@@ -1229,6 +1240,7 @@ def getComparison(self, operand_type):
 
     # ========= AN seperator ==============
     if(self.curr_tok[0] == "Operand Separator"): # AN keyword
+        elements.append(self.curr_tok)
         self.advance()
     else:
         self.error = "ERROR: (Comparison) Missing AN seperator: " + str(self.curr_tok) + " : " + operand_type[0]
@@ -1236,15 +1248,17 @@ def getComparison(self, operand_type):
 
     # ========= second operand ==============
     if (self.curr_tok[0] == "Variable Identifier"):         # second operand is a variable 
+        elements.append(self.curr_tok)
         own_list[2] = self.curr_tok[1]                              # -------------------------------- check if type is same of operand_type.
         self.advance()
     elif (self.curr_tok[1] in comparator):       # second operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
-        own_list[2] = getComparison(self, operand_type)
+        own_list[2] = getComparison_helper(self, operand_type, elements)
         if (self.error != "NONE"):
             return self.error
     elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # second operand is a literal
         #print("second " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
+        elements.append(self.curr_tok)
         if (self.curr_tok[0] == "NUMBAR Literal"): own_list[2] = float(self.curr_tok[1])
         else: own_list[2] = int(self.curr_tok[1])
         self.advance()
@@ -1258,43 +1272,47 @@ def getComparison(self, operand_type):
 
 # use this to catch Boolean Operation
 def generateBooleanStatement(self):
+    elements = []
     if (self.curr_tok[1] in boolTwoOperands):
-        boolList = solveBooleanStatement_2(self) # 2 operand boolean
+        boolList = solveBooleanStatement_2(self, elements) # 2 operand boolean
     elif (self.curr_tok[1] == "NOT"):
-        boolList = solveBooleanStatement_1(self) # 1 operand boolean
+        boolList = solveBooleanStatement_1(self, elements) # 1 operand boolean
     else:
-        boolList = solveBooleanStatement(self) # infinite operand boolean
-
+        boolList = solveBooleanStatement(self, elements) # infinite operand boolean
+    if (isinstance(boolList, str)): return boolList
+    boolList.append(len(elements))
     return boolList
 
 # boolean with 2 operands
-def solveBooleanStatement_2(self):
+def solveBooleanStatement_2(self, elements):
     own_list = ['','','']
     # if(self.curr_tok[1] in boolTwoOperands):
     # boolTokens[0] += 3 # i think nonsense
-
+    elements.append(self.curr_tok)
     own_list[0] = self.curr_tok[1]
     self.advance()
     # ========= first operand ==============
     if((self.curr_tok[0] in literals) or (self.curr_tok[0] == "Variable Identifier")): # first operand is literal
         if(self.curr_tok[0] == "String Delimiter"):
             self.advance()
+            elements.append(self.curr_tok)
             own_list[1] = self.curr_tok
             self.advance()
             self.advance()
         else:
+            elements.append(self.curr_tok)
             own_list[1] = self.curr_tok
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands):      # first operand is another 2 operand bool (BOTH OF ...)
-        own_list[1] = solveBooleanStatement_2(self)
+        own_list[1] = solveBooleanStatement_2(self, elements)
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] == "NOT"):                # first operand is 1 operand bool (NOT)
-        own_list[1] = solveBooleanStatement_1(self)
+        own_list[1] = solveBooleanStatement_1(self, elements)
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] in boolMoreOperand):      # first operand has infinite operand (ALL OF, ANY OF)
-        own_list[1] = solveBooleanStatement(self)  
+        own_list[1] = solveBooleanStatement(self, elements)  
         if (self.error != "NONE"):
             return self.error
     else:
@@ -1303,6 +1321,7 @@ def solveBooleanStatement_2(self):
 
     # ========= AN seperator ==============
     if(self.curr_tok[0] == "Operand Separator"): # AN keyword
+        elements.append(self.curr_tok)
         self.advance()
     else:
         self.error = "ERROR: (Bool) Missing AN seperator"
@@ -1312,22 +1331,24 @@ def solveBooleanStatement_2(self):
     if((self.curr_tok[0] in literals) or (self.curr_tok[0] == "Variable Identifier")): # second operand is literal
         if(self.curr_tok[0] == "String Delimiter"):
             self.advance()
+            elements.append(self.curr_tok)
             own_list[2] = self.curr_tok
             self.advance()
             self.advance()
         else:
+            elements.append(self.curr_tok)
             own_list[2] = self.curr_tok
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands):         # second operand is another 2 operand bool (BOTH OF ...)
-        own_list[2] = solveBooleanStatement_2(self)
+        own_list[2] = solveBooleanStatement_2(self, elements)
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] == "NOT"):                   # second operand is 1 operand bool (NOT)
-        own_list[2] = solveBooleanStatement_1(self)
+        own_list[2] = solveBooleanStatement_1(self, elements)
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] in boolMoreOperand):         # second operand has infinite operand (ALL OF, ANY OF)
-        own_list[2] = solveBooleanStatement(self)  
+        own_list[2] = solveBooleanStatement(self, elements)  
         if (self.error != "NONE"):
             return self.error
     else:
@@ -1339,31 +1360,34 @@ def solveBooleanStatement_2(self):
     return own_list        
 
 # boolean with 1 operand
-def solveBooleanStatement_1(self):
+def solveBooleanStatement_1(self, elements):
     own_list = ['', '']
 
+    elements.append(self.curr_tok)
     own_list[0] = self.curr_tok[1]
     self.advance()
 
     if((self.curr_tok[0] in literals) or (self.curr_tok[0] == "Variable Identifier")): # second operand is literal
         if(self.curr_tok[0] == "String Delimiter"):
             self.advance()
+            elements.append(self.curr_tok)
             own_list[1] = self.curr_tok
             self.advance()
             self.advance()
         else:
+            elements.append(self.curr_tok)
             own_list[1] = self.curr_tok
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands): # second operand is another 2 operand bool
-        own_list[1] = solveBooleanStatement_2(self)
+        own_list[1] = solveBooleanStatement_2(self, elements)
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] == "NOT"): # second operand is 1 operand bool
-        own_list[1] = solveBooleanStatement_1(self)
+        own_list[1] = solveBooleanStatement_1(self, elements)
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] in boolMoreOperand):   
-        own_list[1] = solveBooleanStatement(self)  
+        own_list[1] = solveBooleanStatement(self, elements)  
         if (self.error != "NONE"):
             return self.error
     else:
@@ -1375,9 +1399,10 @@ def solveBooleanStatement_1(self):
     return own_list
 
 # boolean with infinite operands
-def solveBooleanStatement(self):
+def solveBooleanStatement(self, elements):
     own_list = []
 
+    elements.append(self.curr_tok)
     own_list.append(self.curr_tok[1]) # ANY OF || ALL OF
     self.advance()
 
@@ -1385,18 +1410,20 @@ def solveBooleanStatement(self):
     if((self.curr_tok[0] in literals) or (self.curr_tok[0] == "Variable Identifier")): # first operand is literal
         if(self.curr_tok[0] == "String Delimiter"):
             self.advance()
+            elements.append(self.curr_tok)
             own_list.append(self.curr_tok)
             self.advance()
             self.advance()
         else:
+            elements.append(self.curr_tok)
             own_list.append(self.curr_tok)
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands): # first operand is another 2 operand bool
-        own_list.append(solveBooleanStatement_2(self))
+        own_list.append(solveBooleanStatement_2(self, elements))
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] == "NOT"): # first operand is 1 operand bool
-        own_list.append(solveBooleanStatement_1(self))
+        own_list.append(solveBooleanStatement_1(self, elements))
         if (self.error != "NONE"):
             return self.error
     else:
@@ -1405,6 +1432,7 @@ def solveBooleanStatement(self):
 
     # ========= AN seperator ==============
     if(self.curr_tok[0] == "Operand Separator"): # AN keyword
+        elements.append(self.curr_tok)
         self.advance()
     else:
         self.error = "ERROR: (Bool) Missing AN seperator"
@@ -1414,18 +1442,20 @@ def solveBooleanStatement(self):
     if((self.curr_tok[0] in literals) or (self.curr_tok[0] == "Variable Identifier")): # second operand is literal
         if(self.curr_tok[0] == "String Delimiter"):
             self.advance()
+            elements.append(self.curr_tok)
             own_list.append(self.curr_tok)
             self.advance()
             self.advance()
         else:
+            elements.append(self.curr_tok)
             own_list.append(self.curr_tok)
             self.advance()
     elif (self.curr_tok[1] in boolTwoOperands): # second operand is another 2 operand bool
-        own_list.append(solveBooleanStatement_2(self))
+        own_list.append(solveBooleanStatement_2(self, elements))
         if (self.error != "NONE"):
             return self.error
     elif (self.curr_tok[1] == "NOT"): # second operand is 1 operand bool
-        own_list.append(solveBooleanStatement_1(self))
+        own_list.append(solveBooleanStatement_1(self, elements))
         if (self.error != "NONE"):
             return self.error
     else:
@@ -1434,10 +1464,12 @@ def solveBooleanStatement(self):
 
     while(1):
         if (self.curr_tok[0] == "Parameter Delimiter"):
+            elements.append(self.curr_tok)
             self.advance()
             break
         # ========= AN seperator ==============
         if(self.curr_tok[0] == "Operand Separator"): # AN keyword
+            elements.append(self.curr_tok)
             self.advance()
         else:
             self.error = "ERROR: (Bool) Missing AN seperator or MKAY keyword"
@@ -1447,18 +1479,20 @@ def solveBooleanStatement(self):
         if((self.curr_tok[0] in literals) or (self.curr_tok[0] == "Variable Identifier")): # second operand is literal
             if(self.curr_tok[0] == "String Delimiter"):
                 self.advance()
+                elements.append(self.curr_tok)
                 own_list.append(self.curr_tok)
                 self.advance()
                 self.advance()
             else:
+                elements.append(self.curr_tok)
                 own_list.append(self.curr_tok)
                 self.advance()
         elif (self.curr_tok[1] in boolTwoOperands): # second operand is another 2 operand bool
-            own_list.append(solveBooleanStatement_2(self))
+            own_list.append(solveBooleanStatement_2(self, elements))
             if (self.error != "NONE"):
                 return self.error
         elif (self.curr_tok[1] == "NOT"): # second operand is 1 operand bool
-            own_list.append(solveBooleanStatement_1(self))
+            own_list.append(solveBooleanStatement_1(self, elements))
             if (self.error != "NONE"):
                 return self.error
         else:

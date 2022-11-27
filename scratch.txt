@@ -11,7 +11,7 @@ SEMANTIC TASKS
 [x]Comparison
 [X]Boolean
 [X]Switch-Case
-[----]Typecast (R, RMAEK, IS NOW A)
+[x]Typecast (R, RMAEK, IS NOW A)
 [X]Loops
 [X]SMOOSH
 [X]Just a literal

@@ -25,6 +25,14 @@ def check_string_to_float(value):
     except:
         return False
 
-he = "223"
+def count_elements(lst):
+    count = 0
 
-print(float(False))
+    return count
+
+lst = ['BOTH OF', ['NUMBR Literal', '1'], ['BOTH OF', ['NUMBR Literal', '1'], ['NUMBR Literal', '2'], ''], '']
+
+print(f"{lst.remove(['NUMBR Literal', '1'])}")
+
+
+    

@@ -196,7 +196,6 @@ def semanticAnalyze(lst):
 
                         symbolTable[var] = value
                 else: # IS NOW A -> "Typecast Keyword"
-                    print(f":=;=;+;=:=: {line}")
                     val = symbolTable[line[0][1]]
                     new_type = line[2][0]
                     if (new_type == "NUMBAR keyword"):
@@ -271,8 +270,6 @@ def semanticAnalyze(lst):
 
                             symbolTable[var] = result
 
-                            # TODO: add boolean and comparison catcher here
-                        
                     elif (isinstance(line[3], list)):
                         valType = line[3][0]
                         value = line[3][1]
@@ -319,25 +316,27 @@ def semanticAnalyze(lst):
             smooshIndex = -1
             tempCnt = 0
             while (tempCnt < numVisibleArgs):
-                #print(":::"+str(lst[cnt]))
                 cnt += 1
                 tempList.append(lst[cnt])
 
-                if (lst[cnt][0] == "<math_arguments>"):
+                if (lst[cnt][0] in ["<math_arguments>"]):
                     tempList.pop()
                     cnt += 1
                     tempList.append(lst[cnt])
                     tempCnt += len(lst[cnt])-1
-                # boolean
-                # comparison
+
+                elif (lst[cnt][0] in ["<boolean_operation>", "<comparison_operation>"]):
+                    tempList.pop()
+                    cnt += 1
+                    tempList.append(lst[cnt])
+                    
+                    tempCnt += lst[cnt][len(lst[cnt])-1] - 1 
 
                 if (lst[cnt][0][0] == "Concatenation Keyword"):
                     smooshIndex = cnt
                 
                 tempCnt += 1
-                #print("tempCnt: "+str(tempCnt))
-            #print("III")
-            #print(tempList)
+
             if (smooshIndex != -1):
                 numSmooshArgs = lst[smooshIndex][0][2]
                 tempCnt = 0
@@ -357,24 +356,38 @@ def semanticAnalyze(lst):
             
             temp = ""
             for i in tempList:
-                #print("::",str(i))
                 lexType = i[0][0]
                 value = i[0][1]
-                if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
-                    temp += str(value)
-                elif (lexType == "Variable Identifier"):
-                    if (symbolTable[value] == None):
-                        eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
-                        return eval
-                    else:
-                        temp += str(symbolTable[value])
-                elif (lexType == "Arithmetic Operation"):
-                    valueM = mathSolve(i)
-                    if (isinstance(valueM, str)):
-                        return valueM
-                    temp += str(valueM)
-                elif (lexType == "Operand Separator"):
-                    pass
+
+                if (isinstance(i[0], list)):
+                    if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
+                        temp += str(value)
+                    elif (lexType == "Variable Identifier"):
+                        if (symbolTable[value] == None):
+                            eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
+                            return eval
+                        else:
+                            temp += str(symbolTable[value])
+                    elif (lexType == "Arithmetic Operation"):
+                        valueM = mathSolve(i)
+                        if (isinstance(valueM, str)):
+                            return valueM
+                        temp += str(valueM)
+                    elif (lexType == "Operand Separator"):
+                        pass
+                    
+                else : # bool and comparison is seperated since i[0][0] is not a lex type
+                    if (i[0] in ["BOTH OF", "EITHER OF", "WON OF", "NOT", "ALL OF", "ANY OF"]):
+                        result = get_bool_result(i)
+
+                        temp += str(result)
+
+                    elif (i[0] in ["BOTH SAEM", "DIFFRINT"]):
+                        result = get_comparison_result(i)
+                        if (result not in [True, False]): return result
+
+                        temp += str(result)
+
             # Don't comment out this print statement
             print(temp)
             # # # # # # # # # # # # # # # # # # # #
@@ -927,8 +940,6 @@ def get_comparison_result(line):
         if (to_evaluate[1] != to_evaluate[2]): return True
         else: return False
 
-
-
 def convert_value_to_bool(value):
     if (value in ['WIN', 'FAIL']): # value is already a TROOF
         return value
@@ -956,7 +967,7 @@ def get_bool_result(line):
 
 def get_bool_result_all(bool_arguments):
 
-    for i in range(1, len(bool_arguments)):
+    for i in range(1, len(bool_arguments)-1):
         
         temp = ""
         if ((bool_arguments[i][0] == "TROOF Literal")): # if already a TROOF
