@@ -620,6 +620,19 @@ class Parser:
                             # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
                         else:
                             self.error = "ERROR: (MAEK) only accepts two arguments"
+                    elif (self.curr_tok[1] == "A"):
+                        self.advance()
+                        if (self.curr_tok[0] in types):
+                            maekList.append(self.curr_tok)
+                            self.advance()
+                            if (self.curr_tok[0] == "NEWLINE"):
+                                child = self.tree.children[len(self.tree.children)-1]
+                                child.add_child(TreeNode(maekList))
+                                self.advance()
+                                # child.children[len(child.children)-1].add_child(TreeNode(maekList))
+                                # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                        else:
+                            self.error = "ERROR: (MAEK) only accepts two arguments"
                     else:
                         self.error = "ERROR: (MAEK) second argument should be a variable type"
                         return self.error   
