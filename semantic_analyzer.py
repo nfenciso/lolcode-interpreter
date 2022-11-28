@@ -107,7 +107,7 @@ def semanticAnalyze(lst):
                 symbolTable["IT"] = symbolTable[line[0][1]]
             else:
                 # in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]
-                if (line[1][0] == "Assignment Keyword"):
+                if (line[1][0] == "Assignment Keyword"): # R keyword
                     value = line[2]
                     if (isinstance(value, list)): 
                         if (value[0] == "Variable Identifier"): # assigning value from variable
@@ -184,6 +184,68 @@ def semanticAnalyze(lst):
                         result = get_bool_result(line)
 
                         symbolTable[var] = result
+
+                    elif (value == "<concat>"):
+                        var = line[0][1]
+                        cnt += 1
+                        line = lst[cnt]
+
+                        numSmooshArgs = line[0][2]
+                        tempList = []
+                        tempCnt = 0
+                        while (tempCnt < numSmooshArgs):
+                            cnt += 1
+                            tempList.append(lst[cnt])
+
+                            if (lst[cnt][0] == "<math_arguments>"):
+                                tempList.pop()
+                                cnt += 1
+                                tempList.append(lst[cnt])
+                                tempCnt += len(lst[cnt])-1
+                            # boolean
+                            # comparison
+                            elif (lst[cnt][0] in ["<boolean_operation>", "<comparison_operation>"]):
+                                tempList.pop()
+                                cnt += 1
+                                tempList.append(lst[cnt])
+                                
+                                tempCnt += lst[cnt][len(lst[cnt])-1] - 1
+                            
+                            tempCnt += 1
+                        
+                        temp = ""
+                        for i in tempList:
+                            lexType = i[0][0]
+                            value = i[0][1]
+                            if (isinstance(i[0], list)):
+                                if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
+                                    temp += str(value)
+                                elif (lexType == "Variable Identifier"):
+                                    if (symbolTable[value] == None):
+                                        eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
+                                        return eval
+                                    else:
+                                        temp += str(symbolTable[value])
+                                elif (lexType == "Arithmetic Operation"):
+                                    valueM = mathSolve(i)
+                                    if (isinstance(valueM, str)):
+                                        return valueM
+                                    temp += str(valueM)
+                                elif (lexType == "Operand Separator"):
+                                    pass
+                            else: 
+                                if (i[0] in ["BOTH OF", "EITHER OF", "WON OF", "NOT", "ALL OF", "ANY OF"]):
+                                    result = get_bool_result(i)
+
+                                    temp += str(result)
+
+                                elif (i[0] in ["BOTH SAEM", "DIFFRINT"]):
+                                    result = get_comparison_result(i)
+                                    if (result not in [True, False]): return result
+
+                                    temp += str(result)
+                                    
+                        symbolTable[var] = temp
 
                     else: # Math operations
                         var = line[0][1]
@@ -448,6 +510,12 @@ def semanticAnalyze(lst):
                     tempCnt += len(lst[cnt])-1
                 # boolean
                 # comparison
+                elif (lst[cnt][0] in ["<boolean_operation>", "<comparison_operation>"]):
+                    tempList.pop()
+                    cnt += 1
+                    tempList.append(lst[cnt])
+                    
+                    tempCnt += lst[cnt][len(lst[cnt])-1] - 1
                 
                 tempCnt += 1
             
@@ -455,21 +523,34 @@ def semanticAnalyze(lst):
             for i in tempList:
                 lexType = i[0][0]
                 value = i[0][1]
-                if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
-                    temp += str(value)
-                elif (lexType == "Variable Identifier"):
-                    if (symbolTable[value] == None):
-                        eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
-                        return eval
-                    else:
-                        temp += str(symbolTable[value])
-                elif (lexType == "Arithmetic Operation"):
-                    valueM = mathSolve(i)
-                    if (isinstance(valueM, str)):
-                        return valueM
-                    temp += str(valueM)
-                elif (lexType == "Operand Separator"):
-                    pass
+                if (isinstance(i[0], list)):
+                    if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
+                        temp += str(value)
+                    elif (lexType == "Variable Identifier"):
+                        if (symbolTable[value] == None):
+                            eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
+                            return eval
+                        else:
+                            temp += str(symbolTable[value])
+                    elif (lexType == "Arithmetic Operation"):
+                        valueM = mathSolve(i)
+                        if (isinstance(valueM, str)):
+                            return valueM
+                        temp += str(valueM)
+                    elif (lexType == "Operand Separator"):
+                        pass
+                else: 
+                    if (i[0] in ["BOTH OF", "EITHER OF", "WON OF", "NOT", "ALL OF", "ANY OF"]):
+                        result = get_bool_result(i)
+
+                        temp += str(result)
+
+                    elif (i[0] in ["BOTH SAEM", "DIFFRINT"]):
+                        result = get_comparison_result(i)
+                        if (result not in [True, False]): return result
+
+                        temp += str(result)
+
             symbolTable["IT"] = temp
         elif (line[0][0] == "<if-then block>"):
             ifList = []
@@ -515,8 +596,6 @@ def semanticAnalyze(lst):
                 tmp = semanticAnalyze(elseList)
                 if (tmp == "ENDLOOP"):
                     return "ENDLOOP"
-
-            continue
 
         elif (line[0][0] == "<switch-case block>"):
             temp = []
@@ -1161,8 +1240,8 @@ def semantic_main():
         pass
     else:
         lst = syntax.getResult().get_list([])
-        #for i in lst:
-           #print(i)
+        # for i in lst:
+        #    print(i)
         semanticResult = semanticAnalyze(lst)
 
         print("\n### SYMBOL TABLE ###")

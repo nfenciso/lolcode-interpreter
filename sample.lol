@@ -1,27 +1,10 @@
 HAI
 
-	I HAS A counter ITZ 0
-	I HAS A numStrings
-	I HAS A result ITZ ""
-	I HAS A input
+	I HAS A var ITZ "None"
+	VISIBLE SMOOSH var AN " " AN 12 AN WIN
+	I HAS A x ITZ ""
 
-	VISIBLE "===Concatenate Strings==="
-	VISIBLE ">How many strings to concatenate?"
-	GIMMEH numStrings
-	numStrings IS NOW A NUMBR
-
-	IM IN YR loop UPPIN YR counter
-		BOTH SAEM counter AN numStrings
-		O RLY?
-			YA RLY
-				GTFO
-		OIC
-
-		VISIBLE SUM OF counter AN 1 ") Enter string:"
-		GIMMEH input
-	IM OUTTA YR loop
-
-	VISIBLE "Result:"
-	VISIBLE result
+	var R SMOOSH 12 AN " " AN "s" AN " " AN BOTH OF 1 AN 3
+	SMOOSH 12 AN " " AN "s" AN " " AN BOTH OF 1 AN 0
 
 KTHXBYE
