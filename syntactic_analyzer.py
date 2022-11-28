@@ -258,7 +258,7 @@ class Parser:
                                             else:
                                                 continue
                                     if (self.curr_tok == "END OF TOKENS"):
-                                        self.error = "ERROR: Lacking IM OUTTA YR"
+                                        self.error = "ERROR: Lacking IM OUTTA YR line"
                                         return self.error
                                     loopList.append(self.curr_tok)
                                     self.advance()
@@ -940,7 +940,7 @@ class Parser:
                                                 else:
                                                     continue
                                         if (self.curr_tok == "END OF TOKENS"):
-                                            self.error = "ERROR: Lacking IM OUTTA YR"
+                                            self.error = "ERROR: Lacking IM OUTTA YR line"
                                             return self.error
                                         loopList.append(self.curr_tok)
                                         self.advance()
@@ -1024,7 +1024,7 @@ class Parser:
                                                         else:
                                                             continue
                                                 if (self.curr_tok == "END OF TOKENS"):
-                                                    self.error = "ERROR: Lacking IM OUTTA YR"
+                                                    self.error = "ERROR: Lacking IM OUTTA YR line"
                                                     return self.error
                                                 loopList.append(self.curr_tok)
                                                 self.advance()
