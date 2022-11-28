@@ -557,17 +557,29 @@ class Parser:
                             to_be_casted = self.curr_tok # not yet used (can check the value here if it can be casted. ex. "wow" -> NUMBR, error)
                             self.advance()
                             if ((self.curr_tok[0] in types) or (self.curr_tok[0] == "Typecast Noise Word")):
-                                if (self.curr_tok[0] == "Typecast Noise Word"): self.advance()
-                                maekList.append(self.curr_tok)
-                                self.advance()
-                                if (self.curr_tok[0] == "NEWLINE"):
-                                    child = self.tree.children[len(self.tree.children)-1]
-                                    child.add_child(TreeNode(maekList))
+                                if (self.curr_tok[0] == "Typecast Noise Word"): 
                                     self.advance()
-                                    # child.children[len(child.children)-1].add_child(TreeNode(maekList))
-                                    # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
+                                    if ((self.curr_tok[0] in types)):
+                                        maekList.append(self.curr_tok)
+                                        self.advance()
+                                        if (self.curr_tok[0] == "NEWLINE"):
+                                            child = self.tree.children[len(self.tree.children)-1]
+                                            child.add_child(TreeNode(maekList))
+                                            self.advance()
+                                        else:
+                                            self.error = "ERROR: (MAEK) only accepts two arguments"
+                                    else:
+                                        self.error = "ERROR: (MAEK) last argument should be a variable type"
+                                        return self.error  
                                 else:
-                                    self.error = "ERROR: (MAEK) only accepts two arguments"
+                                    maekList.append(self.curr_tok)
+                                    self.advance()
+                                    if (self.curr_tok[0] == "NEWLINE"):
+                                        child = self.tree.children[len(self.tree.children)-1]
+                                        child.add_child(TreeNode(maekList))
+                                        self.advance()
+                                    else:
+                                        self.error = "ERROR: (MAEK) only accepts two arguments"
                             else:
                                 self.error = "ERROR: (MAEK) second argument should be a variable type"
                                 return self.error   
@@ -616,8 +628,6 @@ class Parser:
                             child = self.tree.children[len(self.tree.children)-1]
                             child.add_child(TreeNode(maekList))
                             self.advance()
-                            # child.children[len(child.children)-1].add_child(TreeNode(maekList))
-                            # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
                         else:
                             self.error = "ERROR: (MAEK) only accepts two arguments"
                     elif (self.curr_tok[1] == "A"):
@@ -629,12 +639,10 @@ class Parser:
                                 child = self.tree.children[len(self.tree.children)-1]
                                 child.add_child(TreeNode(maekList))
                                 self.advance()
-                                # child.children[len(child.children)-1].add_child(TreeNode(maekList))
-                                # self.tree.children[len(self.tree.children)-1].add_child(TreeNode(assignList))
                         else:
                             self.error = "ERROR: (MAEK) only accepts two arguments"
                     else:
-                        self.error = "ERROR: (MAEK) second argument should be a variable type"
+                        self.error = "ERROR: (MAEK) last argument should be a variable type"
                         return self.error   
                 else:
                     self.error = "ERROR: (MAEK) first argument should be a variable"

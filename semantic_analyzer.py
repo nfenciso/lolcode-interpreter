@@ -125,7 +125,7 @@ def semanticAnalyze(lst):
                                 else:
                                     symbolTable[line[0][1]] = False
 
-                    elif (value == "<typecasted_value>"):
+                    elif (value == "<typecasted_value>"):       # MAEK
                         var = line[0][1]
                         cnt += 1
                         line = lst[cnt]
@@ -166,7 +166,7 @@ def semanticAnalyze(lst):
                                 symbolTable[var] = int(new_value)
                             else:
                                 if (check_string_to_int(new_value)) : symbolTable[var] = int(float(new_value))
-                                else: return f"ERROR: {new_value} can't be typecasted to integer"
+                                else: return f"ERROR: '{new_value}' can't be typecasted to integer"
 
                     elif (value == "<comparison_operation>"):
                         var = line[0][1]
@@ -207,7 +207,7 @@ def semanticAnalyze(lst):
                         if (val == None): symbolTable[line[0][1]] = 0
                         else:
                             if(check_string_to_int(val)): symbolTable[line[0][1]] = int(float(val))
-                            else: return f"ERROR: {val} can't be typecasted to integer"
+                            else: return f"ERROR: '{val}' can't be typecasted to integer"
                     elif (new_type == "YARN keyword"):
                         if (val == None): symbolTable[line[0][1]] = ""
                         else:
@@ -224,6 +224,48 @@ def semanticAnalyze(lst):
                                 else: symbolTable[line[0][1]] = True
                             else: # True or False
                                 symbolTable[line[0][1]] = val
+        elif (line[0] == "<typecasted_value>"):
+            cnt += 1
+            line = lst[cnt]
+
+            new_value = symbolTable[line[1][1]]
+
+            if (line[2][0] == "YARN keyword"):      # converting to YARN
+                symbolTable["IT"] = str(new_value)
+            elif (line[2][0] == "TROOF keyword"):   # to TROOF
+                if (new_value == None): symbolTable["IT"] = False
+                elif (isinstance(new_value, int) or isinstance(new_value, float)):
+                    if (new_value == 0) : symbolTable["IT"] = False
+                    else: symbolTable["IT"] = True
+                elif (isinstance(new_value, str)):
+                    if (len(new_value) == 0) : symbolTable["IT"] = False
+                    else: symbolTable["IT"] = True
+                else:
+                    symbolTable["IT"] = new_value
+            elif (line[2][0] == "NUMBAR keyword"):  # to float
+                if (new_value == None): 
+                    symbolTable["IT"] = 0.0
+                elif (isinstance(new_value, int)):
+                    symbolTable["IT"] = float(new_value)
+                elif (isinstance(new_value, float)):
+                    symbolTable["IT"] = new_value
+                elif (isinstance(new_value, str)):
+                    if (check_string_to_float(new_value)) : symbolTable["IT"] = float(new_value)
+                    else: return f"ERROR: {new_value} can't be typecasted to float"
+                else:
+                    if (new_value == True): symbolTable["IT"] = 1.0
+                    else: symbolTable["IT"] = 0.0
+            elif (line[2][0] == "NUMBR keyword"):  # to integer
+                if (new_value == None): 
+                    symbolTable["IT"] = 0
+                elif (isinstance(new_value, int)): # TROOF are also fall here
+                    symbolTable["IT"] = int(new_value)
+                elif (isinstance(new_value, float)):
+                    symbolTable["IT"] = int(new_value)
+                else:
+                    if (check_string_to_int(new_value)) : symbolTable["IT"] = int(float(new_value))
+                    else: return f"ERROR: '{new_value}' can't be typecasted to integer"
+
         elif (line[0][0] == "Variable Declaration"):
             var = line[1][1]
             if var in symbolTable:
