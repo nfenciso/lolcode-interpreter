@@ -516,6 +516,8 @@ def semanticAnalyze(lst):
                 if (tmp == "ENDLOOP"):
                     return "ENDLOOP"
 
+            continue
+
         elif (line[0][0] == "<switch-case block>"):
             temp = []
             #print("&&&")
