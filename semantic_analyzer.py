@@ -1159,8 +1159,8 @@ def semantic_main():
         pass
     else:
         lst = syntax.getResult().get_list([])
-        for i in lst:
-           print(i)
+        #for i in lst:
+           #print(i)
         semanticResult = semanticAnalyze(lst)
 
         print("\n### SYMBOL TABLE ###")
