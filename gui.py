@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import Frame, OptionMenu, Scrollbar, StringVar, messagebox
 from tkinter import filedialog as fd
 from tkinter.font import Font
+from tkinter import scrolledtext
+
 
 class GUI:
     def __init__(self):
@@ -29,14 +31,28 @@ class GUI:
         # lolcode_label.pack()
         berlin_sans = Font(family='Berlin Sans', size=10, weight='bold')
         btn2 = tk.Button(lolcode_frame, text="Upload LOL code file", font=berlin_sans, width = 43, command=self.open_file)
-        btn2.pack(pady=(10, 5))
+        btn2.pack(pady=(10, 5), padx=(9,0), fill="both")
 
         # v=tk.Scrollbar("win", orient='vertical')
         # v.pack(side="RIGHT", fill='y')
 
-        consolas_font = Font(family='Rockwell', size=10, weight='normal')
-        self.code_textbox = tk.Text(lolcode_frame, height=20, width=50, font=consolas_font, bg="#DADADA")
-        self.code_textbox.pack(padx=10, pady=(0, 10))
+        consolas_font = Font(family='Arial', size=10, weight='normal') # TODO: not working
+        # self.code_textbox = tk.Text(lolcode_frame, height=20, width=50, font=consolas_font, bg="#DADADA", wrap="none")
+
+        # Add a Scrollbar
+        h=Scrollbar(lolcode_frame, orient='horizontal')
+        h.pack(side=tk.BOTTOM, fill='both', padx=(9,0))
+        v=Scrollbar(lolcode_frame, orient='vertical')
+        v.pack(side=tk.RIGHT, fill='both')
+
+        consolas_font = Font(family='Calibri', size=10, weight='normal') # TODO: not working
+        self.code_textbox = tk.Text(lolcode_frame, height=20, width=60, font=consolas_font, bg="#DADADA", wrap="none", xscrollcommand=h.set, yscrollcommand=v.set)
+
+        # Attach the scrollbar with the text widget
+        h.config(command=self.code_textbox.xview)
+        v.config(command=self.code_textbox.yview)
+
+        self.code_textbox.pack(padx=10, pady=(0, 10), fill="both")
 
         lolcode_frame.grid(row=0, column=0, sticky="nsew")
 
@@ -210,3 +226,21 @@ root.mainloop()
 
 # references:
 #   > open file in tkinter: https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
+#   > color picker: https://imagecolorpicker.com/color-code
+
+
+
+
+
+        # # Add a Scrollbar
+        # h=Scrollbar(lolcode_frame, orient='horizontal')
+        # h.pack(side=tk.BOTTOM, fill='x', padx=20)
+        # v=Scrollbar(lolcode_frame, orient='vertical')
+        # v.pack(side=tk.RIGHT, fill='y', pady=5)
+
+        # consolas_font = Font(family='Calibri', size=10, weight='normal') # TODO: not working
+        # self.code_textbox = tk.Text(lolcode_frame, height=20, width=60, font=consolas_font, bg="#DADADA", wrap="none", xscrollcommand=h.set, yscrollcommand=v.set)
+
+        # # Attach the scrollbar with the text widget
+        # h.config(command=self.code_textbox.xview)
+        # v.config(command=self.code_textbox.yview)
