@@ -1,5 +1,8 @@
+import os
 import tkinter as tk
-from tkinter import Frame, OptionMenu, StringVar, messagebox
+from tkinter import Frame, OptionMenu, Scrollbar, StringVar, messagebox
+from tkinter import filedialog as fd
+from tkinter.font import Font
 
 class GUI:
     def __init__(self):
@@ -21,17 +24,24 @@ class GUI:
         frame1.columnconfigure(2, weight=1)
 
         # ===================== lol code frame ==========================
-        lolcode_frame = Frame(frame1, bg="blue")
-        lolcode_label = tk.Label(lolcode_frame, text="Code section", font=('Arial', 10))
-        lolcode_label.pack()
+        lolcode_frame = Frame(frame1, background="#272727")
+        # lolcode_label = tk.Label(lolcode_frame, text="Code section", font=('Arial', 10))
+        # lolcode_label.pack()
+        berlin_sans = Font(family='Berlin Sans', size=10, weight='bold')
+        btn2 = tk.Button(lolcode_frame, text="Upload LOL code file", font=berlin_sans, width = 43, command=self.open_file)
+        btn2.pack(pady=(10, 5))
 
-        self.code_textbox = tk.Text(lolcode_frame, height=20, width=50, font=('Arial', 10))
-        self.code_textbox.pack(padx=10, pady=10)
+        # v=tk.Scrollbar("win", orient='vertical')
+        # v.pack(side="RIGHT", fill='y')
+
+        consolas_font = Font(family='Rockwell', size=10, weight='normal')
+        self.code_textbox = tk.Text(lolcode_frame, height=20, width=50, font=consolas_font, bg="#DADADA")
+        self.code_textbox.pack(padx=10, pady=(0, 10))
 
         lolcode_frame.grid(row=0, column=0, sticky="nsew")
 
         # ===================== lexemes frame ==========================
-        lexemes_frame = Frame(frame1, background="red")
+        lexemes_frame = Frame(frame1, background="#272727")
         lexemes_label = tk.Label(lexemes_frame, text="Lexemes section", font=('Arial', 10))
         lexemes_label.pack()
         self.lexemes_textbox = tk.Text(lexemes_frame, height=20, width=40, font=('Arial', 10))
@@ -39,7 +49,7 @@ class GUI:
         lexemes_frame.grid(row=0, column=1, sticky="nsew")
 
         # ===================== symbol table frame ==========================
-        symbol_table_frame = Frame(frame1, background="yellow")
+        symbol_table_frame = Frame(frame1, background="#272727")
         symbol_table_label = tk.Label(symbol_table_frame, text="Symbol Table section", font=('Arial', 10))
         symbol_table_label.pack()
         self.symbol_table_textbox = tk.Text(symbol_table_frame, height=20, width=40, font=('Arial', 10))
@@ -49,13 +59,37 @@ class GUI:
         frame1.pack(expand=True, fill="both", padx=10, pady=10)
 
         # ===================== execute frame ==========================
-        frame2 = Frame(master, background="green")
+        frame2 = Frame(master, background="#272727")
         execute_label = tk.Label(frame2, text="Execute section", font=('Arial', 10))
         execute_label.pack(pady=10)
         self.x_textbox = tk.Text(frame2, height=15, width=120, font=('Arial', 10))
         self.x_textbox.pack()
 
         frame2.pack(expand=True, fill="both", padx=10)
+
+    def open_file(self):
+        
+        filetypes = (
+            ('text files', '*.lol'),
+            ('All files', '*.*')
+        )
+
+        filename = fd.askopenfilenames(
+            title='Open files',
+            initialdir=os.getcwd(),
+            filetypes=filetypes)
+
+        # messagebox.showinfo(
+        #     title='Selected Files',
+        #     message=filename
+        # )
+
+        self.code_textbox.delete('1.0', "end")
+        with open(str(filename)[2:-3], 'r') as a:
+            self.code_textbox.insert("insert", a.read())
+
+        # print(str(filename)[2:-3])
+        pass
 
 # class GUI:
 #     def __init__(self):
@@ -150,3 +184,29 @@ GUI(root)
 # hahabutton.place(x= 400, y=400, height=50, width=50)
 
 root.mainloop()
+
+
+
+
+# # fonts
+# font_1 = Font(family='Arial', 
+#               size=24, 
+#               weight='normal', 
+#               slant='italic', 
+#               underline=1, 
+#               overstrike=1)
+
+# font_2 = Font(family='Helvetica',
+#               size=12,
+#               weight='bold',
+#               slant='italic',
+#               underline=0,
+#               overstrike=0)
+
+# font_3 = Font(family='Courier', size=14, weight='normal', slant='roman', underline=0, overstrike=0)
+# font_4 = Font(family='Times', size=22, weight='bold', slant='roman', underline=0, overstrike=0)
+
+
+
+# references:
+#   > open file in tkinter: https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
