@@ -274,6 +274,7 @@ def lex_main(filename):
 
         print("INTERRUPT!\n"+error)
         print("==================== LEXICAL ANALYSIS INTERRUPTED ====================")
+        categoriesAndLexemes.insert(0, error)
         return categoriesAndLexemes 
 
     else:

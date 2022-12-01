@@ -2,8 +2,6 @@ from tkinter import ttk
 import lexical_analyzer
 import syntactic_analyzer
 
-
-
 import os
 import tkinter as tk
 from tkinter import Entry, Frame, OptionMenu, Scrollbar, StringVar, messagebox
@@ -60,12 +58,14 @@ class GUI:
 
         # ===================== lexemes frame ==========================
         lexemes_frame = Frame(frame1, background="#272727")
+        table_frame = Frame(lexemes_frame, background="#272727")
 
         columns = ('type', 'lexemes')
 
+        c=Scrollbar(lexemes_frame, orient='vertical')
+        c.pack(side=tk.RIGHT, fill='both', pady=(14, 20))
 
         # define headings
-        # self.tree.config(height=20)
         self.style = ttk.Style()
         self.style.theme_use("clam") # clam, alt, 
         self.style.configure("Treeview",
@@ -79,10 +79,16 @@ class GUI:
             background = [("selected", "black")],
             foreground = [("selected", "white")])
 
-        self.tree = ttk.Treeview(lexemes_frame, columns=columns, show='headings', height=14)
-        self.tree.heading('type', text='Types')
-        self.tree.heading('lexemes', text='Lexemes')
+        self.tree = ttk.Treeview(table_frame, columns=columns, show='headings', height=14, yscrollcommand=c.set)
+        self.tree.heading('type', text='Type')
+        self.tree.heading('lexemes', text='Lexeme')
         self.tree.grid(row=0, column=0, sticky='nsew', pady=10)
+        self.tree.column("#1", stretch="yes", width=150)
+        self.tree.pack(pady=(12,0))
+
+        table_frame.pack()
+
+        c.config(command=self.tree.yview)
 
         lexemes_frame.grid(row=0, column=1, sticky="nsew")
 
@@ -126,16 +132,16 @@ class GUI:
         global lexemes
         lexemes = lexical_analyzer.lex_main(filename)
         self.show_lexemes()
-        # for i in lexemes:
-        #     print(i)
 
     def show_lexemes(self):
         for item in self.tree.get_children():
             self.tree.delete(item)
 
         global lexemes
+        if (isinstance(lexemes[0], str)):
+            error = lexemes.pop(0)
+            lexemes.append(["ERROR:", error[7:]])
         for lexeme in lexemes:
-            # print(contact)
             self.tree.insert('', tk.END, values=lexeme)
         pass
 
@@ -261,20 +267,5 @@ root.mainloop()
 # references:
 #   > open file in tkinter: https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
 #   > color picker: https://imagecolorpicker.com/color-code
+#   > table tkinter: https://www.youtube.com/watch?v=ewxT3ZEGKAA
 
-
-
-
-
-        # # Add a Scrollbar
-        # h=Scrollbar(lolcode_frame, orient='horizontal')
-        # h.pack(side=tk.BOTTOM, fill='x', padx=20)
-        # v=Scrollbar(lolcode_frame, orient='vertical')
-        # v.pack(side=tk.RIGHT, fill='y', pady=5)
-
-        # consolas_font = Font(family='Calibri', size=10, weight='normal') # TODO: not working
-        # self.code_textbox = tk.Text(lolcode_frame, height=20, width=60, font=consolas_font, bg="#DADADA", wrap="none", xscrollcommand=h.set, yscrollcommand=v.set)
-
-        # # Attach the scrollbar with the text widget
-        # h.config(command=self.code_textbox.xview)
-        # v.config(command=self.code_textbox.yview)
