@@ -250,8 +250,8 @@ def LexAnalyze(results, main):
         #print(lexemes)
     return lexemes
 
-def lex_main():
-    fileHandle = open("sample.lol","r")
+def lex_main(filename):
+    fileHandle = open(filename,"r")
     content = fileHandle.read()
     fileHandle.close()
 
@@ -266,27 +266,27 @@ def lex_main():
     results = re.findall(rx, content)
     categoriesAndLexemes = LexAnalyze(results, 1)
     #print(categoriesAndLexemes)
-    print("===================================================================")
+    print("=========================== in Lexical Analyzer ===========================")
     if (isinstance(categoriesAndLexemes[0], str)):
         error = categoriesAndLexemes.pop(0)
         for i in categoriesAndLexemes:
             print(i[0].ljust(27," ")+":\t"+i[1])
 
         print("INTERRUPT!\n"+error)
-    else:
-        for i in categoriesAndLexemes:
-            if (i[0] != "NEWLINE"):
-                print("\n\t",i[0].ljust(27," ")+":\t"+i[1], end="")
-                #if (i[0] == "Output Keyword"):
-                #    print(" ("+str(i[2])+" next lexemes or smoosh)",end="")
-                
+        print("==================== LEXICAL ANALYSIS INTERRUPTED ====================")
+        return categoriesAndLexemes 
 
-        if (error != "NONE"):
-            print("INTERRUPT!\nERROR: "+error)
-        else:
-            print("\n\nLEXICAL ANALYSIS COMPLETE!")
-            print("===================================================================")
-            return categoriesAndLexemes
+    else:
+        print(categoriesAndLexemes)
+        print("\n\nLEXICAL ANALYSIS COMPLETE!")
+        print("===================================================================")
+        return categoriesAndLexemes 
+
+        # if (error != "NONE"):
+        #     print("INTERRUPT!\nERROR: "+error)
+        #     print("==================== LEXICAL ANALYSIS INTERRUPTED ====================")
+        # else:
+            
 
         #for i in categoriesAndLexemes:
         #    print(i)

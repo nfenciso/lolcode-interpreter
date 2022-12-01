@@ -1625,8 +1625,9 @@ def checkIfValidMathSyntax(tokens):
     else:
         return eval
 
-def syntax_main():
-    tokens = lexical_analyzer.lex_main()
+def syntax_main(lexemes):
+    # tokens = lexical_analyzer.lex_main()
+    tokens = lexemes
     i = 0
     if (isinstance(tokens, list)):
         while (i < len(tokens)):

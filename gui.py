@@ -1,6 +1,12 @@
+from tkinter import ttk
+import lexical_analyzer
+import syntactic_analyzer
+
+
+
 import os
 import tkinter as tk
-from tkinter import Frame, OptionMenu, Scrollbar, StringVar, messagebox
+from tkinter import Entry, Frame, OptionMenu, Scrollbar, StringVar, messagebox
 from tkinter import filedialog as fd
 from tkinter.font import Font
 from tkinter import scrolledtext
@@ -13,6 +19,10 @@ class GUI:
 
 
 root = tk.Tk()
+
+lexemes = None
+parse_tree = None
+
 
 class GUI:
     def __init__(self, master):
@@ -27,23 +37,15 @@ class GUI:
 
         # ===================== lol code frame ==========================
         lolcode_frame = Frame(frame1, background="#272727")
-        # lolcode_label = tk.Label(lolcode_frame, text="Code section", font=('Arial', 10))
-        # lolcode_label.pack()
         berlin_sans = Font(family='Berlin Sans', size=10, weight='bold')
         btn2 = tk.Button(lolcode_frame, text="Upload LOL code file", font=berlin_sans, width = 43, command=self.open_file)
-        btn2.pack(pady=(10, 5), padx=(9,0), fill="both")
-
-        # v=tk.Scrollbar("win", orient='vertical')
-        # v.pack(side="RIGHT", fill='y')
-
-        consolas_font = Font(family='Arial', size=10, weight='normal') # TODO: not working
-        # self.code_textbox = tk.Text(lolcode_frame, height=20, width=50, font=consolas_font, bg="#DADADA", wrap="none")
+        btn2.pack(pady=(10, 5), padx=(9, 15), fill="both")
 
         # Add a Scrollbar
         h=Scrollbar(lolcode_frame, orient='horizontal')
-        h.pack(side=tk.BOTTOM, fill='both', padx=(9,0))
+        h.pack(side=tk.BOTTOM, fill='both', padx=(9,15), pady=(0, 10))
         v=Scrollbar(lolcode_frame, orient='vertical')
-        v.pack(side=tk.RIGHT, fill='both')
+        v.pack(side=tk.RIGHT, fill='both', padx=(0,15),)
 
         consolas_font = Font(family='Calibri', size=10, weight='normal') # TODO: not working
         self.code_textbox = tk.Text(lolcode_frame, height=20, width=60, font=consolas_font, bg="#DADADA", wrap="none", xscrollcommand=h.set, yscrollcommand=v.set)
@@ -58,10 +60,30 @@ class GUI:
 
         # ===================== lexemes frame ==========================
         lexemes_frame = Frame(frame1, background="#272727")
-        lexemes_label = tk.Label(lexemes_frame, text="Lexemes section", font=('Arial', 10))
-        lexemes_label.pack()
-        self.lexemes_textbox = tk.Text(lexemes_frame, height=20, width=40, font=('Arial', 10))
-        self.lexemes_textbox.pack(padx=10, pady=10)
+
+        columns = ('type', 'lexemes')
+
+
+        # define headings
+        # self.tree.config(height=20)
+        self.style = ttk.Style()
+        self.style.theme_use("clam") # clam, alt, 
+        self.style.configure("Treeview",
+            background = "silver",
+            foreground = "black",
+            rowheight = 23,
+            fieldbackground = "white",
+            )
+        self.style.configure("Treeview.Heading", font=berlin_sans)
+        self.style.map("Treeview",
+            background = [("selected", "black")],
+            foreground = [("selected", "white")])
+
+        self.tree = ttk.Treeview(lexemes_frame, columns=columns, show='headings', height=14)
+        self.tree.heading('type', text='Types')
+        self.tree.heading('lexemes', text='Lexemes')
+        self.tree.grid(row=0, column=0, sticky='nsew', pady=10)
+
         lexemes_frame.grid(row=0, column=1, sticky="nsew")
 
         # ===================== symbol table frame ==========================
@@ -81,7 +103,7 @@ class GUI:
         self.x_textbox = tk.Text(frame2, height=15, width=120, font=('Arial', 10))
         self.x_textbox.pack()
 
-        frame2.pack(expand=True, fill="both", padx=10)
+        frame2.pack(expand=True, fill="both", padx=10, pady=(0, 10))
 
     def open_file(self):
         
@@ -95,16 +117,26 @@ class GUI:
             initialdir=os.getcwd(),
             filetypes=filetypes)
 
-        # messagebox.showinfo(
-        #     title='Selected Files',
-        #     message=filename
-        # )
+        filename = str(filename)[2:-3] # removing parenthesis and apostrophes
 
         self.code_textbox.delete('1.0', "end")
-        with open(str(filename)[2:-3], 'r') as a:
+        with open(filename, 'r') as a:
             self.code_textbox.insert("insert", a.read())
 
-        # print(str(filename)[2:-3])
+        global lexemes
+        lexemes = lexical_analyzer.lex_main(filename)
+        self.show_lexemes()
+        # for i in lexemes:
+        #     print(i)
+
+    def show_lexemes(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        global lexemes
+        for lexeme in lexemes:
+            # print(contact)
+            self.tree.insert('', tk.END, values=lexeme)
         pass
 
 # class GUI:
@@ -162,7 +194,11 @@ class GUI:
 #         if messagebox.askyesno(title="U wanna leave me?", message="Do you really want to quit?"):
 #             self.root.destroy()
 
+
 GUI(root)
+
+root.mainloop()
+
 
 # root = tk.Tk()
 
@@ -198,8 +234,6 @@ GUI(root)
 
 # hahabutton = tk.Button(root, text="haha", font=('Arial', 20))
 # hahabutton.place(x= 400, y=400, height=50, width=50)
-
-root.mainloop()
 
 
 

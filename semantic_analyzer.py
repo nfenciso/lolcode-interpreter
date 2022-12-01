@@ -1228,8 +1228,9 @@ def get_bool_result_2(bool_arguments):
         else: return 'FAIL'      
 
 
-def semantic_main():
-    syntax = syntactic_analyzer.syntax_main()
+def semantic_main(parse_tree):
+    syntax = parse_tree
+    # syntax = syntactic_analyzer.syntax_main()
 
     # print("==============")
     # print(syntax.getResult().print_tree())
