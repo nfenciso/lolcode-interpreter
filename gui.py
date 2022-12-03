@@ -35,6 +35,9 @@ class GUI:
         frame1.columnconfigure(2, weight=1)
 
         # ===================== lol code frame ==========================
+        # TODO: can edit files. if no file selected, create new file then save.
+        # else, save the edited to chosen file
+        
         lolcode_frame = Frame(frame1, background="#272727")
         berlin_sans = Font(family='Berlin Sans', size=12, weight='bold')
         btn2 = tk.Button(lolcode_frame, text="Upload LOL code file", font=berlin_sans, width = 43, command=self.open_file)
@@ -142,16 +145,11 @@ class GUI:
         self.tree_s.heading('value', text='Value')
         self.tree_s.heading('type', text='Type')
         self.tree_s.grid(row=0, column=0, sticky='nsew', pady=10)
-        # self.tree_s.column("#0", stretch="yes", width=90)
         self.tree_s.column('name', stretch="yes", width=100)
         self.tree_s.column('type', stretch="yes", width=90)
         self.tree_s.pack(pady=(12,0))
 
         symboltable_frame.pack()
-
-        # self.symbol_table_textbox = tk.Text(symbol_table_frame, height=20, width=40, font=('Arial', 10))
-        # self.symbol_table_textbox.pack(padx=10, pady=10)
-
         frame1.pack(expand=True, fill="both", padx=10, pady=10)
 
         # ===================== execute frame ==========================
@@ -160,6 +158,10 @@ class GUI:
         execute_label.pack(pady=10)
         self.x_textbox = tk.Text(frame2, height=15, width=120, font=('Arial', 10))
         self.x_textbox.pack()
+
+
+        # TODO: mimic terminal. pass the self.(where to print) to semantic in able to print in terminal
+        # find way to enter inputs (can use message box)
 
         frame2.pack(expand=True, fill="both", padx=10, pady=(0, 10))
 
@@ -181,6 +183,7 @@ class GUI:
         with open(filename, 'r') as a:
             self.code_textbox.insert("insert", a.read())
 
+        # setup lexeme table and symbol table
         global lexemes, parse_tree, symbol_table
         lexemes = lexical_analyzer.lex_main(filename)
         self.show_lexemes()
@@ -188,7 +191,6 @@ class GUI:
         parse_tree = syntactic_analyzer.syntax_main(lexemes)
         symbol_table = semantic_analyzer.semantic_main(parse_tree)
         self.show_symbol_table()
-        print(symbol_table)
 
 
         # self.fill_lexeme_table() # fill the lexeme table 
