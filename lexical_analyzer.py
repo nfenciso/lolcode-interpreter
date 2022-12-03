@@ -295,4 +295,5 @@ def lex_main(filename):
 #lex_main()
 
 if __name__ == "__main__":
-    lex_main()
+    filename = "sample.lol"
+    lex_main(filename)

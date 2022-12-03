@@ -8,13 +8,14 @@ from tkinter import Entry, Frame, OptionMenu, Scrollbar, StringVar, messagebox
 from tkinter import filedialog as fd
 from tkinter.font import Font
 from tkinter import scrolledtext
-
+import textwrap
 
 class GUI:
     def __init__(self):
         pass
 
-
+def wrap(string, lenght=25):
+    return '\n'.join(textwrap.wrap(string, lenght))
 
 root = tk.Tk()
 
@@ -35,7 +36,7 @@ class GUI:
 
         # ===================== lol code frame ==========================
         lolcode_frame = Frame(frame1, background="#272727")
-        berlin_sans = Font(family='Berlin Sans', size=10, weight='bold')
+        berlin_sans = Font(family='Berlin Sans', size=12, weight='bold')
         btn2 = tk.Button(lolcode_frame, text="Upload LOL code file", font=berlin_sans, width = 43, command=self.open_file)
         btn2.pack(pady=(10, 5), padx=(9, 15), fill="both")
 
@@ -58,8 +59,12 @@ class GUI:
 
         # ===================== lexemes frame ==========================
         lexemes_frame = Frame(frame1, background="#272727")
-        table_frame = Frame(lexemes_frame, background="#272727")
+        lexemes_frame.grid(row=0, column=1, sticky="nsew")
+        self.table_frame = Frame(lexemes_frame, height=10, background="#272727")
+        # self.table_frame.resizable(False, False)
 
+        # -- using treeview for table --
+        table_frame = Frame(lexemes_frame, background="#272727")
         columns = ('type', 'lexemes')
 
         c=Scrollbar(lexemes_frame, orient='vertical')
@@ -89,9 +94,25 @@ class GUI:
         table_frame.pack()
 
         c.config(command=self.tree.yview)
+        # -- using treeview for table --
 
-        lexemes_frame.grid(row=0, column=1, sticky="nsew")
 
+        ''' attempt for better table to scroll colomn horizontally
+        # table headers
+        self.e = Entry(self.table_frame, width=15, justify='center', 
+            font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
+        self.e.grid(row=0, column=0)
+        self.e.insert(tk.END, "Type")
+        self.e.configure(state="disabled")
+        self.e = Entry(self.table_frame, width=22, justify='center',
+            font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
+        self.e.grid(row=0, column=1)
+        self.e.insert(tk.END, "Lexeme")
+        self.e.configure(state="disabled")
+
+        self.table_frame.pack(pady=(15,0), fill=None, expand=False)
+        lexemes_frame.pack_propagate(False)
+        '''
         # ===================== symbol table frame ==========================
         symbol_table_frame = Frame(frame1, background="#272727")
         symbol_table_label = tk.Label(symbol_table_frame, text="Symbol Table section", font=('Arial', 10))
@@ -133,6 +154,38 @@ class GUI:
         lexemes = lexical_analyzer.lex_main(filename)
         self.show_lexemes()
 
+        # self.fill_lexeme_table() # fill the lexeme table 
+
+    '''
+    def fill_lexeme_table(self):
+        global lexemes
+        total_rows = len(lexemes)
+        total_columns = len(lexemes[1])
+        print(f"row: {total_rows} == col: {total_columns}")
+        for i in range(total_rows):
+            for j in range(total_columns):
+                 
+                self.e = Entry(self.table_frame, width=15 if j==0 else 22,
+                    font=('Berlin Sans',11,'normal'), disabledforeground="black")
+                 
+                self.e.grid(row=i+1, column=j)
+                self.e.insert(tk.END, lexemes[i][j])
+                self.e.configure(state='disabled')
+        # berlin_sans = Font(family='Berlin Sans', size=12, weight='bold')
+        # self.e = Entry(self.table_frame, width=15, justify='center', 
+        #     font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
+        # self.e.grid(row=1, column=0)
+        # self.e.insert(tk.END, "Type")
+        # self.e.configure(state="disabled")
+
+        # self.e = Entry(self.table_frame, width=15, justify='center', 
+        #     font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
+        # self.e.grid(row=1, column=1)
+        # self.e.insert(tk.END, "Type")
+        # self.e.configure(state="disabled")
+    '''
+
+    # function for treeview
     def show_lexemes(self):
         for item in self.tree.get_children():
             self.tree.delete(item)
@@ -142,7 +195,7 @@ class GUI:
             error = lexemes.pop(0)
             lexemes.append(["ERROR:", error[7:]])
         for lexeme in lexemes:
-            self.tree.insert('', tk.END, values=lexeme)
+            self.tree.insert('', tk.END, values=(wrap(lexeme[0]), wrap(lexeme[1])))
         pass
 
 # class GUI:
