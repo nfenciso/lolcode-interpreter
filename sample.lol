@@ -6,7 +6,7 @@ HAI
 	I HAS A input
 
 	VISIBLE "===Concatenate Strings==="
-	VISIBLE VISIBLE ">How many strings to concatenate?"
+	VISIBLE ">How many strings to concatenate?"
 	GIMMEH numStrings
 	numStrings IS NOW A NUMBR
 	VISIBLE ""

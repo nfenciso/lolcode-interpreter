@@ -1,6 +1,7 @@
 from tkinter import ttk
 import lexical_analyzer
 import syntactic_analyzer
+import semantic_analyzer
 
 import os
 import tkinter as tk
@@ -14,21 +15,20 @@ class GUI:
     def __init__(self):
         pass
 
-def wrap(string, lenght=25):
-    return '\n'.join(textwrap.wrap(string, lenght))
 
 root = tk.Tk()
 
 lexemes = None
 parse_tree = None
+symbol_table = None
 
 
 class GUI:
     def __init__(self, master):
-        master.geometry("1200x700")
+        master.geometry("1300x700")
         master.resizable(False, False)
 
-        frame1 = Frame(master)
+        frame1 = Frame(master, background="#272727")
 
         frame1.columnconfigure(0, weight=1)
         frame1.columnconfigure(1, weight=1)
@@ -59,12 +59,10 @@ class GUI:
 
         # ===================== lexemes frame ==========================
         lexemes_frame = Frame(frame1, background="#272727")
-        lexemes_frame.grid(row=0, column=1, sticky="nsew")
-        self.table_frame = Frame(lexemes_frame, height=10, background="#272727")
-        # self.table_frame.resizable(False, False)
+        lexemes_frame.grid(row=0, column=1, sticky="nsw")
 
         # -- using treeview for table --
-        table_frame = Frame(lexemes_frame, background="#272727")
+        lextable_frame = Frame(lexemes_frame, background="#272727")
         columns = ('type', 'lexemes')
 
         c=Scrollbar(lexemes_frame, orient='vertical')
@@ -84,14 +82,14 @@ class GUI:
             background = [("selected", "black")],
             foreground = [("selected", "white")])
 
-        self.tree = ttk.Treeview(table_frame, columns=columns, show='headings', height=14, yscrollcommand=c.set)
+        self.tree = ttk.Treeview(lextable_frame, columns=columns, show='headings', height=14, yscrollcommand=c.set)
         self.tree.heading('type', text='Type')
         self.tree.heading('lexemes', text='Lexeme')
         self.tree.grid(row=0, column=0, sticky='nsew', pady=10)
         self.tree.column("#1", stretch="yes", width=150)
         self.tree.pack(pady=(12,0))
 
-        table_frame.pack()
+        lextable_frame.pack()
 
         c.config(command=self.tree.yview)
         # -- using treeview for table --
@@ -115,11 +113,44 @@ class GUI:
         '''
         # ===================== symbol table frame ==========================
         symbol_table_frame = Frame(frame1, background="#272727")
-        symbol_table_label = tk.Label(symbol_table_frame, text="Symbol Table section", font=('Arial', 10))
-        symbol_table_label.pack()
-        self.symbol_table_textbox = tk.Text(symbol_table_frame, height=20, width=40, font=('Arial', 10))
-        self.symbol_table_textbox.pack(padx=10, pady=10)
-        symbol_table_frame.grid(row=0, column=2, sticky="nsew")
+        symbol_table_frame.grid(row=0, column=2, sticky="nsw")
+
+
+        # # -- using treeview for table --
+        symboltable_frame = Frame(symbol_table_frame, background="#272727")
+        columns = ('name', 'value', "type")
+
+        c1=Scrollbar(symbol_table_frame, orient='vertical')
+        c1.pack(side=tk.RIGHT, fill='both', pady=(14, 20))
+
+        # define headings
+        self.style = ttk.Style()
+        self.style.theme_use("clam") # clam, alt, 
+        self.style.configure("Treeview",
+            background = "silver",
+            foreground = "black",
+            rowheight = 23,
+            fieldbackground = "white",
+            )
+        self.style.configure("Treeview.Heading", font=berlin_sans)
+        self.style.map("Treeview",
+            background = [("selected", "black")],
+            foreground = [("selected", "white")])
+
+        self.tree_s = ttk.Treeview(symboltable_frame, columns=columns, show='headings', height=14, yscrollcommand=c1.set)
+        self.tree_s.heading('name', text='Name')
+        self.tree_s.heading('value', text='Value')
+        self.tree_s.heading('type', text='Type')
+        self.tree_s.grid(row=0, column=0, sticky='nsew', pady=10)
+        # self.tree_s.column("#0", stretch="yes", width=90)
+        self.tree_s.column('name', stretch="yes", width=100)
+        self.tree_s.column('type', stretch="yes", width=90)
+        self.tree_s.pack(pady=(12,0))
+
+        symboltable_frame.pack()
+
+        # self.symbol_table_textbox = tk.Text(symbol_table_frame, height=20, width=40, font=('Arial', 10))
+        # self.symbol_table_textbox.pack(padx=10, pady=10)
 
         frame1.pack(expand=True, fill="both", padx=10, pady=10)
 
@@ -150,9 +181,15 @@ class GUI:
         with open(filename, 'r') as a:
             self.code_textbox.insert("insert", a.read())
 
-        global lexemes
+        global lexemes, parse_tree, symbol_table
         lexemes = lexical_analyzer.lex_main(filename)
         self.show_lexemes()
+
+        parse_tree = syntactic_analyzer.syntax_main(lexemes)
+        symbol_table = semantic_analyzer.semantic_main(parse_tree)
+        self.show_symbol_table()
+        print(symbol_table)
+
 
         # self.fill_lexeme_table() # fill the lexeme table 
 
@@ -195,8 +232,15 @@ class GUI:
             error = lexemes.pop(0)
             lexemes.append(["ERROR:", error[7:]])
         for lexeme in lexemes:
-            self.tree.insert('', tk.END, values=(wrap(lexeme[0]), wrap(lexeme[1])))
-        pass
+            self.tree.insert('', tk.END, values=lexeme)
+
+    def show_symbol_table(self):
+        for item in self.tree_s.get_children():
+            self.tree_s.delete(item)
+
+        global symbol_table
+        for val in symbol_table:
+            self.tree_s.insert('', tk.END, values=val)
 
 # class GUI:
 #     def __init__(self):

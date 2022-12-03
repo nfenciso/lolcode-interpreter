@@ -1229,6 +1229,7 @@ def get_bool_result_2(bool_arguments):
 
 
 def semantic_main(parse_tree):
+    global symbolTable
     syntax = parse_tree
     # syntax = syntactic_analyzer.syntax_main()
 
@@ -1239,6 +1240,7 @@ def semantic_main(parse_tree):
         tmp = isinstance(syntax.getResult(), str)
     except:
         tmp = True
+
     if (tmp):
         pass
     else:
@@ -1256,5 +1258,31 @@ def semantic_main(parse_tree):
         if (semanticResult != 1):
             print("\n"+semanticResult)
 
+        # convert dict to list
+        symbolTable_list = []
+        for i in symbolTable:
+            elem = []
+            elem.append(str(i))
+            value = symbolTable[i]
+            elem.append(str(value))
+
+            v_type = None
+            if (value == None):
+                v_type = "NOOB"
+            elif (isinstance(value, str)):
+                v_type = "YARN"
+            elif (check_string_to_int(value)):
+                v_type = "NUMBR"
+            elif (check_string_to_float(value)):
+                v_type = "NUMBAR"
+            else:
+                v_type = "TROOF"
+
+            elem.append(v_type)
+            symbolTable_list.append(elem)
+
+        return symbolTable_list
+
 if __name__ == "__main__":
-    semantic_main()
+    syntax = syntactic_analyzer.syntax_main()
+    semantic_main(syntax)
