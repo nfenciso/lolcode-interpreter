@@ -1,9 +1,3 @@
-# CMSC124 B-1L
-# Lexical Analyzer
-# CONTRIBUTORS:
-#   John Kenneth F. Manalang
-#   Nathaniel F. Enciso
-
 import lexical_analyzer
 import syntactic_analyzer
 from tkinter import simpledialog
@@ -31,12 +25,13 @@ def mathSolve(tokens):
             sublistTokens.append(float(i[1]))
         elif (i[0] == "YARN Literal"):
             try:
-                containsDecimal = '.' in i[1]
+                cnv = float(i[1])
+                checkCnv = cnv - int(i[1])
 
-                if (containsDecimal):
-                    sublistTokens.append(float(i[1]))
-                else:
+                if (checkCnv == 0):
                     sublistTokens.append(int(i[1]))
+                else:
+                    sublistTokens.append(float(i[1]))
             except:
                 eval = f"ERROR: {i[1]} cannot be converted to number"
                 return eval
@@ -46,15 +41,16 @@ def mathSolve(tokens):
         elif (i[0] == "Variable Identifier"):
             varValue = symbolTable[i[1]]
             try:
-                containsDecimal = '.' in varValue
-
-                if (containsDecimal):
-                    sublistTokens.append(float(varValue))
-                else:
-                    sublistTokens.append(int(varValue))
+                cnv = float(varValue)
+                checkCnv = cnv - int(varValue)
             except:
                 eval = f"ERROR: {i[1]} cannot be converted to number"
                 return eval
+
+            if (checkCnv == 0):
+                sublistTokens.append(int(varValue))
+            else:
+                sublistTokens.append(float(varValue))
     
     while (1):
         if (len(acc) >= 3):
@@ -354,8 +350,9 @@ def semanticAnalyze(lst, interface):
                                     allInt = False
                                     break
                                 elif (i[0] == "YARN Literal"):
-                                    containsDecimal = '.' in i[1]
-                                    if (containsDecimal):
+                                    temp = float(i[1])
+                                    checkTemp = temp - int(i[1])
+                                    if (checkTemp != 0):
                                         allInt = False
                                         break
                             if (allInt):
@@ -477,12 +474,7 @@ def semanticAnalyze(lst, interface):
                             eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                             return eval
                         else:
-                            if (symbolTable[value] == True):
-                                temp += "WIN"
-                            elif (symbolTable[value] == False):
-                                temp += "FAIL"
-                            else:
-                                temp += str(symbolTable[value])
+                            temp += str(symbolTable[value])
                     elif (lexType == "Arithmetic Operation"):
                         valueM = mathSolve(i)
                         if (isinstance(valueM, str)):
@@ -504,7 +496,7 @@ def semanticAnalyze(lst, interface):
                         temp += str(result)
 
             # Don't comment out this print statement
-            # print(temp)
+            #print(temp)
             interface.x_textbox.insert("end",temp+"\n")
             # # # # # # # # # # # # # # # # # # # #
         elif (line[0][0] == "Concatenation Keyword"):
@@ -628,12 +620,13 @@ def semanticAnalyze(lst, interface):
                     elif (frontRemoved == 'FAIL'):
                         caseVal = False
                     else:
-                        containsDecimal = '.' in frontRemoved
+                        cnv = float(frontRemoved)
+                        checkCnv = cnv - int(frontRemoved)
 
-                        if (containsDecimal):
-                            caseVal = float(frontRemoved)
-                        else:
+                        if (checkCnv == 0):
                             caseVal = int(frontRemoved)
+                        else:
+                            caseVal = float(frontRemoved)
 
                     breakEncountered = False
                     #print("$"+str(frontRemoved))
@@ -1256,25 +1249,19 @@ def semantic_main(syntax, interface):
         elem = []
         elem.append(str(i))
         value = symbolTable[i]
-        
+        elem.append(str(value))
 
         v_type = None
         if (value == None):
             v_type = "NOOB"
         elif (isinstance(value, str)):
             v_type = "YARN"
-        elif (value in [True,False]):
-            v_type = "TROOF"
-        elif (type(value) == float):
+        elif (check_string_to_int(value)):
+            v_type = "NUMBR"
+        elif (check_string_to_float(value)):
             v_type = "NUMBAR"
         else:
-            v_type = "NUMBR"
-        
-        if (value == True):
-            value = "WIN"
-        elif (value == False):
-            value = "FAIL"
-        elem.append(str(value))    
+            v_type = "TROOF"
 
         elem.append(v_type)
         symbolTable_list.append(elem)
