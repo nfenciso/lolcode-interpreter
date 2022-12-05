@@ -153,7 +153,7 @@ class GUI:
 
         # ===================== execute frame ==========================
         frame2 = Frame(master, background="#272727")
-        execute_label = tk.Button(frame2, text="Execute section", font=('Arial', 10), command=self.execute)
+        execute_label = tk.Button(frame2, text="Execute/Run", font=('Arial', 10), command=self.execute)
         execute_label.pack(pady=10)
         self.x_textbox = tk.Text(frame2, height=15, width=120, font=('Arial', 10))
         self.x_textbox.pack()
@@ -191,7 +191,7 @@ class GUI:
                     self.x_textbox.insert("insert", parse_tree.getResult())
                     self.show_symbol_table()
                 else:
-                    symbol_table = semantic_analyzer.semantic_main(parse_tree)
+                    symbol_table = semantic_analyzer.semantic_main(parse_tree, self)
                     #print("SEMANTIC"+str(symbol_table))
                     if (isinstance(symbol_table, str)):
                         self.x_textbox.insert("insert", symbol_table)

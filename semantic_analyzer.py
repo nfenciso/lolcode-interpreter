@@ -1,5 +1,6 @@
 import lexical_analyzer
 import syntactic_analyzer
+from tkinter import simpledialog
 
 symbolTable = {
     "IT": None
@@ -95,7 +96,7 @@ def mathSolve(tokens):
     
     return eval
 
-def semanticAnalyze(lst):
+def semanticAnalyze(lst, interface):
     temp = ""
     tempList = []
     cnt = 0
@@ -412,7 +413,8 @@ def semanticAnalyze(lst):
                 else:
                     symbolTable["IT"] = False
         elif (line[0][0] == "Input Keyword"):
-            temp = input()
+            temp = simpledialog.askstring("","Enter input")
+            interface.x_textbox.insert("end",temp+"\n")
             var = line[1][1]
             symbolTable[var] = temp
         elif (line[0][0] == "Output Keyword"):
@@ -494,7 +496,8 @@ def semanticAnalyze(lst):
                         temp += str(result)
 
             # Don't comment out this print statement
-            print(temp)
+            #print(temp)
+            interface.x_textbox.insert("end",temp+"\n")
             # # # # # # # # # # # # # # # # # # # #
         elif (line[0][0] == "Concatenation Keyword"):
             numSmooshArgs = line[0][2]
@@ -590,11 +593,11 @@ def semanticAnalyze(lst):
             
             #print("EVAL: "+str(eval))
             if (eval):
-                tmp = semanticAnalyze(ifList)
+                tmp = semanticAnalyze(ifList, interface)
                 if (tmp == "ENDLOOP"):
                     return "ENDLOOP"
             elif (len(elseList) != 0 and not eval):
-                tmp = semanticAnalyze(elseList)
+                tmp = semanticAnalyze(elseList, interface)
                 if (tmp == "ENDLOOP"):
                     return "ENDLOOP"
             
@@ -666,27 +669,27 @@ def semanticAnalyze(lst):
                 if (i[0] == "$#DEFAULT#$" and not matchedCase):
                     if (i[1][len(i[1])-1][0][0] == "Break Keyword"):
                         i[1].pop()
-                        semanticAnalyze(i[1])
+                        semanticAnalyze(i[1], interface)
                         break
                     else:
-                        semanticAnalyze(i[1])
+                        semanticAnalyze(i[1], interface)
                 if (matchedCase and execSucceeding and i[0] != "$#DEFAULT#$"):
                     if (i[1][len(i[1])-1][0][0] == "Break Keyword"):
                         i[1].pop()
-                        semanticAnalyze(i[1])
+                        semanticAnalyze(i[1], interface)
                         break
                     else:
-                        semanticAnalyze(i[1])
+                        semanticAnalyze(i[1], interface)
                     continue
                 if (not matchedCase and i[0] == symbolTable["IT"]):
                     matchedCase = True
                     #print("QQQ:"+str(i[1][len(i[1])-1][0]))
                     if (i[1][len(i[1])-1][0][0] == "Break Keyword"):
                         i[1].pop()
-                        semanticAnalyze(i[1])
+                        semanticAnalyze(i[1], interface)
                         break
                     else:
-                        semanticAnalyze(i[1])
+                        semanticAnalyze(i[1], interface)
 
         elif (line[0] == "<boolean_operation>"):
             cnt += 1
@@ -722,7 +725,7 @@ def semanticAnalyze(lst):
             #print("***")
             #print(loopList)
             while (1):
-                iterResult = semanticAnalyze(loopList)
+                iterResult = semanticAnalyze(loopList, interface)
                 #print("///"+str(iterResult))
                 if (iterResult == "ENDLOOP"):
                     break
@@ -818,7 +821,7 @@ def semanticAnalyze(lst):
                 if (loopConditionType == "WILE" and not fulfilledExpr):
                     break
 
-                iterResult = semanticAnalyze(loopList)
+                iterResult = semanticAnalyze(loopList, interface)
                 #print("///"+str(iterResult))
                 if (iterResult == "ENDLOOP"):
                     break
@@ -1229,34 +1232,18 @@ def get_bool_result_2(bool_arguments):
         else: return 'FAIL'      
 
 
-def semantic_main(syntax):
-    #print("parsetree"+str(syntax))
+def semantic_main(syntax, interface):
     global symbolTable
     symbolTable = {
         "IT": None
     }
-    # syntax = syntactic_analyzer.syntax_main()
-
-    # print("==============")
-    #print(syntax.getResult().print_tree())
 
     lst = syntax.getResult().get_list([])
-    #print("lst"+str(lst))
-    # for i in lst:
-    #    print(i)
-    semanticResult = semanticAnalyze(lst)
+    semanticResult = semanticAnalyze(lst, interface)
 
-    #print("\n### SYMBOL TABLE ###")
-    #for i in symbolTable:
-    #    if (isinstance(symbolTable[i], str)):
-    #        print(f"{i.rjust(10)}: \"{symbolTable[i]}\"")
-    #    else:
-    #        print(f"{i.rjust(10)}: {symbolTable[i]}")
     if (semanticResult != 1):
-        #print("\n"+semanticResult)
         return semanticResult
 
-    # convert dict to list
     symbolTable_list = []
     for i in symbolTable:
         elem = []
@@ -1280,11 +1267,3 @@ def semantic_main(syntax):
         symbolTable_list.append(elem)
 
     return symbolTable_list
-
-if __name__ == "__main__":
-    fd = open(".temp_content.txt", "r")
-    content = fd.read()
-    fd.close()
-    lexemes = lexical_analyzer.lex_main(content)
-    syntax = syntactic_analyzer.syntax_main(lexemes)
-    semantic_main(syntax)
