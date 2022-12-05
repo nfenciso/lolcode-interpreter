@@ -251,12 +251,13 @@ def LexAnalyze(results, main):
     return lexemes
 
 def lex_main(content):
-    # filename = "sample.lol"
-    # fileHandle = open(filename,"r")
-    # content = fileHandle.read()
-    # fileHandle.close()
+    global declaredIdentifiers
+    declaredIdentifiers = ["IT"]
+    global declaredIdentifiersType
+    declaredIdentifiersType = ["Variable Identifier"]
 
-    print(content+"\n")
+    #print("***")
+    #print(content+"\n")
 
     content = " "+content+"\n "
     content = content.replace(" ", "   ")
@@ -267,21 +268,22 @@ def lex_main(content):
     results = re.findall(rx, content)
     categoriesAndLexemes = LexAnalyze(results, 1)
     #print(categoriesAndLexemes)
-    print("=========================== in Lexical Analyzer ===========================")
+    #print("=========================== in Lexical Analyzer ===========================")
+    #print("lex[0]"+str(categoriesAndLexemes[0]))
     if (isinstance(categoriesAndLexemes[0], str)):
-        error = categoriesAndLexemes.pop(0)
-        for i in categoriesAndLexemes:
-            print(i[0].ljust(27," ")+":\t"+i[1])
+        #error = categoriesAndLexemes.pop(0)
+        #for i in categoriesAndLexemes:
+            #print(i[0].ljust(27," ")+":\t"+i[1])
 
-        print("INTERRUPT!\n"+error)
-        print("==================== LEXICAL ANALYSIS INTERRUPTED ====================")
-        categoriesAndLexemes.insert(0, error)
+        #print("INTERRUPT!\n"+error)
+        #print("==================== LEXICAL ANALYSIS INTERRUPTED ====================")
+        #categoriesAndLexemes.insert(0, error)
         return categoriesAndLexemes 
 
     else:
-        print(categoriesAndLexemes)
-        print("\n\nLEXICAL ANALYSIS COMPLETE!")
-        print("===================================================================")
+        #print(categoriesAndLexemes)
+        #print("\n\nLEXICAL ANALYSIS COMPLETE!")
+        #print("===================================================================")
         return categoriesAndLexemes 
 
         # if (error != "NONE"):

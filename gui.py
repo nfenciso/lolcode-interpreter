@@ -10,6 +10,9 @@ from tkinter import filedialog as fd
 from tkinter.font import Font
 from tkinter import scrolledtext
 import textwrap
+import subprocess
+
+
 root = tk.Tk()
 
 lexemes = None
@@ -162,19 +165,52 @@ class GUI:
         frame2.pack(expand=True, fill="both", padx=10, pady=(0, 10))
 
     def execute(self):
+        self.x_textbox.delete("1.0", tk.END)
         global lexemes, parse_tree, symbol_table
         lexemes = None
         parse_tree = None
         symbol_table = None
-        if (filename != "::NO_FILE_CHOSEN::"):
-            lexemes = lexical_analyzer.lex_main(self.code_textbox.get("1.0", tk.END))
+        temp_content = self.code_textbox.get("1.0", tk.END)
+        temp_content.strip
+        if (filename != "::NO_FILE_CHOSEN::" or len(temp_content) != 1):
+            temp_file = open(".temp_content.txt", "w")
+            temp_file.write(temp_content)
+            temp_file.close()
+            lexemes = lexical_analyzer.lex_main(temp_content)
+            #print("LEX"+str(lexemes))
+            firstLex = lexemes[0]
             self.show_lexemes()
 
-            parse_tree = syntactic_analyzer.syntax_main(lexemes)
-            symbol_table = semantic_analyzer.semantic_main(parse_tree)
-            self.show_symbol_table()
+            if (isinstance(firstLex,str)):
+                self.show_symbol_table()
+            else:
+                parse_tree = syntactic_analyzer.syntax_main(lexemes)
+                #print("SYNTAX"+str(parse_tree.getResult()))
+
+                if (isinstance(parse_tree.getResult(), str)):
+                    self.x_textbox.insert("insert", parse_tree.getResult())
+                    self.show_symbol_table()
+                else:
+                    symbol_table = semantic_analyzer.semantic_main(parse_tree)
+                    #print("SEMANTIC"+str(symbol_table))
+                    if (isinstance(symbol_table, str)):
+                        self.x_textbox.insert("insert", symbol_table)
+                    else:
+                        self.show_symbol_table()
+
+            #out = check_output(["python", "semantic_analyzer.py"])
+            #print('started')
+            # p = subprocess.Popen(["python", "semantic_analyzer.py"], stdout=subprocess.PIPE, bufsize=1, text=True)
+            # while p.poll() is None: # check whether process is still running
+            #     print("...running")
+            #     msg = p.stdout.readline().strip() # read a line from the process output
+            #     if msg:
+            #         print("::"+msg)
+            #         self.x_textbox.insert("end", msg+"\n")
+            # #print('finished')
+            #print(">>>"+p)
         else:
-            print("NO FILE CHOSEN")
+            self.x_textbox.insert("insert","NO CODE")
 
     def open_file(self):
         
@@ -192,8 +228,11 @@ class GUI:
         filename = str(filename)[2:-3] # removing parenthesis and apostrophes
 
         self.code_textbox.delete('1.0', "end")
-        with open(filename, 'r') as a:
-            self.code_textbox.insert("insert", a.read())
+        try:
+            with open(filename, 'r') as a:
+                self.code_textbox.insert("insert", a.read())
+        except:
+            filename = "::NO_FILE_CHOSEN::"
 
         # setup lexeme table and symbol table
         # global lexemes, parse_tree, symbol_table
@@ -245,6 +284,7 @@ class GUI:
         if (isinstance(lexemes[0], str)):
             error = lexemes.pop(0)
             lexemes.append(["ERROR:", error[7:]])
+        #print(lexemes)
         for lexeme in lexemes:
             if (lexeme[0] != "NEWLINE"):
                 self.tree.insert('', tk.END, values=lexeme)
@@ -258,7 +298,7 @@ class GUI:
             for val in symbol_table:
                 self.tree_s.insert('', tk.END, values=val)
         except:
-            self.tree_s.insert('', tk.END, values=["ERROR"])
+            pass
 
 # class GUI:
 #     def __init__(self):

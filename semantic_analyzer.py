@@ -1,3 +1,4 @@
+import lexical_analyzer
 import syntactic_analyzer
 
 symbolTable = {
@@ -1228,64 +1229,62 @@ def get_bool_result_2(bool_arguments):
         else: return 'FAIL'      
 
 
-def semantic_main(parse_tree):
+def semantic_main(syntax):
+    #print("parsetree"+str(syntax))
     global symbolTable
     symbolTable = {
         "IT": None
     }
-    syntax = parse_tree
     # syntax = syntactic_analyzer.syntax_main()
 
     # print("==============")
-    # print(syntax.getResult().print_tree())
+    #print(syntax.getResult().print_tree())
 
-    try:
-        tmp = isinstance(syntax.getResult(), str)
-    except:
-        tmp = True
+    lst = syntax.getResult().get_list([])
+    #print("lst"+str(lst))
+    # for i in lst:
+    #    print(i)
+    semanticResult = semanticAnalyze(lst)
 
-    if (tmp):
-        pass
-    else:
-        lst = syntax.getResult().get_list([])
-        # for i in lst:
-        #    print(i)
-        semanticResult = semanticAnalyze(lst)
+    #print("\n### SYMBOL TABLE ###")
+    #for i in symbolTable:
+    #    if (isinstance(symbolTable[i], str)):
+    #        print(f"{i.rjust(10)}: \"{symbolTable[i]}\"")
+    #    else:
+    #        print(f"{i.rjust(10)}: {symbolTable[i]}")
+    if (semanticResult != 1):
+        #print("\n"+semanticResult)
+        return semanticResult
 
-        print("\n### SYMBOL TABLE ###")
-        for i in symbolTable:
-            if (isinstance(symbolTable[i], str)):
-                print(f"{i.rjust(10)}: \"{symbolTable[i]}\"")
-            else:
-                print(f"{i.rjust(10)}: {symbolTable[i]}")
-        if (semanticResult != 1):
-            print("\n"+semanticResult)
+    # convert dict to list
+    symbolTable_list = []
+    for i in symbolTable:
+        elem = []
+        elem.append(str(i))
+        value = symbolTable[i]
+        elem.append(str(value))
 
-        # convert dict to list
-        symbolTable_list = []
-        for i in symbolTable:
-            elem = []
-            elem.append(str(i))
-            value = symbolTable[i]
-            elem.append(str(value))
+        v_type = None
+        if (value == None):
+            v_type = "NOOB"
+        elif (isinstance(value, str)):
+            v_type = "YARN"
+        elif (check_string_to_int(value)):
+            v_type = "NUMBR"
+        elif (check_string_to_float(value)):
+            v_type = "NUMBAR"
+        else:
+            v_type = "TROOF"
 
-            v_type = None
-            if (value == None):
-                v_type = "NOOB"
-            elif (isinstance(value, str)):
-                v_type = "YARN"
-            elif (check_string_to_int(value)):
-                v_type = "NUMBR"
-            elif (check_string_to_float(value)):
-                v_type = "NUMBAR"
-            else:
-                v_type = "TROOF"
+        elem.append(v_type)
+        symbolTable_list.append(elem)
 
-            elem.append(v_type)
-            symbolTable_list.append(elem)
-
-        return symbolTable_list
+    return symbolTable_list
 
 if __name__ == "__main__":
-    syntax = syntactic_analyzer.syntax_main()
+    fd = open(".temp_content.txt", "r")
+    content = fd.read()
+    fd.close()
+    lexemes = lexical_analyzer.lex_main(content)
+    syntax = syntactic_analyzer.syntax_main(lexemes)
     semantic_main(syntax)

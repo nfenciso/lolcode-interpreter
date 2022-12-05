@@ -1628,20 +1628,23 @@ def checkIfValidMathSyntax(tokens):
 def syntax_main(lexemes):
     # tokens = lexical_analyzer.lex_main("wew")
     tokens = lexemes
+    #print(tokens)
     i = 0
+    if (tokens[len(tokens)-1][0] == "ERROR:"):
+        return tokens[len(tokens)-1][1]
+
     if (isinstance(tokens, list)):
-        while (i < len(tokens)):
-            #print(i,tokens[i])
-            i +=1
+        #while (i < len(tokens)):
+        #    print(i,tokens[i])
+        #    i +=1
         syntax = Parser(tokens,1)
-        if (isinstance(syntax.getResult(), str)):
-            syntax.tree.print_tree()
-            print()
-            print(syntax.getResult())
-        else:
-            syntax.getResult().print_tree()
-            print("\nSYNTACTIC ANALYSIS COMPLETE!")
-            print("===================================================================")
+        #    syntax.tree.print_tree()
+        #    print()
+        #print(syntax.getResult())
+        #else:
+        #    syntax.getResult().print_tree()
+        #    print("\nSYNTACTIC ANALYSIS COMPLETE!")
+        #    print("===================================================================")
         return syntax
 
 if __name__ == "__main__":
