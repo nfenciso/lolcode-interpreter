@@ -31,13 +31,12 @@ def mathSolve(tokens):
             sublistTokens.append(float(i[1]))
         elif (i[0] == "YARN Literal"):
             try:
-                cnv = float(i[1])
-                checkCnv = cnv - int(i[1])
+                containsDecimal = '.' in i[1]
 
-                if (checkCnv == 0):
-                    sublistTokens.append(int(i[1]))
-                else:
+                if (containsDecimal):
                     sublistTokens.append(float(i[1]))
+                else:
+                    sublistTokens.append(int(i[1]))
             except:
                 eval = f"ERROR: {i[1]} cannot be converted to number"
                 return eval
@@ -47,16 +46,15 @@ def mathSolve(tokens):
         elif (i[0] == "Variable Identifier"):
             varValue = symbolTable[i[1]]
             try:
-                cnv = float(varValue)
-                checkCnv = cnv - int(varValue)
+                containsDecimal = '.' in varValue
+
+                if (containsDecimal):
+                    sublistTokens.append(float(varValue))
+                else:
+                    sublistTokens.append(int(varValue))
             except:
                 eval = f"ERROR: {i[1]} cannot be converted to number"
                 return eval
-
-            if (checkCnv == 0):
-                sublistTokens.append(int(varValue))
-            else:
-                sublistTokens.append(float(varValue))
     
     while (1):
         if (len(acc) >= 3):
@@ -356,9 +354,8 @@ def semanticAnalyze(lst, interface):
                                     allInt = False
                                     break
                                 elif (i[0] == "YARN Literal"):
-                                    temp = float(i[1])
-                                    checkTemp = temp - int(i[1])
-                                    if (checkTemp != 0):
+                                    containsDecimal = '.' in i[1]
+                                    if (containsDecimal):
                                         allInt = False
                                         break
                             if (allInt):
@@ -626,13 +623,12 @@ def semanticAnalyze(lst, interface):
                     elif (frontRemoved == 'FAIL'):
                         caseVal = False
                     else:
-                        cnv = float(frontRemoved)
-                        checkCnv = cnv - int(frontRemoved)
+                        containsDecimal = '.' in frontRemoved
 
-                        if (checkCnv == 0):
-                            caseVal = int(frontRemoved)
-                        else:
+                        if (containsDecimal):
                             caseVal = float(frontRemoved)
+                        else:
+                            caseVal = int(frontRemoved)
 
                     breakEncountered = False
                     #print("$"+str(frontRemoved))
@@ -1262,12 +1258,13 @@ def semantic_main(syntax, interface):
             v_type = "NOOB"
         elif (isinstance(value, str)):
             v_type = "YARN"
-        elif (check_string_to_int(value)):
-            v_type = "NUMBR"
-        elif (check_string_to_float(value)):
+        elif (value in [True,False]):
+            v_type = "TROOF"
+        elif (type(value) == float):
             v_type = "NUMBAR"
         else:
-            v_type = "TROOF"
+            v_type = "NUMBR"
+            
 
         elem.append(v_type)
         symbolTable_list.append(elem)
