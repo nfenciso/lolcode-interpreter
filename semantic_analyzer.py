@@ -26,7 +26,7 @@ def mathSolve(tokens):
         elif (i[0] == "YARN Literal"):
             try:
                 cnv = float(i[1])
-                checkCnv = cnv - int(i[1])
+                checkCnv = cnv - int(float(i[1]))
 
                 if (checkCnv == 0):
                     sublistTokens.append(int(i[1]))
@@ -42,9 +42,9 @@ def mathSolve(tokens):
             varValue = symbolTable[i[1]]
             try:
                 cnv = float(varValue)
-                checkCnv = cnv - int(varValue)
+                checkCnv = cnv - int(float(varValue))
             except:
-                eval = f"ERROR: {i[1]} cannot be converted to number"
+                eval = f"ERROR: {i[1]} cannot be converted to number1"
                 return eval
 
             if (checkCnv == 0):
@@ -351,7 +351,7 @@ def semanticAnalyze(lst, interface):
                                     break
                                 elif (i[0] == "YARN Literal"):
                                     temp = float(i[1])
-                                    checkTemp = temp - int(i[1])
+                                    checkTemp = temp - int(float(i[1]))
                                     if (checkTemp != 0):
                                         allInt = False
                                         break
@@ -399,15 +399,15 @@ def semanticAnalyze(lst, interface):
                 return value
             symbolTable["IT"] = value
         elif (line[0][0] in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
-            type = line[0][0]
+            type1 = line[0][0]
             value = line[0][1]
-            if (type == "NUMBR Literal"):
+            if (type1 == "NUMBR Literal"):
                 symbolTable["IT"] = int(value)
-            elif (type == "NUMBAR Literal"):
+            elif (type1 == "NUMBAR Literal"):
                 symbolTable["IT"] = float(value)
-            elif (type == "YARN Literal"):
+            elif (type1 == "YARN Literal"):
                 symbolTable["IT"] = value
-            elif (type == "TROOF Literal"):
+            elif (type1 == "TROOF Literal"):
                 if (value == "WIN"):
                     symbolTable["IT"] = True
                 else:
@@ -474,7 +474,12 @@ def semanticAnalyze(lst, interface):
                             eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                             return eval
                         else:
-                            temp += str(symbolTable[value])
+                            if (symbolTable[value] == True):
+                                temp += "WIN"
+                            elif (symbolTable[value] == False):
+                                temp += "FAIL"
+                            else:
+                                temp += str(symbolTable[value])
                     elif (lexType == "Arithmetic Operation"):
                         valueM = mathSolve(i)
                         if (isinstance(valueM, str)):
@@ -1249,19 +1254,26 @@ def semantic_main(syntax, interface):
         elem = []
         elem.append(str(i))
         value = symbolTable[i]
-        elem.append(str(value))
+        
 
         v_type = None
         if (value == None):
             v_type = "NOOB"
         elif (isinstance(value, str)):
             v_type = "YARN"
-        elif (check_string_to_int(value)):
+        elif (type(value) == int):
             v_type = "NUMBR"
-        elif (check_string_to_float(value)):
+        elif (type(value) == float):
             v_type = "NUMBAR"
         else:
             v_type = "TROOF"
+        
+        if (value == True and v_type == "TROOF"):
+            elem.append("WIN")
+        elif (value == False and v_type == "TROOF"):
+            elem.append("FAIL")    
+        else:
+            elem.append(str(value))
 
         elem.append(v_type)
         symbolTable_list.append(elem)
