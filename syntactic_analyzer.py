@@ -1,5 +1,10 @@
+# CMSC124 B-1L
+# Lexical Analyzer
+# CONTRIBUTORS:
+#   John Kenneth F. Manalang
+#   Nathaniel F. Enciso
+
 import random
-import lexical_analyzer
 
 mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier","String Delimiter"]
 literals = ["NUMBR Literal", "NUMBAR Literal", "TROOF Literal", "String Delimiter"]
@@ -1626,26 +1631,11 @@ def checkIfValidMathSyntax(tokens):
         return eval
 
 def syntax_main(lexemes):
-    # tokens = lexical_analyzer.lex_main("wew")
     tokens = lexemes
-    #print(tokens)
     i = 0
     if (tokens[len(tokens)-1][0] == "ERROR:"):
         return tokens[len(tokens)-1][1]
 
     if (isinstance(tokens, list)):
-        #while (i < len(tokens)):
-        #    print(i,tokens[i])
-        #    i +=1
         syntax = Parser(tokens,1)
-        #    syntax.tree.print_tree()
-        #    print()
-        #print(syntax.getResult())
-        #else:
-        #    syntax.getResult().print_tree()
-        #    print("\nSYNTACTIC ANALYSIS COMPLETE!")
-        #    print("===================================================================")
         return syntax
-
-if __name__ == "__main__":
-    syntax_main()

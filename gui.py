@@ -1,19 +1,26 @@
+# CMSC124 B-1L
+# Lexical Analyzer
+# CONTRIBUTORS:
+#   John Kenneth F. Manalang
+#   Nathaniel F. Enciso
+
 from tkinter import ttk
 import lexical_analyzer
 import syntactic_analyzer
 import semantic_analyzer
-
-import os
 import tkinter as tk
-from tkinter import Entry, Frame, OptionMenu, Scrollbar, StringVar, messagebox
+from tkinter import Frame, Scrollbar
+#from tkinter import Entry, OptionMenu, StringVar, messagebox
 from tkinter import filedialog as fd
 from tkinter.font import Font
-from tkinter import scrolledtext
-import textwrap
-import subprocess
+#from tkinter import scrolledtext
+#import textwrap
+#import subprocess
 
 
 root = tk.Tk()
+root.title("LOL_CODE_INTERPRETER by Enciso & Manalang")
+root.configure(background='#303030')
 
 lexemes = None
 parse_tree = None
@@ -21,13 +28,12 @@ symbol_table = None
 
 filename = "::NO_FILE_CHOSEN::"
 
-
 class GUI:
     def __init__(self, master):
         master.geometry("1300x700")
         master.resizable(False, False)
 
-        frame1 = Frame(master, background="#272727")
+        frame1 = Frame(master, background="#303030")#272727
 
         frame1.columnconfigure(0, weight=1)
         frame1.columnconfigure(1, weight=1)
@@ -37,7 +43,7 @@ class GUI:
         # TODO: can edit files. if no file selected, create new file then save.
         # else, save the edited to chosen file
         
-        lolcode_frame = Frame(frame1, background="#272727")
+        lolcode_frame = Frame(frame1, background="#303030")#272727
         berlin_sans = Font(family='Berlin Sans', size=12, weight='bold')
         btn2 = tk.Button(lolcode_frame, text="Open .lol file", font=berlin_sans, width = 43, command=self.open_file)
         btn2.pack(pady=(10, 5), padx=(9, 15), fill="both")
@@ -60,12 +66,12 @@ class GUI:
         lolcode_frame.grid(row=0, column=0, sticky="nsew")
 
         # ===================== lexemes frame ==========================
-        lexemes_frame = Frame(frame1, background="#272727")
+        lexemes_frame = Frame(frame1, background="#303030")#272727
         lexemes_frame.grid(row=0, column=1, sticky="nsw")
 
         # -- using treeview for table --
-        lextable_frame = Frame(lexemes_frame, background="#272727")
-        columns = ('type', 'lexemes')
+        lextable_frame = Frame(lexemes_frame, background="#303030")#272727
+        columns = ('lexemes', 'classification')
 
         c=Scrollbar(lexemes_frame, orient='vertical')
         c.pack(side=tk.RIGHT, fill='y', pady=12)
@@ -85,8 +91,8 @@ class GUI:
             foreground = [("selected", "white")])
 
         self.tree = ttk.Treeview(lextable_frame, columns=columns, show='headings', height=14, yscrollcommand=c.set)
-        self.tree.heading('type', text='Type')
         self.tree.heading('lexemes', text='Lexeme')
+        self.tree.heading('classification', text='Classification')
         self.tree.grid(row=0, column=0, sticky='nsew', pady=10)
         self.tree.column("#1", stretch="yes", width=150)
         self.tree.pack(pady=(12,0))
@@ -114,16 +120,17 @@ class GUI:
         lexemes_frame.pack_propagate(False)
         '''
         # ===================== symbol table frame ==========================
-        symbol_table_frame = Frame(frame1, background="#272727")
+        symbol_table_frame = Frame(frame1, background="#303030")#272727
         symbol_table_frame.grid(row=0, column=2, sticky="nsw")
 
 
         # # -- using treeview for table --
-        #symboltable_frame = Frame(symbol_table_frame, background="#272727")
-        columns = ('name', 'value', "type")
+        #symboltable_frame = Frame(symbol_table_frame, background="#303030")#272727
+        columns = ('identifier', 'value', "type")
 
         c1=Scrollbar(symbol_table_frame, orient='vertical')
         c1.pack(side=tk.RIGHT, fill='both', pady=12)
+
 
         # define headings
         self.style = ttk.Style()
@@ -140,27 +147,25 @@ class GUI:
             foreground = [("selected", "white")])
 
         self.tree_s = ttk.Treeview(symbol_table_frame, columns=columns, show='headings', height=14, yscrollcommand=c1.set)
-        self.tree_s.heading('name', text='Name')
+        self.tree_s.heading('identifier', text='Identifier')
         self.tree_s.heading('value', text='Value')
         self.tree_s.heading('type', text='Type')
         #self.tree_s.grid(row=0, column=0, sticky='nsew', pady=10)
-        self.tree_s.column('name', stretch="yes", width=100)
+        self.tree_s.column('identifier', stretch="yes", width=100)
         self.tree_s.column('type', stretch="yes", width=90)
         self.tree_s.pack(pady=(12,0))
+
+        c1.config(command=self.tree_s.yview)
 
         #symboltable_frame.pack()
         frame1.pack(expand=True, fill="both", padx=10, pady=10)
 
         # ===================== execute frame ==========================
-        frame2 = Frame(master, background="#272727")
-        execute_label = tk.Button(frame2, text="Execute/Run", font=('Arial', 10), command=self.execute)
+        frame2 = Frame(master, background="#303030")#272727
+        execute_label = tk.Button(frame2, text="Execute/Run", font=('Arial', 10), command=self.execute, width=100)
         execute_label.pack(pady=10)
-        self.x_textbox = tk.Text(frame2, height=15, width=120, font=('Arial', 10))
+        self.x_textbox = tk.Text(frame2, height=15, width=115, font=('Arial', 10), background="#000", foreground="#fff")
         self.x_textbox.pack()
-
-
-        # TODO: mimic terminal. pass the self.(where to print) to semantic in able to print in terminal
-        # find way to enter inputs (can use message box)
 
         frame2.pack(expand=True, fill="both", padx=10, pady=(0, 10))
 
@@ -195,6 +200,8 @@ class GUI:
                     #print("SEMANTIC"+str(symbol_table))
                     if (isinstance(symbol_table, str)):
                         self.x_textbox.insert("insert", symbol_table)
+                        symbol_table = None
+                        self.show_symbol_table()
                     else:
                         self.show_symbol_table()
 
@@ -210,7 +217,7 @@ class GUI:
             # #print('finished')
             #print(">>>"+p)
         else:
-            self.x_textbox.insert("insert","NO CODE")
+            self.x_textbox.insert("insert","There is no code")
 
     def open_file(self):
         
@@ -222,7 +229,7 @@ class GUI:
         global filename
         filename = fd.askopenfilenames(
             title='Open files',
-            initialdir=os.getcwd(),
+            initialdir=".",
             filetypes=filetypes)
 
         filename = str(filename)[2:-3] # removing parenthesis and apostrophes
@@ -287,7 +294,10 @@ class GUI:
         #print(lexemes)
         for lexeme in lexemes:
             if (lexeme[0] != "NEWLINE"):
-                self.tree.insert('', tk.END, values=lexeme)
+                rev_lexeme = []
+                rev_lexeme.append(lexeme[1])
+                rev_lexeme.append(lexeme[0])
+                self.tree.insert('', tk.END, values=rev_lexeme)
 
     def show_symbol_table(self):
         for item in self.tree_s.get_children():

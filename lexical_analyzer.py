@@ -33,13 +33,9 @@ def LexAnalyze(results, main):
     if (main == -1):
         results = re.findall(rxVisible, results)
         numVisibleLex = 0
-        #print(">>>>")
-        #print(results)
     if (main == -2):
         results = re.findall(rxSmoosh, results)
         numSmooshLex = 0
-        #print("<<<<<")
-        #print(results)
 
     for i in results:
         if (main == -1):
@@ -242,12 +238,8 @@ def LexAnalyze(results, main):
     
     if (main == -1):
         lexemes.insert(0,["Output Keyword", "VISIBLE", numVisibleLex])
-        #lexemes.insert(0,["Output Keyword", "VISIBLE"])
-        #print(lexemes)
     elif (main == -2):
         lexemes.insert(0,["Concatenation Keyword", "SMOOSH", numSmooshLex])
-        #print("::::")
-        #print(lexemes)
     return lexemes
 
 def lex_main(content):
@@ -255,9 +247,6 @@ def lex_main(content):
     declaredIdentifiers = ["IT"]
     global declaredIdentifiersType
     declaredIdentifiersType = ["Variable Identifier"]
-
-    #print("***")
-    #print(content+"\n")
 
     content = " "+content+"\n "
     content = content.replace(" ", "   ")
@@ -267,36 +256,6 @@ def lex_main(content):
     error = "NONE"
     results = re.findall(rx, content)
     categoriesAndLexemes = LexAnalyze(results, 1)
-    #print(categoriesAndLexemes)
-    #print("=========================== in Lexical Analyzer ===========================")
-    #print("lex[0]"+str(categoriesAndLexemes[0]))
-    if (isinstance(categoriesAndLexemes[0], str)):
-        #error = categoriesAndLexemes.pop(0)
-        #for i in categoriesAndLexemes:
-            #print(i[0].ljust(27," ")+":\t"+i[1])
+    
+    return categoriesAndLexemes 
 
-        #print("INTERRUPT!\n"+error)
-        #print("==================== LEXICAL ANALYSIS INTERRUPTED ====================")
-        #categoriesAndLexemes.insert(0, error)
-        return categoriesAndLexemes 
-
-    else:
-        #print(categoriesAndLexemes)
-        #print("\n\nLEXICAL ANALYSIS COMPLETE!")
-        #print("===================================================================")
-        return categoriesAndLexemes 
-
-        # if (error != "NONE"):
-        #     print("INTERRUPT!\nERROR: "+error)
-        #     print("==================== LEXICAL ANALYSIS INTERRUPTED ====================")
-        # else:
-            
-
-        #for i in categoriesAndLexemes:
-        #    print(i)
-        #print()
-#lex_main()
-
-if __name__ == "__main__":
-    filename = "sample.lol"
-    lex_main(filename)

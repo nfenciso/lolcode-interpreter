@@ -1,24 +1,34 @@
+BTW start of the program
 HAI
+    BTW variable dec
+    I HAS A monde
+    I HAS A num ITZ 17
+    I HAS A name ITZ "seventeen"
+    I HAS A fnum ITZ 17.0
+    I HAS A flag ITZ WIN
+I HAS A var1
+I HAS A var11
+I HAS A var12
+I HAS A var13
+I HAS A var14
+I HAS A var15
+I HAS A var116
+I HAS A var117
 
-	I HAS A counter ITZ 0
-	I HAS A numStrings
-	I HAS A result ITZ ""
-	I HAS A input
+    VISIBLE "declarations"
+    BTW VISIBLE monde BTW should be NOOB
+    VISIBLE num
+    VISIBLE name
+    VISIBLE fnum
+    VISIBLE flag
 
-	VISIBLE "===Concatenate Strings==="
-	VISIBLE ">How many strings to concatenate?"
-	GIMMEH numStrings
-	numStrings IS NOW A NUMBR
-	VISIBLE ""
+    I HAS A sum ITZ SUM OF num AN 13
+    I HAS A diff ITZ DIFF OF sum AN 17
+    I HAS A prod ITZ PRODUKT OF 3 AN 4
+    I HAS A quo ITZ QUOSHUNT OF 4 AN 5
 
-	IM IN YR loop UPPIN YR counter TIL BOTH SAEM counter AN numStrings
-		VISIBLE SUM OF counter AN 1 ") Enter string:"
-		GIMMEH input
-		result R SMOOSH result AN input
-	IM OUTTA YR loop
-
-	VISIBLE ""
-	VISIBLE "Result:"
-	VISIBLE result
-
+    VISIBLE sum
+    VISIBLE diff
+    VISIBLE prod
+    VISIBLE quo
 KTHXBYE

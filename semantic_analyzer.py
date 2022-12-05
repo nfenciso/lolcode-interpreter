@@ -1,3 +1,9 @@
+# CMSC124 B-1L
+# Lexical Analyzer
+# CONTRIBUTORS:
+#   John Kenneth F. Manalang
+#   Nathaniel F. Enciso
+
 import lexical_analyzer
 import syntactic_analyzer
 from tkinter import simpledialog
