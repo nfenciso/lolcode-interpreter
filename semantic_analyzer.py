@@ -1230,6 +1230,9 @@ def get_bool_result_2(bool_arguments):
 
 def semantic_main(parse_tree):
     global symbolTable
+    symbolTable = {
+        "IT": None
+    }
     syntax = parse_tree
     # syntax = syntactic_analyzer.syntax_main()
 

@@ -10,17 +10,13 @@ from tkinter import filedialog as fd
 from tkinter.font import Font
 from tkinter import scrolledtext
 import textwrap
-
-class GUI:
-    def __init__(self):
-        pass
-
-
 root = tk.Tk()
 
 lexemes = None
 parse_tree = None
 symbol_table = None
+
+filename = "::NO_FILE_CHOSEN::"
 
 
 class GUI:
@@ -40,7 +36,7 @@ class GUI:
         
         lolcode_frame = Frame(frame1, background="#272727")
         berlin_sans = Font(family='Berlin Sans', size=12, weight='bold')
-        btn2 = tk.Button(lolcode_frame, text="Upload LOL code file", font=berlin_sans, width = 43, command=self.open_file)
+        btn2 = tk.Button(lolcode_frame, text="Open .lol file", font=berlin_sans, width = 43, command=self.open_file)
         btn2.pack(pady=(10, 5), padx=(9, 15), fill="both")
 
         # Add a Scrollbar
@@ -56,7 +52,7 @@ class GUI:
         h.config(command=self.code_textbox.xview)
         v.config(command=self.code_textbox.yview)
 
-        self.code_textbox.pack(padx=10, pady=(0, 10), fill="both")
+        self.code_textbox.pack(padx=(10,0), fill="both")
 
         lolcode_frame.grid(row=0, column=0, sticky="nsew")
 
@@ -69,7 +65,7 @@ class GUI:
         columns = ('type', 'lexemes')
 
         c=Scrollbar(lexemes_frame, orient='vertical')
-        c.pack(side=tk.RIGHT, fill='both', pady=(14, 20))
+        c.pack(side=tk.RIGHT, fill='y', pady=12)
 
         # define headings
         self.style = ttk.Style()
@@ -120,11 +116,11 @@ class GUI:
 
 
         # # -- using treeview for table --
-        symboltable_frame = Frame(symbol_table_frame, background="#272727")
+        #symboltable_frame = Frame(symbol_table_frame, background="#272727")
         columns = ('name', 'value', "type")
 
         c1=Scrollbar(symbol_table_frame, orient='vertical')
-        c1.pack(side=tk.RIGHT, fill='both', pady=(14, 20))
+        c1.pack(side=tk.RIGHT, fill='both', pady=12)
 
         # define headings
         self.style = ttk.Style()
@@ -140,21 +136,21 @@ class GUI:
             background = [("selected", "black")],
             foreground = [("selected", "white")])
 
-        self.tree_s = ttk.Treeview(symboltable_frame, columns=columns, show='headings', height=14, yscrollcommand=c1.set)
+        self.tree_s = ttk.Treeview(symbol_table_frame, columns=columns, show='headings', height=14, yscrollcommand=c1.set)
         self.tree_s.heading('name', text='Name')
         self.tree_s.heading('value', text='Value')
         self.tree_s.heading('type', text='Type')
-        self.tree_s.grid(row=0, column=0, sticky='nsew', pady=10)
+        #self.tree_s.grid(row=0, column=0, sticky='nsew', pady=10)
         self.tree_s.column('name', stretch="yes", width=100)
         self.tree_s.column('type', stretch="yes", width=90)
         self.tree_s.pack(pady=(12,0))
 
-        symboltable_frame.pack()
+        #symboltable_frame.pack()
         frame1.pack(expand=True, fill="both", padx=10, pady=10)
 
         # ===================== execute frame ==========================
         frame2 = Frame(master, background="#272727")
-        execute_label = tk.Label(frame2, text="Execute section", font=('Arial', 10))
+        execute_label = tk.Button(frame2, text="Execute section", font=('Arial', 10), command=self.execute)
         execute_label.pack(pady=10)
         self.x_textbox = tk.Text(frame2, height=15, width=120, font=('Arial', 10))
         self.x_textbox.pack()
@@ -165,13 +161,29 @@ class GUI:
 
         frame2.pack(expand=True, fill="both", padx=10, pady=(0, 10))
 
+    def execute(self):
+        global lexemes, parse_tree, symbol_table
+        lexemes = None
+        parse_tree = None
+        symbol_table = None
+        if (filename != "::NO_FILE_CHOSEN::"):
+            lexemes = lexical_analyzer.lex_main(self.code_textbox.get("1.0", tk.END))
+            self.show_lexemes()
+
+            parse_tree = syntactic_analyzer.syntax_main(lexemes)
+            symbol_table = semantic_analyzer.semantic_main(parse_tree)
+            self.show_symbol_table()
+        else:
+            print("NO FILE CHOSEN")
+
     def open_file(self):
         
         filetypes = (
-            ('text files', '*.lol'),
-            ('All files', '*.*')
+            ('lol files', '*.lol'),
+            #('All files', '*.*')
         )
 
+        global filename
         filename = fd.askopenfilenames(
             title='Open files',
             initialdir=os.getcwd(),
@@ -184,13 +196,13 @@ class GUI:
             self.code_textbox.insert("insert", a.read())
 
         # setup lexeme table and symbol table
-        global lexemes, parse_tree, symbol_table
-        lexemes = lexical_analyzer.lex_main(filename)
-        self.show_lexemes()
+        # global lexemes, parse_tree, symbol_table
+        # lexemes = lexical_analyzer.lex_main(filename)
+        # self.show_lexemes()
 
-        parse_tree = syntactic_analyzer.syntax_main(lexemes)
-        symbol_table = semantic_analyzer.semantic_main(parse_tree)
-        self.show_symbol_table()
+        # parse_tree = syntactic_analyzer.syntax_main(lexemes)
+        # symbol_table = semantic_analyzer.semantic_main(parse_tree)
+        # self.show_symbol_table()
 
 
         # self.fill_lexeme_table() # fill the lexeme table 
@@ -234,15 +246,19 @@ class GUI:
             error = lexemes.pop(0)
             lexemes.append(["ERROR:", error[7:]])
         for lexeme in lexemes:
-            self.tree.insert('', tk.END, values=lexeme)
+            if (lexeme[0] != "NEWLINE"):
+                self.tree.insert('', tk.END, values=lexeme)
 
     def show_symbol_table(self):
         for item in self.tree_s.get_children():
             self.tree_s.delete(item)
 
         global symbol_table
-        for val in symbol_table:
-            self.tree_s.insert('', tk.END, values=val)
+        try:
+            for val in symbol_table:
+                self.tree_s.insert('', tk.END, values=val)
+        except:
+            self.tree_s.insert('', tk.END, values=["ERROR"])
 
 # class GUI:
 #     def __init__(self):

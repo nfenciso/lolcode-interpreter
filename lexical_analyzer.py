@@ -250,11 +250,11 @@ def LexAnalyze(results, main):
         #print(lexemes)
     return lexemes
 
-def lex_main(filename):
+def lex_main(content):
     # filename = "sample.lol"
-    fileHandle = open(filename,"r")
-    content = fileHandle.read()
-    fileHandle.close()
+    # fileHandle = open(filename,"r")
+    # content = fileHandle.read()
+    # fileHandle.close()
 
     print(content+"\n")
 
