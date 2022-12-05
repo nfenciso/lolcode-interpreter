@@ -2,6 +2,8 @@ HAI
     BTW variable dec
     I HAS A x ITZ "2.2"
     SUM OF x AN 4
-    VISIBLE IT
+	WIN
+    VISIBLE WIN FAIL WIN
 KTHXBYE
+
 

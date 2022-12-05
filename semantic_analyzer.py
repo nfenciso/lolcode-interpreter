@@ -477,7 +477,12 @@ def semanticAnalyze(lst, interface):
                             eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                             return eval
                         else:
-                            temp += str(symbolTable[value])
+                            if (symbolTable[value] == True):
+                                temp += "WIN"
+                            elif (symbolTable[value] == False):
+                                temp += "FAIL"
+                            else:
+                                temp += str(symbolTable[value])
                     elif (lexType == "Arithmetic Operation"):
                         valueM = mathSolve(i)
                         if (isinstance(valueM, str)):
@@ -499,7 +504,7 @@ def semanticAnalyze(lst, interface):
                         temp += str(result)
 
             # Don't comment out this print statement
-            #print(temp)
+            # print(temp)
             interface.x_textbox.insert("end",temp+"\n")
             # # # # # # # # # # # # # # # # # # # #
         elif (line[0][0] == "Concatenation Keyword"):
@@ -1251,7 +1256,7 @@ def semantic_main(syntax, interface):
         elem = []
         elem.append(str(i))
         value = symbolTable[i]
-        elem.append(str(value))
+        
 
         v_type = None
         if (value == None):
@@ -1264,7 +1269,12 @@ def semantic_main(syntax, interface):
             v_type = "NUMBAR"
         else:
             v_type = "NUMBR"
-            
+        
+        if (value == True):
+            value = "WIN"
+        elif (value == False):
+            value = "FAIL"
+        elem.append(str(value))    
 
         elem.append(v_type)
         symbolTable_list.append(elem)
