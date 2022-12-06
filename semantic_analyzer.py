@@ -25,13 +25,12 @@ def mathSolve(tokens):
             sublistTokens.append(float(i[1]))
         elif (i[0] == "YARN Literal"):
             try:
-                cnv = float(i[1])
-                checkCnv = cnv - int(float(i[1]))
+                containsDecimal = '.' in i[1]
 
-                if (checkCnv == 0):
-                    sublistTokens.append(int(i[1]))
-                else:
+                if (containsDecimal):
                     sublistTokens.append(float(i[1]))
+                else:
+                    sublistTokens.append(int(i[1]))
             except:
                 eval = f"ERROR: {i[1]} cannot be converted to number"
                 return eval
@@ -41,16 +40,24 @@ def mathSolve(tokens):
         elif (i[0] == "Variable Identifier"):
             varValue = symbolTable[i[1]]
             try:
-                cnv = float(varValue)
-                checkCnv = cnv - int(float(varValue))
+                # check if int, float, string (convert to num), bool (convert to num)
+                if (varValue == True): sublistTokens.append(1)
+                elif (varValue == False): sublistTokens.append(0)
+                elif (varValue == None): 
+                    eval = f"ERROR: {varValue} cannot be converted to number1"
+                    return eval
+                elif (isinstance(varValue, int) or isinstance(varValue, float)): sublistTokens.append(varValue)
+                else: #YARN
+                    containsDecimal = '.' in varValue
+
+                    if (containsDecimal):
+                        sublistTokens.append(float(varValue))
+                    else:
+                        sublistTokens.append(int(varValue))
             except:
-                eval = f"ERROR: {i[1]} cannot be converted to number1"
+                eval = f"ERROR: {varValue} cannot be converted to number1"
                 return eval
 
-            if (checkCnv == 0):
-                sublistTokens.append(int(varValue))
-            else:
-                sublistTokens.append(float(varValue))
     
     while (1):
         if (len(acc) >= 3):
@@ -625,13 +632,12 @@ def semanticAnalyze(lst, interface):
                     elif (frontRemoved == 'FAIL'):
                         caseVal = False
                     else:
-                        cnv = float(frontRemoved)
-                        checkCnv = cnv - int(frontRemoved)
+                        containsDecimal = '.' in frontRemoved
 
-                        if (checkCnv == 0):
-                            caseVal = int(frontRemoved)
-                        else:
+                        if (containsDecimal):
                             caseVal = float(frontRemoved)
+                        else:
+                            caseVal = int(frontRemoved)
 
                     breakEncountered = False
                     #print("$"+str(frontRemoved))
