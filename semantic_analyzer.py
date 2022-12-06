@@ -445,6 +445,8 @@ def semanticAnalyze(lst, interface):
         elif (line[0][0] == "Input Keyword"):
             
             temp = simpledialog.askstring("","Enter input")
+            if (temp == None):
+                temp = ""
             interface.x_textbox.insert("end",temp+"\n")
             var = line[1][1]
             symbolTable[var] = temp
