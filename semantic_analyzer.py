@@ -239,9 +239,9 @@ def semanticAnalyze(lst, interface):
                                         eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                                         return eval
                                     else:
-                                        if (symbolTable[value] == True):
+                                        if (isinstance(symbolTable[value], bool) and symbolTable[value] == True):
                                             temp += "WIN"
-                                        elif (symbolTable[value] == False):
+                                        elif (isinstance(symbolTable[value], bool) and symbolTable[value] == False):
                                             temp += "FAIL"
                                         elif (isinstance(symbolTable[value], float)):
                                             temp += "{:.2f}".format(symbolTable[value])
@@ -509,9 +509,11 @@ def semanticAnalyze(lst, interface):
                             eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                             return eval
                         else:
-                            if (symbolTable[value] == True):
+                            #print("***")
+                            #print(symbolTable)
+                            if (isinstance(symbolTable[value], bool) and symbolTable[value] == True):
                                 temp += "WIN"
-                            elif (symbolTable[value] == False):
+                            elif (isinstance(symbolTable[value], bool) and symbolTable[value] == False):
                                 temp += "FAIL"
                             elif (isinstance(symbolTable[value], float)):
                                 temp += "{:.2f}".format(symbolTable[value])
@@ -580,9 +582,9 @@ def semanticAnalyze(lst, interface):
                             eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                             return eval
                         else:
-                            if (symbolTable[value] == True):
+                            if (isinstance(symbolTable[value], bool) and symbolTable[value] == True):
                                 temp += "WIN"
-                            elif (symbolTable[value] == False):
+                            elif (isinstance(symbolTable[value], bool) and symbolTable[value] == False):
                                 temp += "FAIL"
                             elif (isinstance(symbolTable[value], float)):
                                 temp += "{:.2f}".format(symbolTable[value])
