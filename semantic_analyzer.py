@@ -230,13 +230,23 @@ def semanticAnalyze(lst, interface):
                             value = i[0][1]
                             if (isinstance(i[0], list)):
                                 if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
-                                    temp += str(value)
+                                    if (lexType == "NUMBAR Literal"):
+                                        temp += "{:.2f}".format(value)
+                                    else:
+                                        temp += str(value)
                                 elif (lexType == "Variable Identifier"):
                                     if (symbolTable[value] == None):
                                         eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                                         return eval
                                     else:
-                                        temp += str(symbolTable[value])
+                                        if (symbolTable[value] == True):
+                                            temp += "WIN"
+                                        elif (symbolTable[value] == False):
+                                            temp += "FAIL"
+                                        elif (isinstance(symbolTable[value], float)):
+                                            temp += "{:.2f}".format(symbolTable[value])
+                                        else:
+                                            temp += str(symbolTable[value])
                                 elif (lexType == "Arithmetic Operation"):
                                     valueM = mathSolve(i)
                                     if (isinstance(valueM, str)):
@@ -284,7 +294,10 @@ def semanticAnalyze(lst, interface):
                     elif (new_type == "YARN keyword"):
                         if (val == None): symbolTable[line[0][1]] = ""
                         else:
-                            symbolTable[line[0][1]] = str(val)
+                            if (isinstance(val, float)):
+                                symbolTable[line[0][1]] = "{:.2f}".format(val)
+                            else:
+                                symbolTable[line[0][1]] = str(val)
                     else: # TROOF
                         if(val == None): symbolTable[line[0][1]] = False
                         else:
@@ -305,7 +318,10 @@ def semanticAnalyze(lst, interface):
             new_value = symbolTable[line[1][1]]
 
             if (line[2][0] == "YARN keyword"):      # converting to YARN
-                symbolTable["IT"] = str(new_value)
+                if (isinstance(new_value, float)):
+                    symbolTable["IT"] = "{:.2f}".format(new_value)
+                else:
+                    symbolTable["IT"] = str(new_value)
             elif (line[2][0] == "TROOF keyword"):   # to TROOF
                 if (new_value == None): symbolTable["IT"] = False
                 elif (isinstance(new_value, int) or isinstance(new_value, float)):
@@ -484,7 +500,10 @@ def semanticAnalyze(lst, interface):
 
                 if (isinstance(i[0], list)):
                     if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
-                        temp += str(value)
+                        if (lexType == "NUMBAR Literal"):
+                            temp += "{:.2f}".format(value)
+                        else:
+                            temp += str(value)
                     elif (lexType == "Variable Identifier"):
                         if (symbolTable[value] == None):
                             eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
@@ -494,6 +513,8 @@ def semanticAnalyze(lst, interface):
                                 temp += "WIN"
                             elif (symbolTable[value] == False):
                                 temp += "FAIL"
+                            elif (isinstance(symbolTable[value], float)):
+                                temp += "{:.2f}".format(symbolTable[value])
                             else:
                                 temp += str(symbolTable[value])
                     elif (lexType == "Arithmetic Operation"):
@@ -550,13 +571,23 @@ def semanticAnalyze(lst, interface):
                 value = i[0][1]
                 if (isinstance(i[0], list)):
                     if (lexType in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
-                        temp += str(value)
+                        if (lexType == "NUMBAR Literal"):
+                            temp += "{:.2f}".format(value)
+                        else:
+                            temp += str(value)
                     elif (lexType == "Variable Identifier"):
                         if (symbolTable[value] == None):
                             eval = f"ERROR: Variable {value} of type NOOB cannot be implicitly typecasted to YARN."
                             return eval
                         else:
-                            temp += str(symbolTable[value])
+                            if (symbolTable[value] == True):
+                                temp += "WIN"
+                            elif (symbolTable[value] == False):
+                                temp += "FAIL"
+                            elif (isinstance(symbolTable[value], float)):
+                                temp += "{:.2f}".format(symbolTable[value])
+                            else:
+                                temp += str(symbolTable[value])
                     elif (lexType == "Arithmetic Operation"):
                         valueM = mathSolve(i)
                         if (isinstance(valueM, str)):
