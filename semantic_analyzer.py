@@ -744,6 +744,7 @@ def semanticAnalyze(lst, interface):
                         break
                     else:
                         semanticAnalyze(i[1], interface)
+            switchCases.clear()
 
         elif (line[0] == "<boolean_operation>"):
             cnt += 1
