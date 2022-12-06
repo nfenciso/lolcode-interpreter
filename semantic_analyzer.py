@@ -448,6 +448,7 @@ def semanticAnalyze(lst, interface):
             if (temp == None):
                 temp = ""
             interface.x_textbox.insert("end",temp+"\n")
+            interface.x_textbox.see("end")
             var = line[1][1]
             symbolTable[var] = temp
             update_symbol_table(interface)
@@ -544,6 +545,7 @@ def semanticAnalyze(lst, interface):
             # Don't comment out this print statement
             #print(temp)
             interface.x_textbox.insert("end",temp+"\n")
+            interface.x_textbox.see("end")
             # # # # # # # # # # # # # # # # # # # #
         elif (line[0][0] == "Concatenation Keyword"):
             numSmooshArgs = line[0][2]
