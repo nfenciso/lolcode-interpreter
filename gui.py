@@ -240,6 +240,11 @@ class GUI:
                 self.code_textbox.insert("insert", a.read())
         except:
             filename = "::NO_FILE_CHOSEN::"
+        
+        if (filename != "::NO_FILE_CHOSEN::"):
+            root.title("LOL_CODE_INTERPRETER by Enciso & Manalang: " + filename)
+        else:
+            root.title("LOL_CODE_INTERPRETER by Enciso & Manalang")
 
         # setup lexeme table and symbol table
         # global lexemes, parse_tree, symbol_table
