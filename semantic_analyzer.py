@@ -107,6 +107,7 @@ def semanticAnalyze(lst, interface):
     temp = ""
     tempList = []
     cnt = 0
+    update_symbol_table(interface)
     while (cnt < len(lst)):
         line = lst[cnt]
         if (line[0][0] == "Code Delimiter OPEN"):
@@ -114,6 +115,7 @@ def semanticAnalyze(lst, interface):
         elif (line[0][0] == "Variable Identifier"):
             if (len(line) == 1):
                 symbolTable["IT"] = symbolTable[line[0][1]]
+                update_symbol_table(interface)
             else:
                 # in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]
                 if (line[1][0] == "Assignment Keyword"): # R keyword
@@ -295,6 +297,7 @@ def semanticAnalyze(lst, interface):
                                 else: symbolTable[line[0][1]] = True
                             else: # True or False
                                 symbolTable[line[0][1]] = val
+            update_symbol_table(interface)
         elif (line[0] == "<typecasted_value>"):
             cnt += 1
             line = lst[cnt]
@@ -336,6 +339,7 @@ def semanticAnalyze(lst, interface):
                 else:
                     if (check_string_to_int(new_value)) : symbolTable["IT"] = int(float(new_value))
                     else: return f"ERROR: '{new_value}' can't be typecasted to integer"
+            update_symbol_table(interface)
 
         elif (line[0][0] == "Variable Declaration"):
             var = line[1][1]
@@ -398,6 +402,7 @@ def semanticAnalyze(lst, interface):
                                 symbolTable[var] = True
                             else:
                                 symbolTable[var] = False
+            update_symbol_table(interface)
         elif (line[0][0] == "Arithmetic Operation"):
             #print(lst[cnt:])
             #print("###"+str(line))
@@ -405,6 +410,7 @@ def semanticAnalyze(lst, interface):
             if (isinstance(value, str)):
                 return value
             symbolTable["IT"] = value
+            update_symbol_table(interface)
         elif (line[0][0] in ["NUMBR Literal","NUMBAR Literal","TROOF Literal","YARN Literal"]):
             type1 = line[0][0]
             value = line[0][1]
@@ -419,11 +425,14 @@ def semanticAnalyze(lst, interface):
                     symbolTable["IT"] = True
                 else:
                     symbolTable["IT"] = False
+            update_symbol_table(interface)
         elif (line[0][0] == "Input Keyword"):
+            
             temp = simpledialog.askstring("","Enter input")
             interface.x_textbox.insert("end",temp+"\n")
             var = line[1][1]
             symbolTable[var] = temp
+            update_symbol_table(interface)
         elif (line[0][0] == "Output Keyword"):
             numVisibleArgs = line[0][2]
             tempList = []
@@ -568,6 +577,7 @@ def semanticAnalyze(lst, interface):
                         temp += str(result)
 
             symbolTable["IT"] = temp
+            update_symbol_table(interface)
         elif (line[0][0] == "<if-then block>"):
             ifList = []
             cnt += 2
@@ -708,6 +718,7 @@ def semanticAnalyze(lst, interface):
             result = get_bool_result(line)
 
             symbolTable["IT"] = result
+            update_symbol_table(interface)
 
         elif (line[0] == "<comparison_operation>"):
             cnt += 1
@@ -716,6 +727,7 @@ def semanticAnalyze(lst, interface):
             if (result not in [True, False]): return result
 
             symbolTable["IT"] = result
+            update_symbol_table(interface)
 
         elif (line[0][0] == "<loop>"):
             cnt += 1
@@ -1242,6 +1254,37 @@ def get_bool_result_2(bool_arguments):
         if (x ^ y): return 'WIN'
         else: return 'FAIL'      
 
+
+def update_symbol_table(interface):
+    symbolTable_list = []
+    for i in symbolTable:
+        elem = []
+        elem.append(str(i))
+        value = symbolTable[i]
+        
+
+        v_type = None
+        if (value == None):
+            v_type = "NOOB"
+        elif (isinstance(value, str)):
+            v_type = "YARN"
+        elif (type(value) == int):
+            v_type = "NUMBR"
+        elif (type(value) == float):
+            v_type = "NUMBAR"
+        else:
+            v_type = "TROOF"
+        
+        if (value == True and v_type == "TROOF"):
+            elem.append("WIN")
+        elif (value == False and v_type == "TROOF"):
+            elem.append("FAIL")    
+        else:
+            elem.append(str(value))
+
+        elem.append(v_type)
+        symbolTable_list.append(elem)
+    interface.show_symbol_table2(symbolTable_list)
 
 def semantic_main(syntax, interface):
     global symbolTable

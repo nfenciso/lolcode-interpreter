@@ -178,9 +178,9 @@ class GUI:
         temp_content = self.code_textbox.get("1.0", tk.END)
         temp_content.strip
         if (filename != "::NO_FILE_CHOSEN::" or len(temp_content) != 1):
-            temp_file = open(".temp_content.txt", "w")
-            temp_file.write(temp_content)
-            temp_file.close()
+            # temp_file = open(".temp_content.txt", "w")
+            # temp_file.write(temp_content)
+            # temp_file.close()
             lexemes = lexical_analyzer.lex_main(temp_content)
             #print("LEX"+str(lexemes))
             firstLex = lexemes[0]
@@ -306,6 +306,16 @@ class GUI:
         global symbol_table
         try:
             for val in symbol_table:
+                self.tree_s.insert('', tk.END, values=val)
+        except:
+            pass
+    
+    def show_symbol_table2(self, temp_table):
+        for item in self.tree_s.get_children():
+            self.tree_s.delete(item)
+
+        try:
+            for val in temp_table:
                 self.tree_s.insert('', tk.END, values=val)
         except:
             pass
