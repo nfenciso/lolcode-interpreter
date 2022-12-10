@@ -66,6 +66,8 @@ def LexAnalyze(results, main):
             elif (kw == "YARN"):                 lexemes.append(["YARN keyword",kw])
             elif (kw == "TROOF"):                 lexemes.append(["TROOF keyword",kw])
             elif (kw[0:3] == "BTW"):
+                #print("COMMENT")
+                #print(kw)
                 pass
                 #lexemes.append(["Single Comment Keyword",kw[0:3]])
                 #lexemes.append(["Comment",kw[4:]])
@@ -248,16 +250,16 @@ def LexAnalyze(results, main):
 
 def soft_break_parse(content):
     newContent = ''
-    rxSoftBreak = r"(\".*,.*\")|(,)|([\w\W \t\n])"
+    rxSoftBreak = r"(\".*,.*\")|([ \t\n]BTW.*)|([ \t\n]OBTW[\w\W]*TLDR)|(,)|([\w\W \t\n])"
 
     results = re.findall(rxSoftBreak, content)
     for i in results:
-        if (i[1]):
+        if (i[3]):
             newContent += "\n"
         elif (i[0]):
             newContent += i[0]
-        elif (i[2]):
-            newContent += i[2]
+        elif (i[4]):
+            newContent += i[4]
     
     return newContent
 
@@ -363,7 +365,7 @@ def lex_main(content):
     results = re.findall(rx, content)
     categoriesAndLexemes = LexAnalyze(results, 1)
     
-    # print(categoriesAndLexemes)
+    #print(categoriesAndLexemes)
 
     return categoriesAndLexemes 
 
