@@ -3,7 +3,7 @@ HAI
     I HAS A x
     I HAS A y
     
-    VISIBLE "Hello! Please enter two strings:"
+    VISIBLE "Hello! Please enter two strings: "
     VISIBLE "String 1: "
     GIMMEH x
     VISIBLE "String 2: "
@@ -25,3 +25,8 @@ HAI
     y R MAEK y TROOF
     VISIBLE y
 KTHXBYE
+
+OBTW
+	Changes from original file:
+		Line 6 - Added space between : and " since :" indicates a special character
+TLDR

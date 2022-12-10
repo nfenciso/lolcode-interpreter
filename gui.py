@@ -10,12 +10,8 @@ import syntactic_analyzer
 import semantic_analyzer
 import tkinter as tk
 from tkinter import Frame, Scrollbar
-#from tkinter import Entry, OptionMenu, StringVar, messagebox
 from tkinter import filedialog as fd
 from tkinter.font import Font
-#from tkinter import scrolledtext
-#import textwrap
-#import subprocess
 
 
 root = tk.Tk()
@@ -102,23 +98,6 @@ class GUI:
         c.config(command=self.tree.yview)
         # -- using treeview for table --
 
-
-        ''' attempt for better table to scroll colomn horizontally
-        # table headers
-        self.e = Entry(self.table_frame, width=15, justify='center', 
-            font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
-        self.e.grid(row=0, column=0)
-        self.e.insert(tk.END, "Type")
-        self.e.configure(state="disabled")
-        self.e = Entry(self.table_frame, width=22, justify='center',
-            font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
-        self.e.grid(row=0, column=1)
-        self.e.insert(tk.END, "Lexeme")
-        self.e.configure(state="disabled")
-
-        self.table_frame.pack(pady=(15,0), fill=None, expand=False)
-        lexemes_frame.pack_propagate(False)
-        '''
         # ===================== symbol table frame ==========================
         symbol_table_frame = Frame(frame1, background="#303030")#272727
         symbol_table_frame.grid(row=0, column=2, sticky="nsw")
@@ -179,9 +158,6 @@ class GUI:
         temp_content = self.code_textbox.get("1.0", tk.END)
         temp_content.strip
         if (filename != "::NO_FILE_CHOSEN::" or len(temp_content) != 1):
-            # temp_file = open(".temp_content.txt", "w")
-            # temp_file.write(temp_content)
-            # temp_file.close()
             lexemes = lexical_analyzer.lex_main(temp_content)
             #print("LEX"+str(lexemes))
             firstLex = lexemes[0]
@@ -207,17 +183,6 @@ class GUI:
                     else:
                         self.show_symbol_table()
 
-            #out = check_output(["python", "semantic_analyzer.py"])
-            #print('started')
-            # p = subprocess.Popen(["python", "semantic_analyzer.py"], stdout=subprocess.PIPE, bufsize=1, text=True)
-            # while p.poll() is None: # check whether process is still running
-            #     print("...running")
-            #     msg = p.stdout.readline().strip() # read a line from the process output
-            #     if msg:
-            #         print("::"+msg)
-            #         self.x_textbox.insert("end", msg+"\n")
-            # #print('finished')
-            #print(">>>"+p)
         else:
             self.x_textbox.insert("insert","There is no code")
 
@@ -250,47 +215,6 @@ class GUI:
             root.title("LOL_CODE_INTERPRETER by Enciso & Manalang: " + filename)
         else:
             root.title("LOL_CODE_INTERPRETER by Enciso & Manalang")
-
-        # setup lexeme table and symbol table
-        # global lexemes, parse_tree, symbol_table
-        # lexemes = lexical_analyzer.lex_main(filename)
-        # self.show_lexemes()
-
-        # parse_tree = syntactic_analyzer.syntax_main(lexemes)
-        # symbol_table = semantic_analyzer.semantic_main(parse_tree)
-        # self.show_symbol_table()
-
-
-        # self.fill_lexeme_table() # fill the lexeme table 
-
-    '''
-    def fill_lexeme_table(self):
-        global lexemes
-        total_rows = len(lexemes)
-        total_columns = len(lexemes[1])
-        print(f"row: {total_rows} == col: {total_columns}")
-        for i in range(total_rows):
-            for j in range(total_columns):
-                 
-                self.e = Entry(self.table_frame, width=15 if j==0 else 22,
-                    font=('Berlin Sans',11,'normal'), disabledforeground="black")
-                 
-                self.e.grid(row=i+1, column=j)
-                self.e.insert(tk.END, lexemes[i][j])
-                self.e.configure(state='disabled')
-        # berlin_sans = Font(family='Berlin Sans', size=12, weight='bold')
-        # self.e = Entry(self.table_frame, width=15, justify='center', 
-        #     font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
-        # self.e.grid(row=1, column=0)
-        # self.e.insert(tk.END, "Type")
-        # self.e.configure(state="disabled")
-
-        # self.e = Entry(self.table_frame, width=15, justify='center', 
-        #     font=berlin_sans, disabledforeground="black", disabledbackground="#b2b2b2")
-        # self.e.grid(row=1, column=1)
-        # self.e.insert(tk.END, "Type")
-        # self.e.configure(state="disabled")
-    '''
 
     # function for treeview
     def show_lexemes(self):
@@ -365,123 +289,10 @@ class GUI:
         except:
             pass
 
-# class GUI:
-#     def __init__(self):
-#         self.root = tk.Tk()
-
-#         self.menubar = tk.Menu(self.root)
-
-#         self.filemenu = tk.Menu(self.menubar, tearoff=0)
-#         self.filemenu.add_command(label="Open File", command=exit)
-
-#         self.filemenu.add_separator()
-
-#         self.menubar.add_cascade(menu=self.filemenu, label="File")
-
-#         self.root.config(menu=self.menubar)
-
-
-
-#         self.label = tk.Label(self.root, text="Some label", font=('Arial', 18))
-#         self.label.pack(padx=10, pady=10)
-
-#         self.tbox = tk.Text(self.root, height=5, font=('Arial', 18))
-#         self.tbox.pack(padx=10, pady=10)
-
-#         self.check_state = tk.IntVar()
-
-#         self.check = tk.Checkbutton(self.root, text="Show mssg?", font=('Arial', 18), variable=self.check_state)
-#         self.check.pack(padx=10, pady=10)
-
-#         self.btn = tk.Button(self.root, text="click me", font=('Arial', 18), command=self.btnFunc)
-#         self.btn.pack(padx=10, pady=10)
-
-#         self.btn2 = tk.Button(self.root, text="exit", font=('Arial', 18), command=exit)
-#         self.btn2.pack(padx=10, pady=10)
-
-#         self.btn3 = tk.Button(self.root, text="clear", font=('Arial', 18), command=self.clear)
-#         self.btn3.pack(padx=10, pady=10)
-
-#         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
-
-#         self.root.mainloop()
-
-#     def clear(self):
-#         self.tbox.delete("1.0", tk.END)
-
-#     def btnFunc(self):
-#         if (self.check_state.get()):
-#             messagebox.showinfo(title="txtbox info", message=self.tbox.get('1.0',  tk.END))
-#             pass
-#         else:
-#             print(f"Check?: {self.tbox.get('1.0',  tk.END)[:-1]}")
-
-#     def on_closing(self):
-#         if messagebox.askyesno(title="U wanna leave me?", message="Do you really want to quit?"):
-#             self.root.destroy()
-
 
 GUI(root)
 
 root.mainloop()
-
-
-# root = tk.Tk()
-
-# root.geometry("800x500")
-# root.title("K Means Clustering")
-
-
-# label = tk.Label(root, text="Hey", font=('Arial', 18))
-# label.pack(padx=20, pady=20)
-
-# textbox = tk.Text(root, height=3, font=('Arial', 16))
-# textbox.pack(padx= 20, pady=20)
-
-# entry = tk.Entry(root)
-# entry.pack()
-
-# button = tk.Button(root, text="Open file", font=('Arial', 16))
-# button.pack(pady=20)
-
-# frame1 = tk.Frame(root)
-# frame1.columnconfigure(0, weight=1)
-# frame1.columnconfigure(1, weight=1)
-# frame1.columnconfigure(2, weight=1)
-
-# btn1 = tk.Button(frame1, text="1", font=('Arial', 10))
-# btn1.grid(row=0, column=0)
-
-# btn2 = tk.Button(frame1, text="2", font=('Arial', 10))
-# btn2.grid(row=2, column=0, sticky=tk.W+tk.E)
-
-# frame1.pack(fill="x")
-
-
-# hahabutton = tk.Button(root, text="haha", font=('Arial', 20))
-# hahabutton.place(x= 400, y=400, height=50, width=50)
-
-
-
-
-# # fonts
-# font_1 = Font(family='Arial', 
-#               size=24, 
-#               weight='normal', 
-#               slant='italic', 
-#               underline=1, 
-#               overstrike=1)
-
-# font_2 = Font(family='Helvetica',
-#               size=12,
-#               weight='bold',
-#               slant='italic',
-#               underline=0,
-#               overstrike=0)
-
-# font_3 = Font(family='Courier', size=14, weight='normal', slant='roman', underline=0, overstrike=0)
-# font_4 = Font(family='Times', size=22, weight='bold', slant='roman', underline=0, overstrike=0)
-
 
 
 # references:

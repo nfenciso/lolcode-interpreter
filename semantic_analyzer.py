@@ -44,7 +44,7 @@ def mathSolve(tokens):
                 if (varValue == True): sublistTokens.append(1)
                 elif (varValue == False): sublistTokens.append(0)
                 elif (varValue == None): 
-                    eval = f"ERROR: {varValue} cannot be converted to number1"
+                    eval = f"ERROR: {varValue} cannot be converted to number"
                     return eval
                 elif (isinstance(varValue, int) or isinstance(varValue, float)): sublistTokens.append(varValue)
                 else: #YARN
@@ -55,7 +55,7 @@ def mathSolve(tokens):
                     else:
                         sublistTokens.append(int(varValue))
             except:
-                eval = f"ERROR: {varValue} cannot be converted to number1"
+                eval = f"ERROR: {varValue} cannot be converted to number"
                 return eval
 
     
@@ -804,8 +804,11 @@ def semanticAnalyze(lst, interface):
             while (1):
                 iterResult = semanticAnalyze(loopList, interface)
                 #print("///"+str(iterResult))
-                if (iterResult == "ENDLOOP"):
-                    break
+                if (isinstance(iterResult,str)):
+                    if ("ERROR" in iterResult):
+                        return iterResult
+                    if (iterResult == "ENDLOOP"):
+                        break
                 
                 try:
                     temp = int(symbolTable[loopVar])
