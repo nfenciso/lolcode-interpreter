@@ -182,9 +182,9 @@ class GUI:
             # temp_file.write(temp_content)
             # temp_file.close()
             lexemes = lexical_analyzer.lex_main(temp_content)
-            print("LEX"+str(lexemes))
+            #print("LEX"+str(lexemes))
             firstLex = lexemes[0]
-            print(firstLex)
+            #print(firstLex)
             self.show_lexemes()
 
             if (isinstance(firstLex,str)):
@@ -301,7 +301,12 @@ class GUI:
         for lexeme in lexemes:
             if (lexeme[0] != "NEWLINE"):
                 rev_lexeme = []
-                rev_lexeme.append(lexeme[1])
+                if (lexeme[0] == "YARN Literal"):
+                    temp = lexeme[1].replace("<<@#QUOTE#$>>",'"')
+                    temp = temp.replace("\a","")
+                    rev_lexeme.append(temp)
+                else:
+                    rev_lexeme.append(lexeme[1])
                 rev_lexeme.append(lexeme[0])
                 self.tree.insert('', tk.END, values=rev_lexeme)
 
@@ -312,7 +317,19 @@ class GUI:
         global symbol_table
         try:
             for val in symbol_table:
-                self.tree_s.insert('', tk.END, values=val)
+                if (val[2] == "YARN"):
+                    temp = []
+                    temp.append(val[0])
+                    temp2 = val[1].replace("<<@#QUOTE#$>>",'"')
+                    temp2 = temp2.replace("\a","")
+                    temp.append(temp2)
+                    temp.append(val[2])
+                else:
+                    temp = []
+                    temp.append(val[0])
+                    temp.append(val[1])
+                    temp.append(val[2])
+                self.tree_s.insert('', tk.END, values=temp)
         except:
             pass
     
@@ -322,7 +339,19 @@ class GUI:
 
         try:
             for val in temp_table:
-                self.tree_s.insert('', tk.END, values=val)
+                if (val[2] == "YARN"):
+                    temp = []
+                    temp.append(val[0])
+                    temp2 = val[1].replace("<<@#QUOTE#$>>",'"')
+                    temp2 = temp2.replace("\a","")
+                    temp.append(temp2)
+                    temp.append(val[2])
+                else:
+                    temp = []
+                    temp.append(val[0])
+                    temp.append(val[1])
+                    temp.append(val[2])
+                self.tree_s.insert('', tk.END, values=temp)
         except:
             pass
 

@@ -544,6 +544,13 @@ def semanticAnalyze(lst, interface):
 
             # Don't comment out this print statement
             #print(temp)
+            playBell = False
+            temp = temp.replace("<<@#QUOTE#$>>",'"')
+            if ("\a" in temp):
+                temp = temp.replace("\a","")
+                playBell = True
+            if (playBell):
+                print('\a')
             interface.x_textbox.insert("end",temp+"\n")
             interface.x_textbox.see("end")
             # # # # # # # # # # # # # # # # # # # #

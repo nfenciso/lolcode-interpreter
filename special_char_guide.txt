@@ -1,0 +1,5 @@
+:) − A closing bracket following a colon represents a newline (\n)
+:> − A closing angle bracket following a colon represents a tab (\t)
+:o − A 'o' character following a colon represents a bell (beep) (\g or \a) [must run in cmd or powershell to make a sound]
+:" − A " following a colon represents a literal double quote (")
+:: − A colon following a colon represents a single literal colon (:)

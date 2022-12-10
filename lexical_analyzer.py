@@ -272,19 +272,88 @@ def line_cont_parse(content):
     
     return newContent
 
+def special_char_quot_parse(content):
+    newContent = ''
+    startQuotation = False
+    colonBefore = False
+    for i in content:
+        if (startQuotation):
+            if (not colonBefore and i == '"'):
+                startQuotation = False
+
+            if (colonBefore and i == '"'):
+                if (i == '"'):
+                    newContent += "<<@#QUOTE#$>>"
+                colonBefore = False
+                continue
+            if (colonBefore and i != '"'):
+                newContent += ":"+i
+                colonBefore = False
+                continue
+
+            if (not colonBefore and i == ":"):
+                colonBefore = True
+            if (not colonBefore and i != ":"):
+                newContent += i
+        else:
+            if (i == '"'):
+                startQuotation = True
+            newContent += i
+        
+    return newContent
+
+def special_char_parse(content):
+    newContent = ''
+    startQuotation = False
+    colonBefore = False
+    for i in content:
+        if (startQuotation):
+            if (not colonBefore and i == '"'):
+                startQuotation = False
+
+            if (colonBefore and i in [")",">","o",":"]):
+                if (i == ")"):
+                    newContent += "\n"
+                elif (i == ">"):
+                    newContent += "\t"
+                elif (i == "o"):
+                    newContent += "\a"
+                elif (i == ':'):
+                    newContent += ':'
+                colonBefore = False
+                continue
+            if (colonBefore and i not in [")",">","o",":"]):
+                newContent += ":"+i
+                colonBefore = False
+                continue
+
+            if (not colonBefore and i == ":"):
+                colonBefore = True
+            if (not colonBefore and i != ":"):
+                newContent += i
+        else:
+            if (i == '"'):
+                startQuotation = True
+            newContent += i
+        
+    return newContent
+
 def lex_main(content):
     global declaredIdentifiers
     declaredIdentifiers = ["IT"]
     global declaredIdentifiersType
     declaredIdentifiersType = ["Variable Identifier"]
 
+    content = special_char_quot_parse(content)
     content = soft_break_parse(content)
     content = line_cont_parse(content)
+    
 
     content = " "+content+"\n "
     content = content.replace(" ", "   ")
     content = content.replace("\t", "\t\t\t")
     content = content.replace("\n"," \n\n ")
+    content = special_char_parse(content)
     categoriesAndLexemes = []
     error = "NONE"
     results = re.findall(rx, content)
