@@ -546,6 +546,7 @@ def semanticAnalyze(lst, interface):
             #print(temp)
             playBell = False
             temp = temp.replace("<<@#QUOTE#$>>",'"')
+            temp = temp.replace("<<@#NEWLINE#$>>",'\n')
             if ("\a" in temp):
                 temp = temp.replace("\a","")
                 playBell = True

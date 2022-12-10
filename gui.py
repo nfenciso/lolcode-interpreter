@@ -303,6 +303,8 @@ class GUI:
                 rev_lexeme = []
                 if (lexeme[0] == "YARN Literal"):
                     temp = lexeme[1].replace("<<@#QUOTE#$>>",'"')
+                    temp = temp.replace("<<@#NEWLINE#$>>",'\\n')
+                    temp = temp.replace("\t",'\\t')
                     temp = temp.replace("\a","")
                     rev_lexeme.append(temp)
                 else:
@@ -321,6 +323,8 @@ class GUI:
                     temp = []
                     temp.append(val[0])
                     temp2 = val[1].replace("<<@#QUOTE#$>>",'"')
+                    temp2 = temp2.replace("<<@#NEWLINE#$>>",'\\n')
+                    temp2 = temp2.replace("\t",'\\t')
                     temp2 = temp2.replace("\a","")
                     temp.append(temp2)
                     temp.append(val[2])
@@ -343,6 +347,8 @@ class GUI:
                     temp = []
                     temp.append(val[0])
                     temp2 = val[1].replace("<<@#QUOTE#$>>",'"')
+                    temp2 = temp2.replace("<<@#NEWLINE#$>>",'\\n')
+                    temp2 = temp2.replace("\t",'\\t')
                     temp2 = temp2.replace("\a","")
                     temp.append(temp2)
                     temp.append(val[2])

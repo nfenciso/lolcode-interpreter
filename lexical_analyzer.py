@@ -313,7 +313,7 @@ def special_char_parse(content):
 
             if (colonBefore and i in [")",">","o",":"]):
                 if (i == ")"):
-                    newContent += "\n"
+                    newContent += "<<@#NEWLINE#$>>"
                 elif (i == ">"):
                     newContent += "\t"
                 elif (i == "o"):
