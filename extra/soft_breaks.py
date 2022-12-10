@@ -2,7 +2,7 @@ import re
 
 content = 'HAI\nI HAS A str OBTW this,\n\tis a multiline, commentTLDR\n\tI HAS A var,55\n\tBTW this,is a comment\n\t"Hello, World!"\nKTHXBYE'
 newContent = ''
-rxSoftBreak = r"(\".*,.*\")|([ \t\n]BTW.*)|([ \t\n]OBTW[\w\W]*TLDR)|(,)|([\w\W \t\n])"
+rxSoftBreak = r"(\".*,.*\")|([ \t\n]BTW.*)|([ \t\n]OBTW[\w\W]*?TLDR)|(,)|([\w\W \t\n])"
 
 
 

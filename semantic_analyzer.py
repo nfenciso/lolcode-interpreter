@@ -72,8 +72,16 @@ def mathSolve(tokens):
                 elif (operation == "DIFF OF"):      acc[len(acc)-3] = firstOperand - secondOperand
                 elif (operation == "PRODUKT OF"):   acc[len(acc)-3] = firstOperand * secondOperand
                 elif (operation == "QUOSHUNT OF"):  
-                    if (secondOperand == 0): secondOperand = 1
-                    acc[len(acc)-3] = firstOperand / secondOperand
+                    if (secondOperand == 0): return "ERROR: Cannot divide by zero"
+                    temp = firstOperand / secondOperand
+                    cnv = int(temp)
+                    if (temp-cnv == 0):
+                        if ('.' in str(firstOperand) or '.' in str(secondOperand)):
+                            acc[len(acc)-3] = temp
+                        else:
+                            acc[len(acc)-3] = int(temp)
+                    else:
+                        acc[len(acc)-3] = temp
                 elif (operation == "MOD OF"):       acc[len(acc)-3] = firstOperand % secondOperand
                 elif (operation == "BIGGR OF"):     acc[len(acc)-3] = max(firstOperand, secondOperand)
                 elif (operation == "SMALLR OF"):    acc[len(acc)-3] = min(firstOperand, secondOperand)

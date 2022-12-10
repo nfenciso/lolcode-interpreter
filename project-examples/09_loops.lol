@@ -5,6 +5,7 @@ HAI
 
 	VISIBLE "Gimmeh a number: "
 	GIMMEH num1
+	num1 IS NOW A NUMBR
 
 	num2 R 0
 
@@ -20,3 +21,8 @@ HAI
 
 
 KTHXBYE
+
+OBTW
+	Changes from original file:
+		Line 8 - Added code to convert input num1 to NUMBR
+TLDR
