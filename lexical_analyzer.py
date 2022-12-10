@@ -348,26 +348,19 @@ def lex_main(content):
     global declaredIdentifiersType
     declaredIdentifiersType = ["Variable Identifier"]
 
-    print(f"1: {content}")
     content = special_char_quot_parse(content)
-    print(f"2: {content}")
     content = soft_break_parse(content)
-    print(f"3: {content}")
     content = line_cont_parse(content)
-    print(f"4: {content}")
     
 
     content = " "+content+"\n "
     content = content.replace(" ", "   ")
     content = content.replace("\t", "\t\t\t")
     content = content.replace("\n"," \n\n ")
-    print(f"5: {content}")
     content = special_char_parse(content)
-    print(f"6: {content}")
     categoriesAndLexemes = []
     error = "NONE"
     results = re.findall(rx, content)
-    print(f"6: {content}")
     categoriesAndLexemes = LexAnalyze(results, 1)
     
     # print(categoriesAndLexemes)
