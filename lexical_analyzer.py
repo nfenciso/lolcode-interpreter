@@ -50,9 +50,13 @@ def LexAnalyze(results, main):
                 kw = kw[1:]
             while (kw[len(kw)-1] == " " or kw[len(kw)-1] == "\t" or kw[len(kw)-1] == "\n"):
                 kw = kw[:-1]
+            # print("1" + kw)
 
-            kw = ' '.join(kw.split())
-            #print(kw)
+            if ((kw[0:6] == "SMOOSH") or (kw[0:7] == "VISIBLE")):
+                pass
+            else:
+                kw = ' '.join(kw.split())
+            # print("2" + kw)
 
             # storing valid keyword lexemes and their classifications
             if (kw == "HAI"):                       lexemes.append(["Code Delimiter OPEN",kw])
@@ -92,7 +96,7 @@ def LexAnalyze(results, main):
                 if (main != -2):
                     #print("***")
                     #print(kw)
-                    smooshContent = kw[6:].replace(" ","   ").replace("\t","\t\t\t")
+                    smooshContent = kw[6:]
                     smooshContent = " "+smooshContent+" "
                     
                     smooshLex = LexAnalyze(smooshContent, -2)
@@ -124,7 +128,7 @@ def LexAnalyze(results, main):
             elif (kw == "IS NOW A"):                lexemes.append(["Typecast Keyword",kw])
             elif (kw[0:7] == "VISIBLE"):            
                 if (main == 1):
-                    visibleContent = kw[7:].replace(" ","   ").replace("\t","\t\t\t")
+                    visibleContent = kw[7:]
                     visibleContent = " "+visibleContent+" "
                     visibleLex = LexAnalyze(visibleContent, -1)
                     if (visibleLex == "ERROR"):
@@ -313,7 +317,7 @@ def special_char_parse(content):
 
             if (colonBefore and i in [")",">","o",":"]):
                 if (i == ")"):
-                    newContent += "<<@#NEWLINE#$>>"
+                    newContent += "\n"
                 elif (i == ">"):
                     newContent += "\t"
                 elif (i == "o"):
@@ -344,20 +348,29 @@ def lex_main(content):
     global declaredIdentifiersType
     declaredIdentifiersType = ["Variable Identifier"]
 
+    print(f"1: {content}")
     content = special_char_quot_parse(content)
+    print(f"2: {content}")
     content = soft_break_parse(content)
+    print(f"3: {content}")
     content = line_cont_parse(content)
+    print(f"4: {content}")
     
 
     content = " "+content+"\n "
     content = content.replace(" ", "   ")
     content = content.replace("\t", "\t\t\t")
     content = content.replace("\n"," \n\n ")
+    print(f"5: {content}")
     content = special_char_parse(content)
+    print(f"6: {content}")
     categoriesAndLexemes = []
     error = "NONE"
     results = re.findall(rx, content)
+    print(f"6: {content}")
     categoriesAndLexemes = LexAnalyze(results, 1)
     
+    # print(categoriesAndLexemes)
+
     return categoriesAndLexemes 
 
