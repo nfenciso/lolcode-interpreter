@@ -242,11 +242,28 @@ def LexAnalyze(results, main):
         lexemes.insert(0,["Concatenation Keyword", "SMOOSH", numSmooshLex])
     return lexemes
 
+def soft_break_parse(content):
+    newContent = ''
+    rxSoftBreak = r"(\".*,.*\")|(,)|([\w\W \t\n])"
+
+    results = re.findall(rxSoftBreak, content)
+    for i in results:
+        if (i[1]):
+            newContent += "\n"
+        elif (i[0]):
+            newContent += i[0]
+        elif (i[2]):
+            newContent += i[2]
+    
+    return newContent
+
 def lex_main(content):
     global declaredIdentifiers
     declaredIdentifiers = ["IT"]
     global declaredIdentifiersType
     declaredIdentifiersType = ["Variable Identifier"]
+
+    content = soft_break_parse(content)
 
     content = " "+content+"\n "
     content = content.replace(" ", "   ")
