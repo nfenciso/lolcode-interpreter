@@ -537,6 +537,8 @@ def semanticAnalyze(lst, interface):
                         temp += str(valueM)
                     elif (lexType == "Operand Separator"):
                         pass
+                    elif (lexType == "Suppressor"):
+                        pass
                     
                 else : # bool and comparison is seperated since i[0][0] is not a lex type
                     if (i[0] in ["BOTH OF", "EITHER OF", "WON OF", "NOT", "ALL OF", "ANY OF"]):
@@ -560,7 +562,10 @@ def semanticAnalyze(lst, interface):
                 playBell = True
             if (playBell):
                 print('\a')
-            interface.x_textbox.insert("end",temp+"\n")
+            if (tempList[len(tempList)-1][0][0] == "Suppressor"):
+                interface.x_textbox.insert("end",temp)
+            else:
+                interface.x_textbox.insert("end",temp+"\n")
             interface.x_textbox.see("end")
             # # # # # # # # # # # # # # # # # # # #
         elif (line[0][0] == "Concatenation Keyword"):

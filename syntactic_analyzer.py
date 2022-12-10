@@ -440,6 +440,14 @@ class Parser:
                         self.tok_idx -= 2
                         self.advance()
                         continue
+                    elif (self.curr_tok[0] == "Suppressor"):
+                        self.tree.children[len(self.tree.children)-1].add_child(TreeNode(self.curr_tok))
+                        self.advance()
+                        if (self.curr_tok[0] == "NEWLINE"):
+                            continue
+                        else:
+                            self.error = "ERROR: ! must be at the end of the VISIBLE statement"
+                            return self.error
                     else:
                         self.error = "ERROR: (VISIBLE) Token not valid: " + str(self.curr_tok)
                         return self.error
