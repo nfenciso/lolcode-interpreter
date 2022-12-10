@@ -257,6 +257,21 @@ def soft_break_parse(content):
     
     return newContent
 
+def line_cont_parse(content):
+    newContent = ''
+    rxLineCont = r"(\".*\.\.\..*\")|([ \t]\.\.\.[ \t\n]*)|([\w\W \t\n])"
+
+    results = re.findall(rxLineCont, content)
+    for i in results:
+        if (i[1]):
+            newContent += " "
+        elif (i[0]):
+            newContent += i[0]
+        elif (i[2]):
+            newContent += i[2]
+    
+    return newContent
+
 def lex_main(content):
     global declaredIdentifiers
     declaredIdentifiers = ["IT"]
@@ -264,6 +279,7 @@ def lex_main(content):
     declaredIdentifiersType = ["Variable Identifier"]
 
     content = soft_break_parse(content)
+    content = line_cont_parse(content)
 
     content = " "+content+"\n "
     content = content.replace(" ", "   ")
