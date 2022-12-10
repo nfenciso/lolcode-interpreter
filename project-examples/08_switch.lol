@@ -14,25 +14,32 @@ HAI
 
 	choice
 	WTF?
-		OMG 1
+		OMG "1"
 			VISIBLE "Enter birth year: "
 			GIMMEH input
 			VISIBLE DIFF OF 2022 AN input
 			GTFO
-		OMG 2
+		OMG "2"
 			VISIBLE "Enter bill cost: "
 			GIMMEH input
 			VISIBLE "Tip: " PRODUKT OF input AN 0.1
 			GTFO
-		OMG 3
+		OMG "3"
 			VISIBLE "Enter width: "
 			GIMMEH input
 			VISIBLE "Square Area: " PRODUKT OF input AN input
 			GTFO
-		OMG 0
+		OMG "0"
 			VISIBLE "Goodbye"
 		OMGWTF
 			VISIBLE "Invalid Input!"
 	OIC
 
 KTHXBYE
+
+OBTW
+	Changes from original file:
+		Line 25 - PRODUCKT to PRODUKT
+		Line 30 - PRODUCKT to PRODUKT
+		Lines 17, 22, 27, 32 - From NUMBRs to YARNs (Alternative: Convert choice to NUMBR)
+TLDR
