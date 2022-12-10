@@ -4,6 +4,10 @@
 #   John Kenneth F. Manalang
 #   Nathaniel F. Enciso
 
+# REFERENCES FOR SYNTACTIC ANALYZER
+# https://github.com/codebasics/data-structures-algorithms-python/blob/master/data_structures/7_Tree/7_tree.py
+# https://github.com/davidcallanan/py-myopl-code/blob/master/ep2/basic.py
+
 import random
 
 mathRelatedLex = ["Arithmetic Operation","Operand Separator","NUMBR Literal","NUMBAR Literal","YARN Literal","TROOF Literal","Variable Identifier","String Delimiter"]
