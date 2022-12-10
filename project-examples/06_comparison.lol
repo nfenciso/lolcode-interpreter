@@ -7,6 +7,10 @@ HAI
     VISIBLE "Value 2: "
     GIMMEH y
 
+    BTW should typecast to non-YARN
+    BTW x R MAEK x NUMBR
+    BTW y R MAEK y NUMBR
+
     BTW x==y
     VISIBLE BOTH SAEM x AN y
     BTW x!=y

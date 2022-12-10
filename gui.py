@@ -170,6 +170,7 @@ class GUI:
         frame2.pack(expand=True, fill="both", padx=10, pady=(0, 10))
 
     def execute(self):
+        self.x_textbox.config(state=tk.NORMAL)
         self.x_textbox.delete("1.0", tk.END)
         global lexemes, parse_tree, symbol_table
         lexemes = None
@@ -219,6 +220,9 @@ class GUI:
             #print(">>>"+p)
         else:
             self.x_textbox.insert("insert","There is no code")
+
+        self.x_textbox.config(state=tk.DISABLED)
+        
 
     def open_file(self):
         
