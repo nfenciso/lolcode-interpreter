@@ -182,8 +182,9 @@ class GUI:
             # temp_file.write(temp_content)
             # temp_file.close()
             lexemes = lexical_analyzer.lex_main(temp_content)
-            #print("LEX"+str(lexemes))
+            print("LEX"+str(lexemes))
             firstLex = lexemes[0]
+            print(firstLex)
             self.show_lexemes()
 
             if (isinstance(firstLex,str)):
@@ -295,7 +296,7 @@ class GUI:
         global lexemes
         if (isinstance(lexemes[0], str)):
             error = lexemes.pop(0)
-            lexemes.append(["ERROR:", error[7:]])
+            self.x_textbox.insert("insert", error)
         #print(lexemes)
         for lexeme in lexemes:
             if (lexeme[0] != "NEWLINE"):
