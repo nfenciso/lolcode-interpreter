@@ -1080,8 +1080,11 @@ class Parser:
                 produceConcatSubtree(self, self.tree)
             
             else:
-                self.error = f"ERROR: {self.curr_tok[0]} is not a valid starter of line"
-                return self.error
+                if (isinstance(self.curr_tok, str)):
+                    if (self.curr_tok == "END OF TOKENS"): pass
+                else: 
+                    self.error = f"ERROR: {self.curr_tok} is not a valid starter of line"
+                    return self.error
 
             cnt -= 1
                     
