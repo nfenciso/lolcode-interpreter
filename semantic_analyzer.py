@@ -945,18 +945,76 @@ def check_string_to_float(value):
     except:
         return False
 
-def get_comparison_value(comp_arguments, comp_type):
-    UNMATCH_TYPE_ERROR = f"ERROR: Values must be of the same type (NUMBR or NUMBAR)"
+def get_comparison_value(comp_arguments, comp_type): # BIGGR OF and SMALLR OF
+    UNMATCH_TYPE_ERROR = f"ERROR: Possible errors:\n\tValues are not of the same type \n\tOne of the value is of the type NOOB \n\tTried to nest BOTH SAEM or DIFFRINT with non-TROOF value"
     comp_type = comp_type
     to_evaluate = [comp_arguments[0], "", ""]
 
     # ============= first value ===================
-    if (isinstance(comp_arguments[1], str)): # if string, sure to be a variable
-        value = symbolTable[comp_arguments[1]]
-        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
-            return f"ERROR: (Comparison) Value of '{comp_arguments[1]}' must be of type NUMBR or NUMBAR"
+    if (isinstance(comp_arguments[1], str)): # if string, might be a variable or a string
+        if(comp_arguments[1][0] == "\""): # sure to be string
+            temp_type = "string"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = comp_arguments[1][1:len(comp_arguments[1])-1] # removing double quotes
         else:
-            if (isinstance(value, int)):
+            value = symbolTable[comp_arguments[1]]
+            if (value == None): # value is a NOOB
+                return f"ERROR: (Comparison) Value of '{comp_arguments[1]}' must not be NOOB"
+            else:
+                if (isinstance(value, int)):
+                    temp_type = "integer"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value
+                elif (isinstance(value, str)):
+                    temp_type = "string"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value
+                elif (isinstance(value, bool)):
+                    temp_type = "bool"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value
+                else:
+                    temp_type = "float"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value   
+    elif (isinstance(comp_arguments[1], list)):       
+        if(comp_arguments[1][0] in ["BOTH SAEM", "DIFFRINT"]): # if BOTH SAEM or DIFFRINT
+            value = get_comparison_result(comp_arguments[1])
+            if (isinstance(value, str)): 
+                return value
+            temp_type = "bool"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = value
+        else: # if BIGGR OF or SMALLR OF
+            value = get_comparison_value(comp_arguments[1], comp_type)  
+            if (isinstance(value, str)): 
+                if (len(value) > 6): 
+                    if (value[:5] == "ERROR"):
+                        return value
+                temp_type = "string"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value
+            elif (isinstance(value, bool)):
+                temp_type = "bool"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value
+            elif (isinstance(value, int)):
                 temp_type = "integer"
                 if (comp_type == ""): comp_type = temp_type
                 else:
@@ -967,27 +1025,19 @@ def get_comparison_value(comp_arguments, comp_type):
                 if (comp_type == ""): comp_type = temp_type
                 else:
                     if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-                to_evaluate[1] = value   
-    elif (isinstance(comp_arguments[1], list)):       # if another comparison, BIGGR SMALLR OF
-        value = get_comparison_value(comp_arguments[1], comp_type)
-        if (isinstance(value, str)): return value
-        if (isinstance(value, int)):
-            temp_type = "integer"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[1] = value
+                to_evaluate[1] = value  
+    elif (isinstance(comp_arguments[1], bool)):             # bool
+        temp_type = "bool"
+        if (comp_type == ""): comp_type = temp_type
         else:
-            temp_type = "float"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[1] = value  
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[1] = comp_arguments[1]
     elif (isinstance(comp_arguments[1], int)):             # integer
         temp_type = "integer"
         if (comp_type == ""): comp_type = temp_type
         else:
-            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            if (comp_type != temp_type): 
+                return UNMATCH_TYPE_ERROR
         to_evaluate[1] = comp_arguments[1]
     else:                                   # float
         temp_type = "float"
@@ -997,12 +1047,70 @@ def get_comparison_value(comp_arguments, comp_type):
         to_evaluate[1] = comp_arguments[1]  
 
     # ============= second value ===================
-    if (isinstance(comp_arguments[2], str)): # if string, sure to be a variable
-        value = symbolTable[comp_arguments[2]]
-        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
-            return f"ERROR: (Comparison) Value of '{comp_arguments[2]}' must be of type NUMBR or NUMBAR"
+    if (isinstance(comp_arguments[2], str)): # if string, might be a variable or a string
+        if(comp_arguments[2][0] == "\""): # sure to be string
+            temp_type = "string"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = comp_arguments[2][1:len(comp_arguments[2])-1] # removing double quotes
         else:
-            if (isinstance(value, int)):
+            value = symbolTable[comp_arguments[2]]
+            if (value == None): # value is a NOOB
+                return f"ERROR: (Comparison) Value of '{comp_arguments[2]}' must not be NOOB"
+            else:
+                if (isinstance(value, int)):
+                    temp_type = "integer"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value
+                elif (isinstance(value, str)):
+                    temp_type = "string"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value
+                elif (isinstance(value, bool)):
+                    temp_type = "bool"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value
+                else:
+                    temp_type = "float"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value   
+    elif (isinstance(comp_arguments[2], list)):       
+        if(comp_arguments[2][0] in ["BOTH SAEM", "DIFFRINT"]): # if BOTH SAEM or DIFFRINT
+            value = get_comparison_result(comp_arguments[2])
+            if (isinstance(value, str)): 
+                return value
+            temp_type = "bool"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = value
+        else: # if BIGGR OF or SMALLR OF
+            value = get_comparison_value(comp_arguments[2], comp_type)  
+            if (isinstance(value, str)): 
+                if (len(value) > 6): 
+                    if (value[:5] == "ERROR"):
+                        return value
+                temp_type = "string"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value
+            elif (isinstance(value, bool)):
+                temp_type = "bool"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value
+            elif (isinstance(value, int)):
                 temp_type = "integer"
                 if (comp_type == ""): comp_type = temp_type
                 else:
@@ -1013,22 +1121,13 @@ def get_comparison_value(comp_arguments, comp_type):
                 if (comp_type == ""): comp_type = temp_type
                 else:
                     if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-                to_evaluate[2] = value   
-    elif (isinstance(comp_arguments[2], list)):       # if another comparison, BIGGR SMALLR OF
-        value = get_comparison_value(comp_arguments[2], comp_type)
-        if (isinstance(value, str)): return value
-        if (isinstance(value, int)):
-            temp_type = "integer"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[2] = value
+                to_evaluate[2] = value  
+    elif (isinstance(comp_arguments[2], bool)):             # bool
+        temp_type = "bool"
+        if (comp_type == ""): comp_type = temp_type
         else:
-            temp_type = "float"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[2] = value  
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[2] = comp_arguments[2]
     elif (isinstance(comp_arguments[2], int)):             # integer
         temp_type = "integer"
         if (comp_type == ""): comp_type = temp_type
@@ -1048,19 +1147,77 @@ def get_comparison_value(comp_arguments, comp_type):
     else: # SMALLR OF
         return min(to_evaluate[1], to_evaluate[2])
 
-def get_comparison_result(line):
-    UNMATCH_TYPE_ERROR = f"ERROR: Values must be of the same type (NUMBR or NUMBAR)"
+def get_comparison_result(line): # BOTH SAEM and DIFFRNT
+    UNMATCH_TYPE_ERROR = f"ERROR: Possible errors:\n\tValues are not of the same type \n\tOne of the value is of the type NOOB \n\tTried to nest BOTH SAEM or DIFFRINT with non-TROOF value"
     comp_type = ""
     to_evaluate = [line[0], "", ""]
-    # line[0] contains if == or !=
 
     # ============= first value ===================
-    if (isinstance(line[1], str)): # if string, sure to be a variable
-        value = symbolTable[line[1]]
-        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
-            return f"ERROR: (Comparison) Value of '{line[1]}' must be of type NUMBR or NUMBAR"
+    if (isinstance(line[1], str)): # if string, might be a variable or a string
+        if(line[1][0] == "\""): # sure to be string
+            temp_type = "string"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = line[1][1:len(line[1])-1] # removing double quotes
         else:
-            if (isinstance(value, int)):
+            value = symbolTable[line[1]]
+            if (value == None): # value is a NOOB
+                return f"ERROR: (Comparison) Value of '{line[1]}' must not be NOOB"
+            else:
+                if (isinstance(value, int)):
+                    temp_type = "integer"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value
+                elif (isinstance(value, str)):
+                    temp_type = "string"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value
+                elif (isinstance(value, bool)):
+                    temp_type = "bool"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value
+                else:
+                    temp_type = "float"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[1] = value   
+    elif (isinstance(line[1], list)):       
+
+        if(line[1][0] in ["BOTH SAEM", "DIFFRINT"]): # if BOTH SAEM or DIFFRINT
+            value = get_comparison_result(line[1])
+            if (isinstance(value, str)): 
+                return value
+            temp_type = "bool"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[1] = value
+        else: # if BIGGR OF or SMALLR OF
+            value = get_comparison_value(line[1], comp_type)  
+            if (isinstance(value, str)): 
+                if (len(value) > 6): 
+                    if (value[:5] == "ERROR"):
+                        return value
+                temp_type = "string"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value
+            elif (isinstance(value, bool)):
+                temp_type = "bool"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[1] = value
+            elif (isinstance(value, int)):
                 temp_type = "integer"
                 if (comp_type == ""): comp_type = temp_type
                 else:
@@ -1071,22 +1228,13 @@ def get_comparison_result(line):
                 if (comp_type == ""): comp_type = temp_type
                 else:
                     if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-                to_evaluate[1] = value   
-    elif (isinstance(line[1], list)):       # if another comparison, BIGGR SMALLR OF
-        value = get_comparison_value(line[1], comp_type)
-        if (isinstance(value, str)): return value
-        if (isinstance(value, int)):
-            temp_type = "integer"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[1] = value
+                to_evaluate[1] = value  
+    elif (isinstance(line[1], bool)):             # bool
+        temp_type = "bool"
+        if (comp_type == ""): comp_type = temp_type
         else:
-            temp_type = "float"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[1] = value  
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[1] = line[1]
     elif (isinstance(line[1], int)):             # integer
         temp_type = "integer"
         if (comp_type == ""): comp_type = temp_type
@@ -1101,12 +1249,71 @@ def get_comparison_result(line):
         to_evaluate[1] = line[1]  
 
     # ============= second value ===================
-    if (isinstance(line[2], str)): # if string, sure to be a variable
-        value = symbolTable[line[2]]
-        if ((isinstance(value, str)) or (value == None)): # value is not an integer or a float
-            return f"ERROR: (Comparison) Value of '{line[2]}' must be of type NUMBR or NUMBAR"
+    if (isinstance(line[2], str)): # if string, might be a variable or a string
+        if(line[2][0] == "\""): # sure to be string
+            temp_type = "string"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = line[2][1:len(line[2])-1] # removing double quotes
         else:
-            if (isinstance(value, int)):
+            value = symbolTable[line[2]]
+            if (value == None): # value is a NOOB
+                return f"ERROR: (Comparison) Value of '{line[2]}' must not be NOOB"
+            else:
+                if (isinstance(value, int)):
+                    temp_type = "integer"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value
+                elif (isinstance(value, str)):
+                    temp_type = "string"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value
+                elif (isinstance(value, bool)):
+                    temp_type = "bool"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value
+                else:
+                    temp_type = "float"
+                    if (comp_type == ""): comp_type = temp_type
+                    else:
+                        if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                    to_evaluate[2] = value 
+    elif (isinstance(line[2], list)):       
+
+        if(line[2][0] in ["BOTH SAEM", "DIFFRINT"]): # if BOTH SAEM or DIFFRINT
+            value = get_comparison_result(line[2])
+            if (isinstance(value, str)): 
+                return value
+            temp_type = "bool"
+            if (comp_type == ""): comp_type = temp_type
+            else:
+                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+            to_evaluate[2] = value
+        else: # if BIGGR OF or SMALLR OF
+            value = get_comparison_value(line[2], comp_type)  
+            if (isinstance(value, str)): 
+                if (len(value) > 6): 
+                    if (value[:5] == "ERROR"):
+                        return value
+                temp_type = "string"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value
+            elif (isinstance(value, bool)):
+                temp_type = "bool"
+                if (comp_type == ""): comp_type = temp_type
+                else:
+                    if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+                to_evaluate[2] = value
+            elif (isinstance(value, int)):
                 temp_type = "integer"
                 if (comp_type == ""): comp_type = temp_type
                 else:
@@ -1117,22 +1324,13 @@ def get_comparison_result(line):
                 if (comp_type == ""): comp_type = temp_type
                 else:
                     if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-                to_evaluate[2] = value   
-    elif (isinstance(line[2], list)):       # if another comparison, BIGGR SMALLR OF
-        value = get_comparison_value(line[2], comp_type)
-        if (isinstance(value, str)): return value
-        if (isinstance(value, int)):
-            temp_type = "integer"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[2] = value
+                to_evaluate[2] = value  
+    elif (isinstance(line[2], bool)):             # bool
+        temp_type = "bool"
+        if (comp_type == ""): comp_type = temp_type
         else:
-            temp_type = "float"
-            if (comp_type == ""): comp_type = temp_type
-            else:
-                if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
-            to_evaluate[2] = value  
+            if (comp_type != temp_type): return UNMATCH_TYPE_ERROR
+        to_evaluate[2] = line[2]
     elif (isinstance(line[2], int)):             # integer
         temp_type = "integer"
         if (comp_type == ""): comp_type = temp_type

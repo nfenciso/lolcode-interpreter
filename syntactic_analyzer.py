@@ -1232,6 +1232,8 @@ def getComparison(self, operand_type):
 
     result = getComparison_helper(self, operand_type, elements)
 
+    print(result)
+    if (isinstance(result, str)): return result
     result.append(len(elements))
     return result
 
@@ -1247,33 +1249,49 @@ def getComparison_helper(self, operand_type, elements):
             # check the type of this variable using third index and then save to operand_type
             # operand_type[0] = "NUMBAR Literal"  # VARIABLES ARE IMPLICITLY TYPECASTED TO NUMBAR ------- MUST CHANGE TO REAL TYPE OF VARIABLE
             pass
-        elif ((self.curr_tok[0] == "NUMBAR Literal") or (self.curr_tok[0] == "NUMBR Literal")):
+        # elif ((self.curr_tok[0] == "NUMBAR Literal") or (self.curr_tok[0] == "NUMBR Literal")):
+        #     operand_type[0] = self.curr_tok[0]
+        elif (self.curr_tok[0] in literals ):
             operand_type[0] = self.curr_tok[0]
         elif (self.curr_tok[1] in comparator):
             pass
         else:
-            self.error = "ERROR: (Comparison) Invalid operand type. Must be NUMBAR or NUMBR " + str(self.curr_tok)
+            self.error = "ERROR: (Comparison) Invalid operand type. Must not be NOOB " + str(self.curr_tok)
             return self.error
 
     # ========= first operand ==============
     if (self.curr_tok[0] == "Variable Identifier"):         # first operand is a variable 
         elements.append(self.curr_tok)
-        own_list[1] = self.curr_tok[1]                          # check if type is same of operand_type. ------ NOT CURRENTLY CHECKING TYPE SO ERROR MIGHT NOT BE CATCHED
+        own_list[1] = str(self.curr_tok[1])                           # check if type is same of operand_type. ------ NOT CURRENTLY CHECKING TYPE SO ERROR MIGHT NOT BE CATCHED
         self.advance()
         # print(str(self.curr_tok))
     elif (self.curr_tok[1] in comparator):      # first operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
         own_list[1] = getComparison_helper(self, operand_type, elements)
         if (self.error != "NONE"):
             return self.error
-    elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # first operand is a literal
+    elif ((self.curr_tok[0] in literals) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # first operand is a literal
         #print("first " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
-        elements.append(self.curr_tok)
-        if (self.curr_tok[0] == "NUMBAR Literal"): own_list[1] = float(self.curr_tok[1])
-        else: own_list[1] = int(self.curr_tok[1])
-        self.advance()
+
+        if (self.curr_tok[0] == "String Delimiter"): #string
+            self.advance()
+            elements.append(self.curr_tok)
+            own_list[1] = "\"" + str(self.curr_tok[1]) + "\""
+            self.advance()
+            self.advance()
+        elif (self.curr_tok[0] == "TROOF Literal"): #boolean
+            elements.append(self.curr_tok)
+            if (self.curr_tok[1] == "WIN"):
+                own_list[1] = True
+            else: own_list[1] = False
+            self.advance()
+        else: # float and int
+            elements.append(self.curr_tok)
+            if (self.curr_tok[0] == "NUMBAR Literal"): own_list[1] = float(self.curr_tok[1])
+            else: own_list[1] = int(self.curr_tok[1])
+            self.advance()
     else:
-        self.error = "ERROR: (Comparison) Operand must be of the same types. (NUMBR or NUMBAR):\n\tCurrent token: " + str(self.curr_tok) + "\n\tPrevious types: " + str(operand_type[0])
+        self.error = "ERROR: (Comparison) Operand must be of the same types. (must not be NOOB):\n\tCurrent token: " + str(self.curr_tok) + "\n\tPrevious types: " + str(operand_type[0])
         return self.error
 
     # ========= AN seperator ==============
@@ -1287,21 +1305,35 @@ def getComparison_helper(self, operand_type, elements):
     # ========= second operand ==============
     if (self.curr_tok[0] == "Variable Identifier"):         # second operand is a variable 
         elements.append(self.curr_tok)
-        own_list[2] = self.curr_tok[1]                              # -------------------------------- check if type is same of operand_type.
+        own_list[2] =  str(self.curr_tok[1])                              # -------------------------------- check if type is same of operand_type.
         self.advance()
     elif (self.curr_tok[1] in comparator):       # second operand is another BOTH SAEM or DIFFRINT (or SMALLR OF or BIGGR OF)
         own_list[2] = getComparison_helper(self, operand_type, elements)
         if (self.error != "NONE"):
             return self.error
-    elif ((self.curr_tok[0] in ["NUMBAR Literal", "NUMBR Literal"]) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):    # second operand is a literal
-        #print("second " + str(self.curr_tok) + " ; " + operand_type[0])
+    elif ((self.curr_tok[0] in literals) and ((self.curr_tok[0] == operand_type[0]) or (operand_type[0] == "NULL"))):   # second operand is a literal
+        #print("first " + str(self.curr_tok) + " ; " + operand_type[0])
         operand_type[0] = self.curr_tok[0]
-        elements.append(self.curr_tok)
-        if (self.curr_tok[0] == "NUMBAR Literal"): own_list[2] = float(self.curr_tok[1])
-        else: own_list[2] = int(self.curr_tok[1])
-        self.advance()
+
+        if (self.curr_tok[0] == "String Delimiter"): #string
+            self.advance()
+            elements.append(self.curr_tok)
+            own_list[2] = "\"" + str(self.curr_tok[1]) + "\""
+            self.advance()
+            self.advance()
+        elif (self.curr_tok[0] == "TROOF Literal"): #boolean
+            elements.append(self.curr_tok)
+            if (self.curr_tok[1] == "WIN"):
+                own_list[2] = True
+            else: own_list[2] = False
+            self.advance()
+        else: # float and int
+            elements.append(self.curr_tok)
+            if (self.curr_tok[0] == "NUMBAR Literal"): own_list[2] = float(self.curr_tok[1])
+            else: own_list[2] = int(self.curr_tok[1])
+            self.advance()
     else:
-        self.error = "ERROR: (Comparison) Operand must be of the same types. (NUMBR or NUMBAR):\n\tCurrent token: " + str(self.curr_tok) + "\n\tPrevious types: " + str(operand_type[0])
+        self.error = "ERROR: (Comparison) Operand must be of the same types. (must not be NOOB):\n\tCurrent token: " + str(self.curr_tok) + "\n\tPrevious types: " + str(operand_type[0])
         return self.error
 
     if (self.error != "NONE"):
@@ -1317,6 +1349,7 @@ def generateBooleanStatement(self):
         boolList = solveBooleanStatement_1(self, elements) # 1 operand boolean
     else:
         boolList = solveBooleanStatement(self, elements) # infinite operand boolean
+
     if (isinstance(boolList, str)): return boolList
     boolList.append(len(elements))
     return boolList
@@ -1646,8 +1679,11 @@ def syntax_main(lexemes):
     tokens = lexemes
     i = 0
     if (tokens[len(tokens)-1][0] == "ERROR:"):
+        print(tokens[len(tokens)-1][1])
         return tokens[len(tokens)-1][1]
 
     if (isinstance(tokens, list)):
         syntax = Parser(tokens,1)
+        if(isinstance(syntax.getResult(),str)): print(syntax.getResult())
+        else: syntax.getResult().print_tree()
         return syntax
