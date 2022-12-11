@@ -175,7 +175,7 @@ class GUI:
         symbol_table = None
         temp_content = self.code_textbox.get("1.0", tk.END)
         temp_content.strip
-        if (filename != "::NO_FILE_CHOSEN::" and len(temp_content) != 1):
+        if ((filename != "::NO_FILE_CHOSEN::" and len(temp_content) > 1) or len(temp_content) > 1):
             lexemes = lexical_analyzer.lex_main(temp_content)
             #print("LEX"+str(lexemes))
             firstLex = lexemes[0]
