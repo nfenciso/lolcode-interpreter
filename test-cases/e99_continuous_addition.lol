@@ -1,3 +1,4 @@
+BTW if block within loop block
 HAI
 
 	I HAS A result ITZ 0
@@ -15,11 +16,10 @@ HAI
 		VISIBLE "New sum: " result
 
 		VISIBLE ""
-		VISIBLE "End operation? (Enter 1 to confirm, numbers only)"
+		VISIBLE "End operation? (Enter 1 to confirm)"
 		GIMMEH input
-		input IS NOW A NUMBR
 		
-		BOTH SAEM input AN 1
+		BOTH SAEM input AN "1"
 		O RLY?
 			YA RLY
 				GTFO
