@@ -157,7 +157,8 @@ class GUI:
         symbol_table = None
         temp_content = self.code_textbox.get("1.0", tk.END)
         temp_content.strip
-        if (filename != "::NO_FILE_CHOSEN::" or len(temp_content) != 1):
+        print(len(temp_content))
+        if (filename != "::NO_FILE_CHOSEN::" and len(temp_content) != 1):
             lexemes = lexical_analyzer.lex_main(temp_content)
             #print("LEX"+str(lexemes))
             firstLex = lexemes[0]
@@ -206,7 +207,7 @@ class GUI:
 
         self.code_textbox.delete('1.0', "end")
         try:
-            with open(filename, 'r') as a:
+            with open(filename, 'r', encoding='latin-1') as a:
                 self.code_textbox.insert("insert", a.read())
         except:
             filename = "::NO_FILE_CHOSEN::"
