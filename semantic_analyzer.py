@@ -465,6 +465,7 @@ def semanticAnalyze(lst, interface):
             tempList = []
             smooshIndex = -1
             tempCnt = 0
+            # print(f"here:   {numVisibleArgs}")
             while (tempCnt < numVisibleArgs):
                 cnt += 1
                 tempList.append(lst[cnt])
@@ -563,9 +564,12 @@ def semanticAnalyze(lst, interface):
                 playBell = True
             if (playBell):
                 print('\a')
-            if (tempList[len(tempList)-1][0][0] == "Suppressor"):
-                interface.x_textbox.insert("end",temp)
-            else:
+            try:
+                if (tempList[len(tempList)-1][0][0] == "Suppressor"):
+                    interface.x_textbox.insert("end",temp)
+                else:
+                    interface.x_textbox.insert("end",temp+"\n")
+            except:
                 interface.x_textbox.insert("end",temp+"\n")
             interface.x_textbox.see("end")
             # # # # # # # # # # # # # # # # # # # #

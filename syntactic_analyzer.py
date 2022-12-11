@@ -1079,6 +1079,10 @@ class Parser:
             elif (self.curr_tok[0] == "Concatenation Keyword"):
                 produceConcatSubtree(self, self.tree)
             
+            else:
+                self.error = f"ERROR: {self.curr_tok[0]} is not a valid starter of line"
+                return self.error
+
             cnt -= 1
                     
         #self.tree.print_tree()
