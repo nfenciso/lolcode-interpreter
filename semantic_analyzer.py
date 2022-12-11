@@ -543,14 +543,15 @@ def semanticAnalyze(lst, interface):
                 else : # bool and comparison is seperated since i[0][0] is not a lex type
                     if (i[0] in ["BOTH OF", "EITHER OF", "WON OF", "NOT", "ALL OF", "ANY OF"]):
                         result = get_bool_result(i)
+                        if (result not in [True, False]): return result
 
-                        temp += str(result)
+                        temp += "WIN" if(result==True) else "FAIL"
 
                     elif (i[0] in ["BOTH SAEM", "DIFFRINT"]):
                         result = get_comparison_result(i)
                         if (result not in [True, False]): return result
 
-                        temp += str(result)
+                        temp += "WIN" if(result==True) else "FAIL"
 
             # Don't comment out this print statement
             #print(temp)

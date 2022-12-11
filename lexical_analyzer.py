@@ -371,8 +371,8 @@ def lex_main(content):
     categoriesAndLexemes = LexAnalyze(results, 1)
     
     #print(categoriesAndLexemes)
-    for i in categoriesAndLexemes:
-        print(i)
+    # for i in categoriesAndLexemes:
+    #     print(i)
 
     return categoriesAndLexemes 
 

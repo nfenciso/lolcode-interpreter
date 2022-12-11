@@ -1232,7 +1232,7 @@ def getComparison(self, operand_type):
 
     result = getComparison_helper(self, operand_type, elements)
 
-    print(result)
+    # print(result)
     if (isinstance(result, str)): return result
     result.append(len(elements))
     return result
@@ -1679,11 +1679,11 @@ def syntax_main(lexemes):
     tokens = lexemes
     i = 0
     if (tokens[len(tokens)-1][0] == "ERROR:"):
-        print(tokens[len(tokens)-1][1])
+        # print(tokens[len(tokens)-1][1])
         return tokens[len(tokens)-1][1]
 
     if (isinstance(tokens, list)):
         syntax = Parser(tokens,1)
-        if(isinstance(syntax.getResult(),str)): print(syntax.getResult())
-        else: syntax.getResult().print_tree()
+        # if(isinstance(syntax.getResult(),str)): print(syntax.getResult())
+        # else: syntax.getResult().print_tree()
         return syntax
