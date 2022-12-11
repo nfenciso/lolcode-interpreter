@@ -465,7 +465,7 @@ class Parser:
                         self.tree.add_child(TreeNode(inputList))
 
                     else:
-                        self.error = "ERROR: Unexpected non-variable identifier"
+                        self.error = "ERROR: (GIMMEH) Must only have one argument"
                         return self.error
                 else:
                     self.error = "ERROR: Must be variable identifier to store the input"
