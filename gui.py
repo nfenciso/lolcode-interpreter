@@ -148,6 +148,24 @@ class GUI:
 
         frame2.pack(expand=True, fill="both", padx=10, pady=(0, 10))
 
+        clear_btn = tk.Button(master, text="Clear", font=berlin_sans, width = 10, command=self.clear)
+        clear_btn.place(x=17, y=400)
+
+
+    def clear(self):
+        global lexemes, parse_tree, symbol_table
+        lexemes = None
+        parse_tree = None
+        symbol_table = None
+        self.x_textbox.config(state=tk.NORMAL)
+        self.x_textbox.delete("1.0", tk.END)
+        self.code_textbox.delete('1.0', "end")
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        for item in self.tree_s.get_children():
+            self.tree_s.delete(item)
+        # self.x_textbox.config(state=tk.DISABLED)
+
     def execute(self):
         self.x_textbox.config(state=tk.NORMAL)
         self.x_textbox.delete("1.0", tk.END)
@@ -157,7 +175,6 @@ class GUI:
         symbol_table = None
         temp_content = self.code_textbox.get("1.0", tk.END)
         temp_content.strip
-        print(len(temp_content))
         if (filename != "::NO_FILE_CHOSEN::" and len(temp_content) != 1):
             lexemes = lexical_analyzer.lex_main(temp_content)
             #print("LEX"+str(lexemes))
@@ -183,12 +200,14 @@ class GUI:
                         self.show_symbol_table()
                     else:
                         self.show_symbol_table()
+            self.x_textbox.config(state=tk.DISABLED)
 
         else:
             self.x_textbox.insert("insert","There is no code")
-
-        self.x_textbox.config(state=tk.DISABLED)
-        
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+            for item in self.tree_s.get_children():
+                self.tree_s.delete(item)
 
     def open_file(self):
         
