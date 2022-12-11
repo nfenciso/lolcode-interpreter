@@ -226,7 +226,7 @@ class GUI:
 
         self.code_textbox.delete('1.0', "end")
         try:
-            with open(filename, 'r', encoding='latin-1') as a:
+            with open(filename, 'r', encoding='utf-8') as a:
                 self.code_textbox.insert("insert", a.read())
         except:
             filename = "::NO_FILE_CHOSEN::"
